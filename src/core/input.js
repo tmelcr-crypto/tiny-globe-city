@@ -1,4 +1,4 @@
-// Keyboard placeholder. Touch input lives in ui/touch-controls.js (TODO).
+// Keyboard placeholder. Touch input lives in ui/touch-controls.js.
 export function createInput() {
   const state = { up: false, down: false, left: false, right: false };
   const map = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
