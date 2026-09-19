@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { createLoop } from './core/loop.js';
 import { createInput } from './core/input.js';
 import { createCamera } from './core/camera.js';
-import { createGlobe, GLOBE_RADIUS } from './world/globe.js';
+import { createGlobe, GLOBE_RADIUS, ANGULAR_SPEED } from './world/globe.js';
 import { createPlayer, turnPlayerToward } from './entities/player.js';
 import { createHud } from './ui/hud.js';
 import { createTouchControls } from './ui/touch-controls.js';
@@ -32,7 +32,7 @@ addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-const SPEED = 0.6; // radians per second
+const SPEED = ANGULAR_SPEED; // rad/s at full joystick deflection (see world/globe.js)
 const AXIS_X = new THREE.Vector3(1, 0, 0);
 const AXIS_Y = new THREE.Vector3(0, 1, 0);
 

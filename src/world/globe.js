@@ -1,12 +1,58 @@
 import * as THREE from 'three';
-export const GLOBE_RADIUS = 50;
+
+// Sized so a player moving at 5 km/h completes one full 360° lap in 60s:
+// lap distance = speed * lapTime = circumference = 2*pi*GLOBE_RADIUS.
+const PLAYER_SPEED_MPS = 5000 / 3600; // 5 km/h
+const LAP_TIME_S = 60;
+export const GLOBE_RADIUS = (PLAYER_SPEED_MPS * LAP_TIME_S) / (2 * Math.PI); // ~13.26 m
+export const ANGULAR_SPEED = (2 * Math.PI) / LAP_TIME_S; // rad/s of worldPivot at full joystick deflection
+
+const GRID_METERS = 1; // reference grid cell size, for future layout orientation
+const GRID_PIXELS_PER_METER = 16;
+
+// Equirectangular grid texture: sphere UVs already run 0-1 around the equator
+// and 0-1 pole-to-pole, so a texture sized in whole meters lines up as a 1x1m grid.
+function createGridTexture() {
+  const circumference = 2 * Math.PI * GLOBE_RADIUS;
+  const halfCircumference = Math.PI * GLOBE_RADIUS;
+  const cols = Math.round(circumference / GRID_METERS);
+  const rows = Math.round(halfCircumference / GRID_METERS);
+  const canvas = document.createElement('canvas');
+  canvas.width = cols * GRID_PIXELS_PER_METER;
+  canvas.height = rows * GRID_PIXELS_PER_METER;
+
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#4a8f4a';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= cols; i++) {
+    const x = i * GRID_PIXELS_PER_METER;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, canvas.height);
+    ctx.stroke();
+  }
+  for (let i = 0; i <= rows; i++) {
+    const y = i * GRID_PIXELS_PER_METER;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
+  return texture;
+}
 
 // Returns worldPivot: a Group that holds the globe and all world objects.
 export function createGlobe() {
   const pivot = new THREE.Group();
   const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(GLOBE_RADIUS, 48, 32),
-    new THREE.MeshStandardMaterial({ color: 0x4a8f4a, flatShading: true })
+    new THREE.MeshStandardMaterial({ map: createGridTexture(), flatShading: true })
   );
   pivot.add(sphere);
 
