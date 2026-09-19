@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { createRandomBuilding } from '../entities/building.js';
+
+const UP = new THREE.Vector3(0, 1, 0);
 
 // Sized so a player moving at 5 km/h completes one full 360° lap in LAP_TIME_S:
 // lap distance = speed * lapTime = circumference = 2*pi*GLOBE_RADIUS.
@@ -56,17 +59,30 @@ export function createGlobe() {
   );
   pivot.add(sphere);
 
-  // Placeholder "buildings" so movement is visible: 5x5m footprint, 2.5m tall.
-  const BUILDING_HEIGHT = 2.5;
+  // Placeholder buildings, mixed types, so movement is visible.
   for (let i = 0; i < 40; i++) {
-    const b = new THREE.Mesh(
-      new THREE.BoxGeometry(5, BUILDING_HEIGHT, 5),
-      new THREE.MeshStandardMaterial({ color: 0xcccccc })
-    );
+    const building = createRandomBuilding();
     const dir = new THREE.Vector3().randomDirection();
-    b.position.copy(dir).multiplyScalar(GLOBE_RADIUS + BUILDING_HEIGHT / 2); // base on the surface, not center
-    b.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
-    pivot.add(b);
+
+    // A flat base tangent to the sphere only touches it at the building's center;
+    // the sphere curves away underneath the rest of the footprint, leaving the
+    // corners floating above the surface (worse the bigger the footprint). Instead
+    // solve for the placement radius that puts the farthest ground corner exactly
+    // on the sphere: |placeRadius*dir + cornerOffset|^2 = GLOBE_RADIUS^2, and since
+    // cornerOffset ends up perpendicular to dir after rotation, that's a simple
+    // Pythagorean relation. This sinks the building's center in slightly instead.
+    const bounds = new THREE.Box3().setFromObject(building);
+    const maxCornerDistSq = Math.max(
+      bounds.min.x ** 2 + bounds.min.z ** 2,
+      bounds.min.x ** 2 + bounds.max.z ** 2,
+      bounds.max.x ** 2 + bounds.min.z ** 2,
+      bounds.max.x ** 2 + bounds.max.z ** 2
+    );
+    const placeRadius = Math.sqrt(GLOBE_RADIUS ** 2 - maxCornerDistSq);
+
+    building.position.copy(dir).multiplyScalar(placeRadius);
+    building.quaternion.setFromUnitVectors(UP, dir);
+    pivot.add(building);
   }
   return pivot;
 }
