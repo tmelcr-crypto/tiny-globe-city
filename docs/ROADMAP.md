@@ -1,6 +1,6 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
-- [ ] Touch controls
+- [x] Touch controls
 - [ ] Buildings on globe
 - [ ] Enter/exit building
 - [ ] One car

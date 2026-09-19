@@ -1,0 +1,32 @@
+[
+  {
+    "id": "building_block",
+    "name": "Block",
+    "parts": [
+      { "shape": "box", "width": 5, "height": 2.5, "depth": 5, "x": 0, "z": 0, "baseY": 0, "material": "wall" }
+    ]
+  },
+  {
+    "id": "building_tower",
+    "name": "Tower",
+    "parts": [
+      { "shape": "box", "width": 5, "height": 12.5, "depth": 5, "x": 0, "z": 0, "baseY": 0, "material": "wall" }
+    ]
+  },
+  {
+    "id": "building_apartment",
+    "name": "Apartment Block",
+    "parts": [
+      { "shape": "box", "width": 20, "height": 5, "depth": 20, "x": 0, "z": 0, "baseY": 0, "material": "wall" }
+    ]
+  },
+  {
+    "id": "building_church",
+    "name": "Church",
+    "parts": [
+      { "shape": "box", "width": 6, "height": 6, "depth": 10, "x": 0, "z": 0, "baseY": 0, "material": "wall" },
+      { "shape": "box", "width": 3, "height": 15, "depth": 3, "x": 0, "z": 6.5, "baseY": 0, "material": "wall" },
+      { "shape": "cone", "radius": 2.1, "height": 4, "radialSegments": 4, "x": 0, "z": 6.5, "baseY": 15, "rotationYDeg": 45, "material": "roof" }
+    ]
+  }
+]
