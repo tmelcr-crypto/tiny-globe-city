@@ -1,0 +1,3 @@
+[
+  { "id": "quest_001", "title": "Placeholder quest", "giver": "npc_placeholder", "steps": ["Talk to NPC"], "reward": { "money": 100 } }
+]
