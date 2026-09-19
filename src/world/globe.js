@@ -56,14 +56,15 @@ export function createGlobe() {
   );
   pivot.add(sphere);
 
-  // Placeholder "buildings" so movement is visible.
+  // Placeholder "buildings" so movement is visible: 5x5m footprint, 2.5m tall.
+  const BUILDING_HEIGHT = 2.5;
   for (let i = 0; i < 40; i++) {
     const b = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, 2 + Math.random() * 3, 1.5),
+      new THREE.BoxGeometry(5, BUILDING_HEIGHT, 5),
       new THREE.MeshStandardMaterial({ color: 0xcccccc })
     );
     const dir = new THREE.Vector3().randomDirection();
-    b.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
+    b.position.copy(dir).multiplyScalar(GLOBE_RADIUS + BUILDING_HEIGHT / 2); // base on the surface, not center
     b.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
     pivot.add(b);
   }
