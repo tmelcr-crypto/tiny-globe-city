@@ -47,7 +47,7 @@ createLoop((dt) => {
   if (magnitude > 0) {
     worldPivot.rotateOnWorldAxis(AXIS_X, y * SPEED * dt);
     worldPivot.rotateOnWorldAxis(AXIS_Z, x * SPEED * dt);
-    turnPlayerToward(player, Math.atan2(x, y), dt);
+    turnPlayerToward(player, Math.atan2(-x, y), dt);
   }
   hud.update();
   renderer.render(scene, camera);
