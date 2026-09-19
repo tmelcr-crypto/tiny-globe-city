@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 
-// Sized so a player moving at 5 km/h completes one full 360° lap in 60s:
+// Sized so a player moving at 5 km/h completes one full 360° lap in LAP_TIME_S:
 // lap distance = speed * lapTime = circumference = 2*pi*GLOBE_RADIUS.
 const PLAYER_SPEED_MPS = 5000 / 3600; // 5 km/h
-const LAP_TIME_S = 60;
-export const GLOBE_RADIUS = (PLAYER_SPEED_MPS * LAP_TIME_S) / (2 * Math.PI); // ~13.26 m
+const LAP_TIME_S = 240; // 4x the original 60s lap, i.e. a 4x bigger globe at the same walking speed
+export const GLOBE_RADIUS = (PLAYER_SPEED_MPS * LAP_TIME_S) / (2 * Math.PI); // ~53.05 m
 export const ANGULAR_SPEED = (2 * Math.PI) / LAP_TIME_S; // rad/s of worldPivot at full joystick deflection
 
 const GRID_METERS = 1; // reference grid cell size, for future layout orientation
-const GRID_PIXELS_PER_METER = 16;
+const GRID_PIXELS_PER_METER = 8; // kept low enough that the grid texture stays under common mobile GPU size limits
 
 // Equirectangular grid texture: sphere UVs already run 0-1 around the equator
 // and 0-1 pole-to-pole, so a texture sized in whole meters lines up as a 1x1m grid.
