@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createRandomBuilding } from '../entities/building.js';
+import { createRandomTree } from '../entities/tree.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -50,6 +51,27 @@ function createGridTexture() {
   return texture;
 }
 
+// A flat base tangent to the sphere only touches it at the object's center;
+// the sphere curves away underneath the rest of the footprint, leaving the
+// corners floating above the surface (worse the bigger the footprint). Instead
+// solve for the placement radius that puts the farthest ground corner exactly
+// on the sphere: |placeRadius*dir + cornerOffset|^2 = GLOBE_RADIUS^2, and since
+// cornerOffset ends up perpendicular to dir after rotation, that's a simple
+// Pythagorean relation. This sinks the object's center in slightly instead.
+function seatOnSurface(object, dir) {
+  const bounds = new THREE.Box3().setFromObject(object);
+  const maxCornerDistSq = Math.max(
+    bounds.min.x ** 2 + bounds.min.z ** 2,
+    bounds.min.x ** 2 + bounds.max.z ** 2,
+    bounds.max.x ** 2 + bounds.min.z ** 2,
+    bounds.max.x ** 2 + bounds.max.z ** 2
+  );
+  const placeRadius = Math.sqrt(GLOBE_RADIUS ** 2 - maxCornerDistSq);
+
+  object.position.copy(dir).multiplyScalar(placeRadius);
+  object.quaternion.setFromUnitVectors(UP, dir);
+}
+
 // Returns worldPivot: a Group that holds the globe and all world objects.
 export function createGlobe() {
   const pivot = new THREE.Group();
@@ -62,27 +84,16 @@ export function createGlobe() {
   // Placeholder buildings, mixed types, so movement is visible.
   for (let i = 0; i < 40; i++) {
     const building = createRandomBuilding();
-    const dir = new THREE.Vector3().randomDirection();
-
-    // A flat base tangent to the sphere only touches it at the building's center;
-    // the sphere curves away underneath the rest of the footprint, leaving the
-    // corners floating above the surface (worse the bigger the footprint). Instead
-    // solve for the placement radius that puts the farthest ground corner exactly
-    // on the sphere: |placeRadius*dir + cornerOffset|^2 = GLOBE_RADIUS^2, and since
-    // cornerOffset ends up perpendicular to dir after rotation, that's a simple
-    // Pythagorean relation. This sinks the building's center in slightly instead.
-    const bounds = new THREE.Box3().setFromObject(building);
-    const maxCornerDistSq = Math.max(
-      bounds.min.x ** 2 + bounds.min.z ** 2,
-      bounds.min.x ** 2 + bounds.max.z ** 2,
-      bounds.max.x ** 2 + bounds.min.z ** 2,
-      bounds.max.x ** 2 + bounds.max.z ** 2
-    );
-    const placeRadius = Math.sqrt(GLOBE_RADIUS ** 2 - maxCornerDistSq);
-
-    building.position.copy(dir).multiplyScalar(placeRadius);
-    building.quaternion.setFromUnitVectors(UP, dir);
+    seatOnSurface(building, new THREE.Vector3().randomDirection());
     pivot.add(building);
   }
+
+  // Placeholder trees, mixed types, scattered more densely than buildings.
+  for (let i = 0; i < 80; i++) {
+    const tree = createRandomTree();
+    seatOnSurface(tree, new THREE.Vector3().randomDirection());
+    pivot.add(tree);
+  }
+
   return pivot;
 }
