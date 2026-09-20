@@ -2,8 +2,11 @@ import * as THREE from 'three';
 import {
   ROAD_WIDTH, SIDEWALK_WIDTH, BLOCK, LAKE_RADIUS, CORNER_RADIUS,
   ROAD_LIFT, SIDEWALK_LIFT, GROUND_LIFT,
-  streets, junctions, surfacePoint, parkBlock, lakeCentre,
+  streets, streetProfiles, junctions, surfacePoint, parkBlock, lakeCentre,
+  directionFromTangent,
 } from './city-plan.js';
+import { GLOBE_RADIUS } from './planet.js';
+import { elevation } from './terrain.js';
 
 // Flat quads laid on a sphere sag in the middle; if that sag exceeds the height
 // they're lifted by, the ground pokes through. Keeping every span short keeps
@@ -199,6 +202,234 @@ function resample(points, step = SCAN) {
   return dense;
 }
 
+
+// --- bridges and tunnels -----------------------------------------------------
+//
+// Earthworks can only do so much. Where a street's profile leaves the ground
+// behind it is carried: a deck on piers over the valley or the river, or a
+// bore through the ridge with a portal at each end.
+
+const DECK = new THREE.MeshStandardMaterial({ color: 0x55585e, flatShading: true });
+const PIER = new THREE.MeshStandardMaterial({ color: 0x8a8880, flatShading: true });
+const PORTAL = new THREE.MeshStandardMaterial({ color: 0x6f6d68, flatShading: true });
+const BORE = new THREE.MeshStandardMaterial({
+  color: 0x2a2b2e, flatShading: true, side: THREE.DoubleSide,
+});
+
+const DECK_THICKNESS = 0.9;
+const PARAPET = 0.55;
+const PIER_EVERY = 14;       // metres between piers
+const ARCH_SEGMENTS = 9;
+
+const _up = new THREE.Vector3();
+const _along = new THREE.Vector3();
+const _across = new THREE.Vector3();
+const _at = new THREE.Vector3();
+
+// The frame at a point on a street: which way is up, along and across.
+function frameOn(sample, next) {
+  directionFromTangent(sample.u, sample.v, _up).normalize();
+  const du = next.u - sample.u;
+  const dv = next.v - sample.v;
+  const run = Math.hypot(du, dv) || 1;
+  // A step along the street, laid flat on the ground.
+  directionFromTangent(sample.u + (du / run) * 2, sample.v + (dv / run) * 2, _at).normalize();
+  _along.copy(_at).addScaledVector(_up, -_at.dot(_up)).normalize();
+  _across.crossVectors(_along, _up).normalize();
+  return { up: _up.clone(), along: _along.clone(), across: _across.clone() };
+}
+
+const pointAt = (sample, height, target = new THREE.Vector3()) =>
+  directionFromTangent(sample.u, sample.v, target).multiplyScalar(GLOBE_RADIUS + height);
+
+// The stretches of one street that share a kind, as runs of samples.
+function runsOf(profile) {
+  const runs = [];
+  let start = 0;
+  const { samples } = profile;
+  for (let i = 1; i <= samples.length; i++) {
+    if (i < samples.length && samples[i].carries === samples[start].carries) continue;
+    runs.push({ carries: samples[start].carries, from: start, to: Math.min(i, samples.length - 1) });
+    start = i;
+  }
+  return runs;
+}
+
+// A box between two rings of four corners, pushed into the positions array.
+function addBox(out, a, b) {
+  const quad = (p, q, r, s) => {
+    pushTriangle(out, p, q, r);
+    pushTriangle(out, q, s, r);
+  };
+  quad(a[0], a[1], b[0], b[1]);  // top
+  quad(a[3], a[2], b[3], b[2]);  // bottom
+  quad(a[1], a[3], b[1], b[3]);  // one side
+  quad(a[2], a[0], b[2], b[0]);  // the other
+}
+
+// Four corners of the deck's cross-section at a sample.
+function deckRing(sample, height, frame, halfWidth, thickness) {
+  const centre = pointAt(sample, height);
+  const out = [];
+  for (const side of [-1, 1]) {
+    for (const drop of [0, -thickness]) {
+      out.push(centre.clone()
+        .addScaledVector(frame.across, side * halfWidth)
+        .addScaledVector(frame.up, drop));
+    }
+  }
+  // order: left-top, left-bottom, right-top, right-bottom → as addBox expects
+  return [out[0], out[2], out[1], out[3]];
+}
+
+function addBridge(group, profile, run) {
+  const deck = [];
+  const piers = [];
+  const { samples } = profile;
+  const half = profile.width / 2 + SIDEWALK_WIDTH;
+  let sincePier = PIER_EVERY;
+
+  for (let i = run.from; i < run.to; i++) {
+    const a = samples[i];
+    const b = samples[i + 1];
+    const frameA = frameOn(a, b);
+    const frameB = frameOn(b, a);
+    frameB.along.negate();
+    frameB.across.negate();
+
+    addBox(deck,
+      deckRing(a, a.height, frameA, half, DECK_THICKNESS),
+      deckRing(b, b.height, frameB, half, DECK_THICKNESS));
+
+    // Parapets, so the deck reads as a bridge from on top of it.
+    for (const side of [-1, 1]) {
+      const edgeA = deckRing(a, a.height + PARAPET / 2, frameA, half, PARAPET);
+      const edgeB = deckRing(b, b.height + PARAPET / 2, frameB, half, PARAPET);
+      const pick = side < 0 ? [0, 1] : [2, 3];
+      const inset = (ring, n) => ring[pick[n]].clone().addScaledVector(frameA.across, -side * 0.35);
+      addBox(deck,
+        [edgeA[pick[0]], inset(edgeA, 0), edgeA[pick[1]], inset(edgeA, 1)],
+        [edgeB[pick[0]], inset(edgeB, 0), edgeB[pick[1]], inset(edgeB, 1)]);
+    }
+
+    sincePier += Math.hypot(b.u - a.u, b.v - a.v);
+    const clear = a.height - a.land;
+    if (sincePier >= PIER_EVERY && clear > 3) {
+      sincePier = 0;
+      const top = pointAt(a, a.height - DECK_THICKNESS);
+      const foot = pointAt(a, a.land - 1.5);
+      const ring = (point, wide) => [
+        point.clone().addScaledVector(frameA.across, -wide).addScaledVector(frameA.along, -wide),
+        point.clone().addScaledVector(frameA.across, wide).addScaledVector(frameA.along, -wide),
+        point.clone().addScaledVector(frameA.across, -wide).addScaledVector(frameA.along, wide),
+        point.clone().addScaledVector(frameA.across, wide).addScaledVector(frameA.along, wide),
+      ];
+      addBox(piers, ring(top, 1.6), ring(foot, 2.1));
+    }
+  }
+
+  if (deck.length) group.add(meshFrom(deck, DECK));
+  if (piers.length) group.add(meshFrom(piers, PIER));
+}
+
+// A half-pipe of triangles over the road: what you drive through inside a hill.
+function addTunnel(group, profile, run) {
+  const bore = [];
+  const portals = [];
+  const { samples } = profile;
+  const half = profile.width / 2 + 0.4;
+
+  // The arch is cut to whatever cover the hill has at that point, so it never
+  // breaks out through the top of what it is bored through.
+  const arch = (sample, deckHeight, frame, scale) => {
+    const centre = pointAt(sample, deckHeight);
+    const height = Math.max(3.2, Math.min(5, sample.land - sample.height - 2));
+    const ring = [];
+    for (let s = 0; s <= ARCH_SEGMENTS; s++) {
+      const angle = Math.PI * (s / ARCH_SEGMENTS);
+      ring.push(centre.clone()
+        .addScaledVector(frame.across, Math.cos(angle) * half * scale)
+        .addScaledVector(frame.up, Math.sin(angle) * height * scale));
+    }
+    return ring;
+  };
+
+  // Only bore where there is hill on both sides of the road as well as over
+  // it. Where a neighbouring street has cut the slope away the road is in a
+  // cutting, whatever the profile thought, and a tube there would stand out in
+  // the open.
+  const buried = (sample, frame) => {
+    const dir = new THREE.Vector3();
+    for (const side of [-1, 1]) {
+      dir.copy(pointAt(sample, sample.height)).addScaledVector(frame.across, side * half).normalize();
+      if (elevation(dir) < sample.height + 2) return false;
+    }
+    return true;
+  };
+
+  for (let i = run.from; i < run.to; i++) {
+    const a = samples[i];
+    const b = samples[i + 1];
+    const frameA = frameOn(a, b);
+    const frameB = frameOn(b, a);
+    frameB.across.negate();
+    if (!buried(a, frameA) || !buried(b, frameB)) continue;
+    const ringA = arch(a, a.height, frameA, 1);
+    const ringB = arch(b, b.height, frameB, 1);
+    for (let s = 0; s < ARCH_SEGMENTS; s++) {
+      pushTriangle(bore, ringA[s], ringA[s + 1], ringB[s]);
+      pushTriangle(bore, ringA[s + 1], ringB[s + 1], ringB[s]);
+    }
+  }
+
+  // A rim of stone at each end, where the road goes into the hill.
+  for (const [end, other] of [[run.from, run.from + 1], [run.to, run.to - 1]]) {
+    const sample = samples[end];
+    const neighbour = samples[Math.max(0, Math.min(samples.length - 1, other))];
+    const frame = frameOn(sample, neighbour);
+    const inner = arch(sample, sample.height, frame, 1);
+    const outer = arch(sample, sample.height, frame, 1.22);
+    for (let s = 0; s < ARCH_SEGMENTS; s++) {
+      pushTriangle(portals, inner[s], outer[s], inner[s + 1]);
+      pushTriangle(portals, outer[s], outer[s + 1], inner[s + 1]);
+    }
+  }
+
+  if (bore.length) group.add(meshFrom(bore, BORE));
+  if (portals.length) group.add(meshFrom(portals, PORTAL));
+}
+
+// A band laid along a street at the height its profile says, offset sideways
+// for a kerb. On the level it sits on the carved bed; over a bridge or through
+// a tunnel it keeps to the deck.
+function addProfileRibbon(out, samples, offset, halfWidth, lift, skip) {
+  // The last sample has nothing ahead of it to take a bearing from, so it
+  // looks back at the one before and turns round. Without this its frame comes
+  // out as nothing at all, and the road ends in a pair of stray wings.
+  const frames = samples.map((sample, s) => {
+    if (s + 1 < samples.length) return frameOn(sample, samples[s + 1]);
+    const frame = frameOn(sample, samples[s - 1]);
+    frame.along.negate();
+    frame.across.negate();
+    return frame;
+  });
+  for (let s = 0; s < samples.length - 1; s++) {
+    const a = samples[s];
+    const b = samples[s + 1];
+    if (skip && skip((a.u + b.u) / 2, (a.v + b.v) / 2)) continue;
+
+    const edge = (sample, frame, across) => pointAt(sample, sample.height + lift, new THREE.Vector3())
+      .addScaledVector(frame.across, offset + across);
+
+    for (let w = 0; w < ACROSS; w++) {
+      const near = -halfWidth + (2 * halfWidth * w) / ACROSS;
+      const far = -halfWidth + (2 * halfWidth * (w + 1)) / ACROSS;
+      pushTriangle(out, edge(a, frames[s], near), edge(a, frames[s], far), edge(b, frames[s + 1], near));
+      pushTriangle(out, edge(a, frames[s], far), edge(b, frames[s + 1], far), edge(b, frames[s + 1], near));
+    }
+  }
+}
+
 // Roads, kerbed sidewalks with rounded corners, the park lawn and the lake, as
 // four merged meshes laid onto the globe.
 export function createCityGround() {
@@ -206,6 +437,7 @@ export function createCityGround() {
   const pavements = [];
   const crossings = junctions();
   const all = streets();
+  const structures = new THREE.Group();
   // Corners sit above every street's pavement, so the overlap where a kerb
   // runs into one is covered rather than fighting with it.
   const CORNER_LIFT = SIDEWALK_LIFT + all.length * LAYER;
@@ -217,28 +449,34 @@ export function createCityGround() {
     ? other.kind !== 'avenue'
     : other.kind === 'avenue'));
 
-  all.forEach((street, index) => {
+  const profiles = streetProfiles();
+  profiles.forEach((profile, index) => {
     const lift = ROAD_LIFT + index * LAYER;
-    addRibbon(roads, street.points, street.width / 2, lift);
+    addProfileRibbon(roads, profile.samples, 0, profile.width / 2, lift);
 
-    const half = street.width / 2;
+    const half = profile.width / 2;
     const offset = half + SIDEWALK_WIDTH / 2;
     // Where the straight kerb hands over to the corner arc: the arc's own end,
-    // measured from the junction.
-    // A metre short of where the arc starts, so the two overlap rather than
-    // leaving a hairline of grass between them.
+    // measured from the junction, less a metre so the two overlap.
     const handover = Math.hypot(offset, half + CORNER_RADIUS) - 1;
-    const others = crossingStreets(street);
+    const others = all.filter((other) => (profile.kind === 'avenue'
+      ? other.kind !== 'avenue'
+      : other.kind === 'avenue'));
 
     const breaks = (u, v) => crossings.some(
       (junction) => Math.hypot(u - junction.u, v - junction.v) < handover
     ) || others.some((other) => nearestPointOn(other.points, u, v) < other.width / 2 + SIDEWALK_WIDTH);
 
     for (const side of [-1, 1]) {
-      const kerb = resample(kerbLine(street.points, offset, side));
-      for (const run of trim(kerb, breaks)) {
-        addRibbon(pavements, run, SIDEWALK_WIDTH / 2, SIDEWALK_LIFT + index * LAYER);
-      }
+      addProfileRibbon(pavements, profile.samples, side * offset, SIDEWALK_WIDTH / 2,
+        SIDEWALK_LIFT + index * LAYER, breaks);
+    }
+
+    // What carries the road where the earth cannot.
+    for (const run of runsOf(profile)) {
+      if (run.to - run.from < 1) continue;
+      if (run.carries === 'bridge') addBridge(structures, profile, run);
+      if (run.carries === 'tunnel') addTunnel(structures, profile, run);
     }
   });
 
@@ -275,6 +513,7 @@ export function createCityGround() {
 
   group.add(meshFrom(roads, ASPHALT));
   group.add(meshFrom(pavements, PAVING));
+  group.add(structures);
   group.name = 'city-ground';
   return group;
 }

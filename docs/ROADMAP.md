@@ -14,6 +14,7 @@
 - [x] Lot grid over the whole globe, pinch zoom in the globe view
 - [x] Cubed-sphere grid: square cells everywhere, streets on great circles
 - [x] Exact layouts in placements (offset/facing/repeat) + the panelák estate
+- [x] Terrain: hills, water, rivers, roads carved into the land, bridges and tunnels
 - [x] Data-described props (props.json)
 - [x] Dev free-float globe view
 - [x] Asset catalogue (PDF, Prague reference, 619 assets)

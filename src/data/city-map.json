@@ -1,54 +1,138 @@
 {
   "seed": 20250920,
-
   "rows": [
     ". h h .",
     "p h a h",
     "h @ a h",
     "c t t a"
   ],
-
   "legend": {
-    ".": { "zone": "empty",      "buildings": 0 },
-    "h": { "zone": "houses",     "buildings": 6 },
-    "a": { "zone": "apartments", "buildings": 4 },
-    "t": { "zone": "towers",     "buildings": 4 },
-    "c": { "zone": "church",     "buildings": 1 },
-    "p": { "zone": "park",       "buildings": 0, "lake": true },
-    "@": { "zone": "houses",     "buildings": 4, "spawn": true }
+    ".": {
+      "zone": "empty",
+      "buildings": 0
+    },
+    "h": {
+      "zone": "houses",
+      "buildings": 6
+    },
+    "a": {
+      "zone": "apartments",
+      "buildings": 4
+    },
+    "t": {
+      "zone": "towers",
+      "buildings": 4
+    },
+    "c": {
+      "zone": "church",
+      "buildings": 1
+    },
+    "p": {
+      "zone": "park",
+      "buildings": 0,
+      "lake": true
+    },
+    "@": {
+      "zone": "houses",
+      "buildings": 4,
+      "spawn": true
+    }
   },
-
   "street": {
     "road": 9,
     "sidewalk": 2.5,
     "verge": 2,
     "corner": 6
   },
-
   "avenues": [
     {
       "id": "narodni",
       "width": 11,
-      "through": [[0.35, 4.0], [1.3, 3.8], [2.2, 3.75], [3.1, 3.6], [4.0, 3.25]]
+      "through": [
+        [
+          0.35,
+          4.0
+        ],
+        [
+          1.3,
+          3.8
+        ],
+        [
+          2.2,
+          3.75
+        ],
+        [
+          3.1,
+          3.6
+        ],
+        [
+          4.0,
+          3.25
+        ]
+      ]
     },
     {
       "id": "nabrezi",
       "width": 10,
-      "through": [[4.0, 0.55], [3.4, 1.1], [3.1, 2.0], [3.45, 2.9], [4.0, 3.45]]
+      "through": [
+        [
+          4.0,
+          0.55
+        ],
+        [
+          3.4,
+          1.1
+        ],
+        [
+          3.1,
+          2.0
+        ],
+        [
+          3.45,
+          2.9
+        ],
+        [
+          4.0,
+          3.45
+        ]
+      ]
     },
     {
       "id": "parkova",
       "width": 8,
-      "through": [[0.0, 1.45], [0.75, 0.9], [1.7, 0.6], [2.55, 0.85], [3.0, 1.35]]
+      "through": [
+        [
+          0.0,
+          1.45
+        ],
+        [
+          0.75,
+          0.9
+        ],
+        [
+          1.7,
+          0.6
+        ],
+        [
+          2.55,
+          0.85
+        ],
+        [
+          3.0,
+          1.35
+        ]
+      ]
     }
   ],
-
   "scenery": {
     "parkTrees": 34,
     "gardenTrees": 48,
     "cars": 14,
-    "mountains": 10,
     "lakeRadius": 18,
-    "mountainRing": [180, 240]
+    "rocks": 90,
+    "rockRing": [
+      60,
+      460
+    ]
   }
 }

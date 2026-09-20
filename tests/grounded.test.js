@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import { createGlobe, GLOBE_RADIUS } from '../src/world/globe.js';
+import { elevation, SEA_LEVEL } from '../src/world/terrain.js';
 import { spawnAll } from '../src/world/spawner.js';
 import { createTree, TREE_KINDS } from '../src/entities/tree.js';
 import { createCar } from '../src/entities/car.js';
@@ -56,7 +57,7 @@ describe('nothing levitates', () => {
     expect(box.min.y).toBeCloseTo(GLOBE_RADIUS, 5);
   });
 
-  it('rests every spawned object on the globe surface', () => {
+  it('rests every spawned object on the land, wherever the land is', () => {
     const pivot = createGlobe();
     spawnAll(pivot);
     pivot.updateMatrixWorld(true);
@@ -65,9 +66,23 @@ describe('nothing levitates', () => {
     expect(placed.length).toBeGreaterThan(20);
 
     for (const object of placed) {
-      // The origin of each model is its base, so it belongs exactly on the surface.
+      // The origin of each model is its base, so it belongs exactly on the
+      // ground — which is no longer a sphere but a height field over one.
+      const ground = GLOBE_RADIUS + elevation(object.position);
       expect(object.position.length(), `${object.userData.id ?? object.userData.type} is off the ground`)
-        .toBeCloseTo(GLOBE_RADIUS, 3);
+        .toBeCloseTo(ground, 3);
+    }
+  });
+
+  it('keeps what it builds out of the water', () => {
+    const pivot = createGlobe();
+    spawnAll(pivot);
+    const dry = ['building', 'safehouse', 'tree', 'car', 'npc'];
+
+    for (const object of pivot.children) {
+      if (!dry.includes(object.userData?.type)) continue;
+      expect(elevation(object.position), `${object.userData.id} is in the water`)
+        .toBeGreaterThan(SEA_LEVEL);
     }
   });
 });

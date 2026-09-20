@@ -58,11 +58,10 @@ describe('placements', () => {
       expect(model, `nothing placed at ${entry.at}`).toBeTruthy();
       if (entry.offset || entry.repeat) continue; // laid out to the metre, not on the marker
 
-      // It stands on the marker it was asked for, within a metre.
-      const target = directionFromTangent(markerPoint(entry.at).u, markerPoint(entry.at).v)
-        .multiplyScalar(GLOBE_RADIUS);
+      // It stands on the marker it was asked for, within a metre of ground.
+      const target = directionFromTangent(markerPoint(entry.at).u, markerPoint(entry.at).v);
       model.getWorldPosition(world);
-      expect(world.distanceTo(target)).toBeLessThan(1);
+      expect(world.angleTo(target) * GLOBE_RADIUS).toBeLessThan(1);
     }
   });
 
@@ -85,12 +84,13 @@ describe('placements', () => {
     const marker = withExtras.at.toUpperCase();
     const centre = markerPoint(marker);
     const world = new THREE.Vector3();
-    const target = directionFromTangent(centre.u, centre.v).multiplyScalar(GLOBE_RADIUS);
+    const target = directionFromTangent(centre.u, centre.v);
 
     for (const model of pivot.children.filter((c) => c.userData?.marker === marker)) {
       model.getWorldPosition(world);
-      // A lot is a quarter of a block; nothing should stray beyond its half-span.
-      expect(world.distanceTo(target)).toBeLessThan(18);
+      // A lot is a quarter of a block; nothing should stray beyond its
+      // half-span, measured along the ground.
+      expect(world.angleTo(target) * GLOBE_RADIUS).toBeLessThan(18);
     }
   });
 

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { GLOBE_RADIUS } from '../world/globe.js';
+import { GLOBE_RADIUS } from '../world/planet.js';
+import { elevation, SEA_LEVEL } from '../world/terrain.js';
 import { edgeDistance } from './collision.js';
 import { NPC_RADIUS } from '../entities/npc.js';
 
@@ -29,6 +30,7 @@ function retargetDelay() {
 // NPCs and obstacles are both children of worldPivot, so their local positions
 // are directly comparable — no world-matrix round trip needed.
 function blocked(npc, obstacles) {
+  if (elevation(npc.position) < SEA_LEVEL + 1) return true; // they keep their feet dry
   for (const obj of obstacles) {
     if (obj.parent !== npc.parent) continue; // e.g. the car the player is driving
     if (edgeDistance(obj, npc.position, obj.position) < NPC_RADIUS) return true;
@@ -72,7 +74,10 @@ export function createNpcWander(npcs, obstacles) {
           continue;
         }
 
+        // Walking round the globe also means walking over the land: put them
+        // back down on whatever height the ground has where they got to.
         _dir.copy(npc.position).normalize();
+        npc.position.copy(_dir).multiplyScalar(GLOBE_RADIUS + elevation(_dir));
         npc.quaternion.setFromUnitVectors(UP, _dir);
       }
     },

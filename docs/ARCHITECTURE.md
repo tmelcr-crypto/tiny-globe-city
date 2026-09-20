@@ -1,6 +1,7 @@
 # Architecture
 - `core/` loop, input, camera, state, event bus
-- `world/` globe, sphere grid (the cubed sphere the planet is divided by),
+- `world/` planet radius, terrain (the height field — see `docs/TERRAIN.md`),
+  globe mesh, sphere grid (the cubed sphere the planet is divided by),
   city plan, spawner, lot markers
 - `entities/` player, car, npc, weapon
 - `interiors/` enterable buildings

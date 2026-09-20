@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import { createGlobe, GLOBE_RADIUS } from '../src/world/globe.js';
+import { elevation } from '../src/world/terrain.js';
 import { spawnAll } from '../src/world/spawner.js';
 import { createNpc } from '../src/entities/npc.js';
 import { createNpcWander } from '../src/systems/npc-wander.js';
@@ -23,7 +24,7 @@ describe('npc entity', () => {
     for (const npc of pivot.children.filter((c) => c.userData?.type === 'npc')) {
       // Feet on the surface, and the body standing outward from the centre
       // rather than buried inside the globe.
-      expect(npc.position.length()).toBeCloseTo(GLOBE_RADIUS, 3);
+      expect(npc.position.length()).toBeCloseTo(GLOBE_RADIUS + elevation(npc.position), 3);
       npc.children[0].getWorldPosition(bodyPos);
       expect(bodyPos.length()).toBeGreaterThan(GLOBE_RADIUS);
     }
@@ -59,7 +60,7 @@ describe('npc wander', () => {
     for (let i = 0; i < 3600; i++) wander.update(1 / 60); // a full minute
 
     for (const npc of npcs) {
-      expect(npc.position.length()).toBeCloseTo(GLOBE_RADIUS, 3);
+      expect(npc.position.length()).toBeCloseTo(GLOBE_RADIUS + elevation(npc.position), 3);
       const fromHome = npc.position.angleTo(npc.userData.home) * GLOBE_RADIUS;
       expect(fromHome).toBeLessThan(40); // leash is 25 m, allow overshoot before it turns back
     }

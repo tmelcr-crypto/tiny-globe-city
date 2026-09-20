@@ -3,7 +3,8 @@ import { on, emit } from '../core/events.js';
 import { markerUnderPlayer, plotsOf } from '../world/markers.js';
 import { grid } from '../world/city-plan.js';
 import { FACE_IDS, TOWN_FACE } from '../world/sphere-grid.js';
-import { GLOBE_RADIUS } from '../world/globe.js';
+import { GLOBE_RADIUS } from '../world/planet.js';
+import { elevation } from '../world/terrain.js';
 
 // Planning overlay: the block and lot grid, drawn right around the planet, and
 // a labelled peg on every plot near the player — so you can walk anywhere,
@@ -33,7 +34,7 @@ const LINE_LIFT = 0.3;   // clear of the pavement so the lines read on any surfa
 const ARC_STEPS = 10;  // segments per cell edge, so a line hugs the curve
 
 const surfaceAt = (direction, lift) =>
-  direction.clone().multiplyScalar(GLOBE_RADIUS + lift);
+  direction.clone().multiplyScalar(GLOBE_RADIUS + elevation(direction) + lift);
 
 // A cell edge, sampled into segments. It is a straight line on the globe; the
 // samples are only there so the drawn line hugs the surface.

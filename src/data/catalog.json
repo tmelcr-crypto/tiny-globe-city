@@ -45,7 +45,9 @@
   "srf_parking_bay": "prop:parking_court",
   "rec_carpet_beater": "prop:carpet_beater",
   "stf_drying_rack": "prop:drying_rack",
-  "tra_estate_lane": "prop:service_road"
+  "tra_estate_lane": "prop:service_road",
+  "veg_boulder": "prop:rock",
+  "veg_outcrop": "prop:crag"
  },
  "categories": [
   {
@@ -4454,6 +4456,34 @@
       "#c8b183"
      ],
      "Raked gravel between the lawns"
+    ],
+    [
+     "veg_boulder",
+     "Boulder",
+     "pile",
+     [
+      3,
+      1.9
+     ],
+     [
+      "#8a8880",
+      "#7d7b74"
+     ],
+     "Sandstone blocks on the slopes above the river"
+    ],
+    [
+     "veg_outcrop",
+     "Rock outcrop",
+     "pile",
+     [
+      7,
+      7
+     ],
+     [
+      "#7f7d76",
+      "#8b8881"
+     ],
+     "Bare rock breaking through the turf on a ridge"
     ]
    ]
   },

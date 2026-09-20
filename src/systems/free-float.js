@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { on, emit } from '../core/events.js';
 import { state } from '../core/state.js';
-import { GLOBE_RADIUS } from '../world/globe.js';
+import { GLOBE_RADIUS } from '../world/planet.js';
 import { PLAY_CAMERA } from '../core/camera.js';
 
 // Development fast travel: pull back off the surface and spin the whole planet

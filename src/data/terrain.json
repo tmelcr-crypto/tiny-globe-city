@@ -1,0 +1,85 @@
+{
+  "seed": 6172025,
+  "seaLevel": -7,
+  "hills": [
+    {
+      "frequency": 1.7,
+      "amplitude": 16
+    },
+    {
+      "frequency": 3.6,
+      "amplitude": 7.5
+    },
+    {
+      "frequency": 7.9,
+      "amplitude": 3.2
+    },
+    {
+      "frequency": 16.3,
+      "amplitude": 1.3
+    }
+  ],
+  "ridge": {
+    "frequency": 2.3,
+    "amplitude": 26,
+    "base": -6
+  },
+  "settled": [
+    {
+      "at": [
+        0,
+        1,
+        0
+      ],
+      "calm": 130,
+      "fades": 300,
+      "damp": 0.38,
+      "level": 9
+    },
+    {
+      "at": [
+        0,
+        -0.3,
+        -0.95
+      ],
+      "calm": 95,
+      "fades": 230,
+      "damp": 0.34,
+      "level": 11
+    }
+  ],
+  "rivers": [
+    {
+      "from": [
+        0.952,
+        0.0,
+        -0.306
+      ],
+      "to": [
+        -0.229,
+        0.661,
+        -0.714
+      ],
+      "width": 14,
+      "depth": 22,
+      "bank": 28,
+      "wander": 16
+    },
+    {
+      "from": [
+        0.947,
+        0.0,
+        -0.322
+      ],
+      "to": [
+        -0.268,
+        0.551,
+        -0.79
+      ],
+      "width": 10,
+      "depth": 20,
+      "bank": 26,
+      "wander": 14
+    }
+  ]
+}

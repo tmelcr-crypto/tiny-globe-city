@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GLOBE_RADIUS } from './globe.js';
+import { GLOBE_RADIUS } from './planet.js';
 
 // A cubed sphere: the grid the whole planet is divided by.
 //

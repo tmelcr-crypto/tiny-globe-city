@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GLOBE_RADIUS } from '../world/globe.js';
+import { GLOBE_RADIUS } from '../world/planet.js';
 import { PLAYER_RADIUS } from '../entities/player.js';
 
 const DEFAULT_FOOTPRINT = 1;  // metres, for obstacles that didn't declare one

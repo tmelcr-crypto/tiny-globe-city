@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GLOBE_RADIUS } from './globe.js';
+import { GLOBE_RADIUS } from './planet.js';
 import { grid, tangentFromDirection, directionFromTangent, blockCell, BLOCK } from './city-plan.js';
 import { TOWN_FACE, FACE_IDS } from './sphere-grid.js';
 

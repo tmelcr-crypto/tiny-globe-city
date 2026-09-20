@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { createLoop } from './core/loop.js';
 import { createInput } from './core/input.js';
-import { createCamera } from './core/camera.js';
+import { createCamera, PLAY_CAMERA } from './core/camera.js';
 import { createGlobe, GLOBE_RADIUS } from './world/globe.js';
+import { walkHeight } from './world/terrain.js';
 import { spawnAll } from './world/spawner.js';
 import { createPlayer } from './entities/player.js';
 import { createWeapon } from './entities/weapon.js';
@@ -27,7 +28,11 @@ document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0b1020);
-scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.2));
+scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x2a3a46, 0.85));
+// A low sun across the land, so hills have a lit side and a shaded one.
+const sun = new THREE.DirectionalLight(0xffe7c4, 1.15);
+sun.position.set(-0.45, 0.72, 0.52).multiplyScalar(GLOBE_RADIUS * 3);
+scene.add(sun);
 
 const camera = createCamera(GLOBE_RADIUS);
 const worldPivot = createGlobe();      // everything in the world is a child of this
@@ -114,6 +119,44 @@ on('vehicle:toggle', ({ entered, multiplier, car }) => {
 });
 
 
+// The player is fixed at the top of the globe, so walking over a hill means
+// the whole planet sinks or rises underneath them. Nothing else has to know.
+const _under = new THREE.Vector3();
+const _spin = new THREE.Quaternion();
+const _toCamera = new THREE.Vector3();
+const playCamera = camera.position.clone();
+const playAim = new THREE.Vector3(0, GLOBE_RADIUS + PLAY_CAMERA.aim, 0);
+const CAMERA_CLEARANCE = 3;  // metres of air the camera keeps above the ground
+let ride = 0;
+let lift = 0;
+
+const ease = (value, target, rate, dt) => value + (target - value) * Math.min(1, Math.max(0, dt) * rate);
+const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+let riding = false;
+
+function rideTheLand(dt) {
+  _spin.copy(worldPivot.quaternion).invert();
+  _under.set(0, 1, 0).applyQuaternion(_spin);
+  const ground = state.freeFloat ? 0 : clamp(walkHeight(_under), -40, 80);
+  // Eased, so a kerb or a doorstep does not jolt the world — but snapped on
+  // the first frame, so the world does not swing up from wherever it started.
+  ride = riding ? ease(ride, ground, 9, dt) : ground;
+  worldPivot.position.y = -ride;
+  if (state.freeFloat) return;
+
+  // The camera sits behind and above the player, which on a hillside can put it
+  // inside the hill. Lift it until it is out in the air again.
+  _toCamera.copy(camera.position).sub(worldPivot.position);
+  const radius = _toCamera.length();
+  _toCamera.normalize().applyQuaternion(_spin);
+  const wanted = GLOBE_RADIUS + clamp(walkHeight(_toCamera), -40, 80) + CAMERA_CLEARANCE - ride;
+  const needed = clamp(wanted - radius, 0, 30);
+  lift = riding ? ease(lift, needed, 6, dt) : needed;
+  riding = true;
+  camera.position.set(playCamera.x, playCamera.y + lift, playCamera.z);
+  camera.lookAt(playAim);
+}
+
 addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
   camera.aspect = innerWidth / innerHeight;
@@ -150,6 +193,7 @@ let currentSpeed = 0;
 let turnRate = 0;
 createLoop((dt) => {
   freeFloat.update(dt);
+  rideTheLand(dt);
   if (state.freeFloat) {
     // Nothing else runs: the world is being steered, not lived in.
     hud.update();

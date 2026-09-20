@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { GLOBE_RADIUS } from './globe.js';
+import { GLOBE_RADIUS } from './planet.js';
+import { elevation, SEA_LEVEL, slope } from './terrain.js';
 import { createCubeGrid, TOWN_FACE } from './sphere-grid.js';
 import cityMap from '../data/city-map.json';
 
@@ -23,11 +24,11 @@ export const VERGE = cityMap.street.verge;
 export const CORNER_RADIUS = cityMap.street.corner ?? 0;
 export const SCENERY = cityMap.scenery;
 export const LAKE_RADIUS = SCENERY.lakeRadius;
-export const MOUNTAIN_RING = { min: SCENERY.mountainRing[0], max: SCENERY.mountainRing[1] };
+export const ROCK_RING = { min: SCENERY.rockRing[0], max: SCENERY.rockRing[1] };
 
-export const ROAD_LIFT = 0.03;
-export const SIDEWALK_LIFT = 0.1;
-export const GROUND_LIFT = 0.02;
+export const ROAD_LIFT = 0.35;
+export const SIDEWALK_LIFT = 0.52;
+export const GROUND_LIFT = 0.25;
 
 const GRID = cityMap.rows.map((row) => row.split(' ').filter(Boolean));
 const ROWS = GRID.length;
@@ -122,8 +123,16 @@ export function directionFromTangent(u, v, target = new THREE.Vector3()) {
   return target.set((u / distance) * sin, Math.cos(theta), (v / distance) * sin);
 }
 
+// A point on the ground, wherever the land happens to be there.
 export function surfacePoint(u, v, lift = 0, target = new THREE.Vector3()) {
-  return directionFromTangent(u, v, target).multiplyScalar(GLOBE_RADIUS + lift);
+  directionFromTangent(u, v, target);
+  return target.multiplyScalar(GLOBE_RADIUS + elevation(target) + lift);
+}
+
+// Ground you can build on: out of the water, and not down the side of a hill.
+export function isBuildable(u, v) {
+  const dir = directionFromTangent(u, v, _probe);
+  return elevation(dir) > SEA_LEVEL + 1.5 && slope(dir) < 0.38;
 }
 
 // The reverse: which point on the flat map a direction on the globe corresponds
@@ -299,6 +308,224 @@ export function streets() {
 }
 
 // ---------------------------------------------------------------------------
+// How a street sits on the land.
+//
+// A road is not draped over every bump: it is cut into the hill and banked up
+// over the hollow, and it has a limit to how steeply it will climb. So each
+// street gets a profile — a height per sample, smoothed and then held to a
+// gradient — and the land is carved to match it (see terrain.js). What the
+// earthworks cannot do, structures do: where the road would stand too far
+// above the ground it becomes a bridge, and where the ground would bury it, a
+// tunnel.
+
+export const MAX_GRADE = 0.085;     // 8.5 in 100, about as steep as a street gets
+const SMOOTH_REACH = 13;     // samples either side averaged over: wide enough
+                             // to carry a street straight over a river valley
+const BRIDGE_CLEAR = 2.2;    // road this far above the ground: bridge it
+const TUNNEL_COVER = 6;    // ground this far above the road: bore it
+const MIN_RUN = 3;           // a structure shorter than this is not worth it
+
+function smoothed(values) {
+  const out = new Array(values.length);
+  for (let i = 0; i < values.length; i++) {
+    let sum = 0;
+    let count = 0;
+    for (let j = Math.max(0, i - SMOOTH_REACH); j <= Math.min(values.length - 1, i + SMOOTH_REACH); j++) {
+      sum += values[j];
+      count++;
+    }
+    out[i] = sum / count;
+  }
+  return out;
+}
+
+// Hold the profile to a gradient, both ways: lower whatever climbs too fast,
+// so the road cuts through high ground rather than going over it, then raise
+// whatever falls too fast, so it banks up across a hollow instead of diving
+// into it. The second pass is what carries a street out over a river on an
+// embankment, and then on a deck.
+function graded(heights, spacing) {
+  const rise = MAX_GRADE * spacing;
+  for (let i = 1; i < heights.length; i++) heights[i] = Math.min(heights[i], heights[i - 1] + rise);
+  for (let i = heights.length - 2; i >= 0; i--) heights[i] = Math.min(heights[i], heights[i + 1] + rise);
+  for (let i = 1; i < heights.length; i++) heights[i] = Math.max(heights[i], heights[i - 1] - rise);
+  for (let i = heights.length - 2; i >= 0; i--) heights[i] = Math.max(heights[i], heights[i + 1] - rise);
+  return heights;
+}
+
+// Short stretches of bridge or tunnel are not worth building: fill them in.
+function settle(kinds) {
+  let start = 0;
+  while (start < kinds.length) {
+    let end = start;
+    while (end + 1 < kinds.length && kinds[end + 1] === kinds[start]) end++;
+    if (kinds[start] !== 'road' && end - start + 1 < MIN_RUN) {
+      for (let i = start; i <= end; i++) kinds[i] = 'road';
+    }
+    start = end + 1;
+  }
+  return kinds;
+}
+
+// Two streets that cross have to agree on how high the crossing is. Each
+// profile is worked out on its own, so they start out differing by a couple of
+// metres; this pulls every contact to a common height and eases each street
+// back into it.
+const CONTACT_REACH = 6;
+const RECONCILE_PASSES = 4;
+
+function contactsBetween(profiles) {
+  const contacts = [];
+  for (let a = 0; a < profiles.length; a++) {
+    for (let b = a + 1; b < profiles.length; b++) {
+      const one = profiles[a].samples;
+      const two = profiles[b].samples;
+
+      // Every sample of one street that comes near the other, paired with its
+      // nearest opposite number. A street and an avenue may cross more than
+      // once, so this is not a single meeting point.
+      for (let i = 0; i < one.length; i++) {
+        let bestGap = CONTACT_REACH;
+        let best = -1;
+        for (let j = 0; j < two.length; j++) {
+          const gap = Math.hypot(one[i].u - two[j].u, one[i].v - two[j].v);
+          if (gap < bestGap) {
+            bestGap = gap;
+            best = j;
+          }
+        }
+        if (best >= 0) contacts.push([a, i, b, best]);
+      }
+    }
+  }
+  return contacts;
+}
+
+// Bring crossings to a common height without kinking the streets that meet
+// there: the correction is applied in full at the crossing and tapered away
+// over a good stretch of street either side, so it changes the gradient by a
+// little rather than putting a step in it.
+const SPREAD = 12; // samples the correction is eased out over
+
+function reconcile(profiles, heights) {
+  const contacts = contactsBetween(profiles);
+
+  for (let pass = 0; pass < RECONCILE_PASSES; pass++) {
+    const shift = heights.map((run) => new Array(run.length).fill(0));
+
+    for (const [a, i, b, j] of contacts) {
+      const meet = (heights[a][i] + heights[b][j]) / 2;
+      for (const [street, at, delta] of [[a, i, meet - heights[a][i]], [b, j, meet - heights[b][j]]]) {
+        for (let n = -SPREAD; n <= SPREAD; n++) {
+          const index = at + n;
+          if (index < 0 || index >= shift[street].length) continue;
+          const taper = delta * (1 - Math.abs(n) / (SPREAD + 1));
+          // Where two crossings pull the same stretch, the stronger one wins
+          // rather than the two adding up.
+          if (Math.abs(taper) > Math.abs(shift[street][index])) shift[street][index] = taper;
+        }
+      }
+    }
+
+    for (let s = 0; s < heights.length; s++) {
+      for (let i = 0; i < heights[s].length; i++) heights[s][i] += shift[s][i];
+    }
+  }
+  return heights;
+}
+
+let profileCache = null;
+
+// Every street's profile: where it runs, how high it sits, and what carries it
+// there. Worked out from the bare land, once, before the land is carved.
+export function streetProfiles() {
+  if (profileCache) return profileCache;
+
+  const roads = streets();
+  const spacings = roads.map((street) => (street.points.length > 1
+    ? Math.hypot(street.points[1].u - street.points[0].u, street.points[1].v - street.points[0].v)
+    : ROAD_STEP));
+
+  const profiles = roads.map((street) => ({
+    street,
+    ground: street.points.map((point) => {
+      const height = elevation(directionFromTangent(point.u, point.v, _probe));
+      // Over water the profile is worked out as if the bank came up to meet
+      // it, so the road crosses on the level and then finds itself on a bridge.
+      return Math.max(height, SEA_LEVEL + 3);
+    }),
+    samples: street.points,
+  }));
+
+  // Smoothed, held to a gradient, lifted clear of the water — which is what
+  // puts a deck over the river rather than a ford through it — and only then
+  // reconciled, so the crossings agree in the profile that actually gets built.
+  const levels = reconcile(profiles, profiles.map((profile, s) => graded(
+    smoothed(profile.ground).map((h) => Math.max(h, SEA_LEVEL + 4.5)),
+    spacings[s]
+  // Agreeing at the crossings can put a kink back in, so hold the gradient one
+  // last time. It moves a crossing by a few centimetres at most, which the
+  // surfacing covers.
+  ))).map((heights, s) => graded(heights, spacings[s]));
+
+  profileCache = roads.map((street, s) => {
+    const heights = levels[s];
+
+    const kinds = street.points.map((point, i) => {
+      const land = elevation(directionFromTangent(point.u, point.v, _probe));
+      if (heights[i] - land > BRIDGE_CLEAR) return 'bridge';
+      if (land - heights[i] > TUNNEL_COVER) return 'tunnel';
+      return 'road';
+    });
+    settle(kinds);
+
+    return {
+      id: street.id,
+      kind: street.kind,
+      width: street.width,
+      half: street.width / 2 + SIDEWALK_WIDTH,
+      shoulder: street.width,
+      samples: street.points.map((point, i) => ({
+        u: point.u,
+        v: point.v,
+        height: heights[i],
+        land: elevation(directionFromTangent(point.u, point.v, _probe)),
+        carries: kinds[i],
+        onGround: kinds[i] === 'road',
+      })),
+    };
+  });
+  return profileCache;
+}
+
+let settled = false;
+
+export function settleStructures() {
+  if (settled) return profileCache ?? [];
+  settled = true;
+  for (const profile of profileCache ?? []) {
+    const kinds = profile.samples.map((sample) => {
+      const land = elevation(directionFromTangent(sample.u, sample.v, _probe));
+      sample.land = land;
+      if (sample.carries === 'tunnel' && land - sample.height < TUNNEL_COVER * 0.6) return 'road';
+      if (sample.carries === 'bridge' && sample.height - land < BRIDGE_CLEAR * 0.6) return 'road';
+      return sample.carries;
+    });
+    settle(kinds);
+    profile.samples.forEach((sample, i) => {
+      sample.carries = kinds[i];
+      sample.onGround = kinds[i] === 'road';
+    });
+  }
+  return profileCache ?? [];
+}
+
+// The height the road sits at, at a point along it.
+export function streetHeightAt(profile, index) {
+  return profile.samples[Math.min(profile.samples.length - 1, Math.max(0, index))].height;
+}
+
+// ---------------------------------------------------------------------------
 // Where the streets are, for anything that has to keep off them or face them.
 
 // Closest point on a segment, as the fraction along it.
@@ -419,6 +646,8 @@ export function plotIn(rng, block, footprint) {
     centre.b + (rng() * 2 - 1) * half
   );
   if (isInLake(plot.u, plot.v, footprint + 2)) return null;
+  // Nobody builds in the river or on the side of a cliff.
+  if (!isBuildable(plot.u, plot.v)) return null;
   // An avenue cuts across blocks, so a plot it crosses is not buildable.
   if (isOnAvenue(plot.u, plot.v, footprint + 1)) return null;
   return plot;

@@ -35,7 +35,7 @@ describe('fixed layout', () => {
 
     expect(count('building')).toBeGreaterThan(10);
     expect(count('tree')).toBeGreaterThan(10);
-    expect(count('mountain')).toBeGreaterThan(4);
+    expect(count('rock')).toBeGreaterThan(20);
     expect(count('safehouse')).toBe(1);
   });
 });

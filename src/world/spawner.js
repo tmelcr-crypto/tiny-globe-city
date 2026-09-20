@@ -1,17 +1,17 @@
 import * as THREE from 'three';
-import { GLOBE_RADIUS } from './globe.js';
+import { GLOBE_RADIUS } from './planet.js';
+import { elevation, slope, SEA_LEVEL } from './terrain.js';
 import { createCar, CAR_RADIUS } from '../entities/car.js';
 import { createNpc, NPC_RADIUS } from '../entities/npc.js';
 import { createTree, TREE_KINDS } from '../entities/tree.js';
 import { createBuilding } from '../entities/building.js';
-import { createMountain } from '../entities/mountain.js';
 import { createProp } from '../entities/prop.js';
 import { createCityGround } from './city-ground.js';
 import { createRng, weighted } from '../core/rng.js';
 import {
-  BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, MOUNTAIN_RING, LAKE_RADIUS, SCENERY, SEED,
+  BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, ROCK_RING, LAKE_RADIUS, SCENERY, SEED,
   QUARTER_SPAN,
-  cityBlocks, plotIn, kerbSpot, parkBlock, lakeCentre, isOnAvenue,
+  cityBlocks, plotIn, kerbSpot, parkBlock, lakeCentre, isOnAvenue, isBuildable, isOnPavement,
   directionFromTangent, tangentFromDirection, tangentFacing, nearestRoad, isInLake,
 } from './city-plan.js';
 import { markerPoint, markerDirection, markerAt, markerUnder, blockRef, layoutFrom, spotIn } from './markers.js';
@@ -43,7 +43,7 @@ function markerSeed(code) {
 // Stands a model on the globe at a direction, turned to look whichever way a
 // tangent says. Everything placed goes through here, so nothing floats.
 function placeOn(mesh, dir, facing) {
-  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
+  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS + elevation(dir));
   if (!facing) {
     mesh.quaternion.setFromUnitVectors(UP, dir);
     return;
@@ -57,7 +57,7 @@ function placeOn(mesh, dir, facing) {
 // The same from a point on the flat map, which is how the town is laid out.
 function placeAt(mesh, u, v, facing) {
   const dir = directionFromTangent(u, v);
-  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
+  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS + elevation(dir));
   if (!facing) {
     mesh.quaternion.setFromUnitVectors(UP, dir);
     return;
@@ -321,6 +321,7 @@ function spawnCars(worldPivot, placed, interactables, rng) {
   for (let i = 0; i < SCENERY.cars; i++) {
     const { u, v, facing } = kerbSpot(rng, ROAD_WIDTH / 2 - 1.3);
     if (overlaps(placed, u, v, CAR_RADIUS) || isInLake(u, v, CAR_RADIUS)) continue;
+    if (!isBuildable(u, v)) continue;
 
     const def = vehicles[i % vehicles.length];
     const car = createCar(def);
@@ -337,6 +338,7 @@ function spawnNpcs(worldPivot, placed, interactables, rng) {
     for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
       const { u, v } = kerbSpot(rng, ROAD_WIDTH / 2 + SIDEWALK_WIDTH / 2);
       if (overlaps(placed, u, v, NPC_RADIUS) || isInLake(u, v, NPC_RADIUS)) continue;
+      if (!isBuildable(u, v)) continue;
 
       const npc = createNpc(def);
       placeAt(npc, u, v);
@@ -353,6 +355,7 @@ function spawnTree(worldPivot, placed, u, v, rng) {
   const tree = createTree(null, rng);
   const radius = tree.userData.footprint;
   if (overlaps(placed, u, v, radius) || isInLake(u, v, radius + 1.5)) return false;
+  if (!isBuildable(u, v)) return false;
   // Trees go where the plan leaves room, and an avenue crossing the park is
   // still a street.
   if (isOnAvenue(u, v, radius)) return false;
@@ -383,24 +386,35 @@ function spawnTrees(worldPivot, placed, rng) {
   }
 }
 
-// A ring of peaks just outside the city, giving the little planet a horizon.
-function spawnMountains(worldPivot, placed, rng) {
-  const span = MOUNTAIN_RING.max - MOUNTAIN_RING.min;
-  for (let i = 0; i < SCENERY.mountains; i++) {
-    const mountain = createMountain(rng);
-    const radius = mountain.userData.footprint;
-
+// Loose rock, where the land is steep or high enough to break through the
+// turf. The mountains are the land itself now, so nothing is standing cones on
+// a sphere any more: this is the detail on top of them.
+function spawnRocks(worldPivot, placed, rng) {
+  const span = ROCK_RING.max - ROCK_RING.min;
+  for (let i = 0; i < SCENERY.rocks; i++) {
     for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
-      const angle = ((i + rng() * 0.8) / SCENERY.mountains) * Math.PI * 2;
-      const distance = MOUNTAIN_RING.min + rng() * span;
+      const angle = rng() * Math.PI * 2;
+      const distance = ROCK_RING.min + rng() * span;
       const u = Math.cos(angle) * distance;
       const v = Math.sin(angle) * distance;
+      const dir = directionFromTangent(u, v, _probe).clone();
+
+      const height = elevation(dir);
+      const steep = slope(dir);
+      if (height < SEA_LEVEL + 1) continue;          // not in the sea
+      if (steep < 0.22 && height < 16) continue;     // only where the land breaks up
+      if (isOnPavement(u, v)) continue;
+
+      const big = steep > 0.45 || height > 24;
+      const def = propDefs.find((d) => d.id === (big ? 'crag' : 'rock'));
+      const rock = createProp(def, rng);
+      const radius = rock.userData.footprint;
       if (overlaps(placed, u, v, radius)) continue;
 
-      placeAt(mountain, u, v);
-      mountain.userData.type = 'mountain';
-      mountain.userData.id = `mountain_${i}`;
-      worldPivot.add(mountain);
+      placeAt(rock, u, v);
+      rock.userData.type = 'rock';
+      rock.userData.id = `${def.id}_${i}`;
+      worldPivot.add(rock);
       remember(placed, u, v, radius);
       break;
     }
@@ -447,7 +461,7 @@ export function spawnAll(worldPivot) {
   spawnCars(worldPivot, placed, interactables, rng);
   spawnNpcs(worldPivot, placed, interactables, rng);
   spawnTrees(worldPivot, placed, rng);
-  spawnMountains(worldPivot, placed, rng);
+  spawnRocks(worldPivot, placed, rng);
 
   return interactables;
 }

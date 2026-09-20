@@ -20,4 +20,4 @@ Movement = rotating `worldPivot` under the player (see `src/core/camera.js`, `sr
 - Performance: target 60 fps on mid-range Android. Use instancing, low-poly, no per-frame allocations.
 
 ## Before structural changes
-Read `docs/ARCHITECTURE.md`. Keep `docs/ROADMAP.md` up to date after each milestone.
+Read `docs/ARCHITECTURE.md`, and `docs/TERRAIN.md` for anything touching the ground. Keep `docs/ROADMAP.md` up to date after each milestone.
