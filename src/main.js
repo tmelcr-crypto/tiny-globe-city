@@ -3,7 +3,9 @@ import { createLoop } from './core/loop.js';
 import { createInput } from './core/input.js';
 import { createCamera } from './core/camera.js';
 import { createGlobe, GLOBE_RADIUS } from './world/globe.js';
+import { spawnAll } from './world/spawner.js';
 import { createPlayer } from './entities/player.js';
+import { createPickupSystem } from './systems/pickups.js';
 import { createHud } from './ui/hud.js';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -18,7 +20,11 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.2));
 const camera = createCamera(GLOBE_RADIUS);
 const worldPivot = createGlobe();      // everything in the world is a child of this
 scene.add(worldPivot);
-scene.add(createPlayer(GLOBE_RADIUS)); // player is NOT a child of worldPivot
+const player = createPlayer(GLOBE_RADIUS); // player is NOT a child of worldPivot
+scene.add(player);
+
+const pickups = spawnAll(worldPivot);
+const pickupSystem = createPickupSystem(player.position, pickups);
 
 const input = createInput();
 const hud = createHud();
@@ -36,6 +42,7 @@ createLoop((dt) => {
   if (input.down)  worldPivot.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -SPEED * dt);
   if (input.left)  worldPivot.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -SPEED * dt);
   if (input.right) worldPivot.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0),  SPEED * dt);
+  pickupSystem.update();
   hud.update();
   renderer.render(scene, camera);
 });

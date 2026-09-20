@@ -1,3 +1,3 @@
 [
-  { "id": "weapon_pistol", "name": "Pistol", "damage": 10, "cooldown": 0.4 }
+  { "id": "weapon_pistol", "name": "Pistol", "damage": 10, "cooldown": 0.4, "pickupAmount": 50 }
 ]
