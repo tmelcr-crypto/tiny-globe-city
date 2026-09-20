@@ -5,6 +5,7 @@ import { createCamera } from './core/camera.js';
 import { createGlobe, GLOBE_RADIUS, ANGULAR_SPEED } from './world/globe.js';
 import { spawnAll } from './world/spawner.js';
 import { createPlayer, turnPlayerToward } from './entities/player.js';
+import { createPickupSystem } from './systems/pickups.js';
 import { createHud } from './ui/hud.js';
 import { createTouchControls } from './ui/touch-controls.js';
 import { moveWithCollision, collectColliders } from './systems/collision.js';
@@ -21,10 +22,11 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.2));
 const camera = createCamera(GLOBE_RADIUS);
 const worldPivot = createGlobe();      // everything in the world is a child of this
 scene.add(worldPivot);
-const world = spawnAll(worldPivot); // NPCs etc.; move on their own, independent of the player
+const world = spawnAll(worldPivot); // NPCs, pickups; move/track independent of the player
 const player = createPlayer(GLOBE_RADIUS); // player is NOT a child of worldPivot
 scene.add(player);
 const colliders = collectColliders(worldPivot);
+const pickupSystem = createPickupSystem(player.position, world.pickups);
 
 const input = createInput();
 createTouchControls(input);
@@ -43,6 +45,7 @@ createLoop((dt) => {
   const moved = moveWithCollision(worldPivot, player, input, colliders, dt, ANGULAR_SPEED);
   if (moved) turnPlayerToward(player, Math.atan2(-x, y), dt);
   world.update(dt);
+  pickupSystem.update();
   hud.update();
   renderer.render(scene, camera);
 });
