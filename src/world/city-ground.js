@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import {
-  ROAD_WIDTH, SIDEWALK_WIDTH, CELL, BLOCK, LAKE_RADIUS, ROAD_OFFSET,
+  ROAD_WIDTH, SIDEWALK_WIDTH, BLOCK, LAKE_RADIUS,
   ROAD_LIFT, SIDEWALK_LIFT, GROUND_LIFT,
-  roadLines, surfacePoint, blockCentre, lakeCentre, PARK_BLOCK,
+  roadLines, surfacePoint, snapToRoad, parkBlock, lakeCentre,
 } from './city-plan.js';
 
 // Flat quads laid on a sphere sag in the middle; if that sag exceeds the height
@@ -105,10 +105,9 @@ export function createCityGround() {
   const roads = [];
   const pavements = [];
   const junctionHalf = ROAD_WIDTH / 2 + SIDEWALK_WIDTH;
-  const atJunction = (value) => {
-    const nearest = Math.round((value - ROAD_OFFSET) / CELL) * CELL + ROAD_OFFSET;
-    return Math.abs(value - nearest) < junctionHalf;
-  };
+  // A sidewalk running along one axis breaks where it meets a road on the other.
+  const atJunction = (axis) => (value) =>
+    Math.abs(value - snapToRoad(value, axis === 'u' ? 'v' : 'u')) < junctionHalf;
 
   for (const line of roadLines()) {
     addStrip(roads, line.axis, line.at, line.from, line.to, ROAD_WIDTH / 2, ROAD_LIFT);
@@ -116,20 +115,24 @@ export function createCityGround() {
     for (const side of [-1, 1]) {
       addStrip(
         pavements, line.axis, line.at + side * offset, line.from, line.to,
-        SIDEWALK_WIDTH / 2, SIDEWALK_LIFT, atJunction
+        SIDEWALK_WIDTH / 2, SIDEWALK_LIFT, atJunction(line.axis)
       );
     }
   }
 
-  const park = [];
-  addRect(park, blockCentre(PARK_BLOCK), BLOCK / 2, BLOCK / 2, GROUND_LIFT);
-
-  const lake = [];
-  addDisc(lake, lakeCentre(), LAKE_RADIUS, GROUND_LIFT + 0.03);
-
   const group = new THREE.Group();
-  group.add(meshFrom(park, LAWN));
-  group.add(meshFrom(lake, WATER));
+
+  const park = parkBlock();
+  if (park) {
+    const lawn = [];
+    addRect(lawn, park, BLOCK / 2, BLOCK / 2, GROUND_LIFT);
+    group.add(meshFrom(lawn, LAWN));
+
+    const water = [];
+    addDisc(water, lakeCentre(), LAKE_RADIUS, GROUND_LIFT + 0.03);
+    group.add(meshFrom(water, WATER));
+  }
+
   group.add(meshFrom(roads, ASPHALT));
   group.add(meshFrom(pavements, PAVING));
   group.name = 'city-ground';

@@ -2,7 +2,7 @@
   {
     "id": "house",
     "name": "House",
-    "districts": { "suburb": 10, "downtown": 1 },
+    "zones": { "houses": 10, "apartments": 1, "church": 2 },
     "width": [7, 9],
     "depth": [6.5, 8],
     "wallHeight": [5.5, 6.5],
@@ -14,7 +14,7 @@
   {
     "id": "church",
     "name": "Church",
-    "districts": { "suburb": 1.2, "downtown": 0.8 },
+    "zones": { "church": 10 },
     "width": [11, 13],
     "depth": [18, 22],
     "wallHeight": [8.5, 10],
@@ -27,7 +27,7 @@
   {
     "id": "apartment",
     "name": "Apartment Block",
-    "districts": { "suburb": 2, "downtown": 5 },
+    "zones": { "apartments": 10, "houses": 1, "towers": 2 },
     "width": [15, 19],
     "depth": [13, 16],
     "wallHeight": [15, 18],
@@ -39,7 +39,7 @@
   {
     "id": "skyscraper",
     "name": "Skyscraper",
-    "districts": { "suburb": 0, "downtown": 8 },
+    "zones": { "towers": 10, "apartments": 2 },
     "width": [12, 15],
     "depth": [12, 15],
     "wallHeight": [28, 38],
@@ -52,7 +52,7 @@
   {
     "id": "safehouse",
     "name": "Safehouse",
-    "districts": { "suburb": 0, "downtown": 0 },
+    "zones": {},
     "width": [8, 9],
     "depth": [7, 8],
     "wallHeight": [5.5, 6.5],

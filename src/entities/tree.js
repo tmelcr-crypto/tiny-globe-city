@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { range, pick } from '../core/rng.js';
 
 // Four kinds of tree, 2 m to 5 m tall. Every one is built with its origin at the
 // base of the trunk, so placing it on the surface stands it on the ground, and
@@ -77,14 +78,14 @@ function bush(group, height) {
 
 const BUILDERS = { pine, oak, birch, bush };
 
-export function createTree(kind = TREE_KINDS[Math.floor(Math.random() * TREE_KINDS.length)]) {
-  const [min, max] = RANGES[kind];
-  const height = min + Math.random() * (max - min);
+export function createTree(kind = null, rng = Math.random) {
+  const chosen = kind ?? pick(rng, TREE_KINDS);
+  const height = range(rng, RANGES[chosen]);
 
   const group = new THREE.Group();
-  const spread = BUILDERS[kind](group, height);
-  group.name = kind;
-  group.userData.kind = kind;
+  const spread = BUILDERS[chosen](group, height);
+  group.name = chosen;
+  group.userData.kind = chosen;
   group.userData.height = height;
   group.userData.footprint = spread;
   return group;

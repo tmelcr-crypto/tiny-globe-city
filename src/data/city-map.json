@@ -1,0 +1,36 @@
+{
+  "seed": 20250920,
+
+  "rows": [
+    ". h h .",
+    "p h a h",
+    "h @ a h",
+    "c t t a"
+  ],
+
+  "legend": {
+    ".": { "zone": "empty",      "buildings": 0 },
+    "h": { "zone": "houses",     "buildings": 4 },
+    "a": { "zone": "apartments", "buildings": 3 },
+    "t": { "zone": "towers",     "buildings": 3 },
+    "c": { "zone": "church",     "buildings": 1 },
+    "p": { "zone": "park",       "buildings": 0, "lake": true },
+    "@": { "zone": "houses",     "buildings": 3, "spawn": true }
+  },
+
+  "street": {
+    "block": 44,
+    "road": 9,
+    "sidewalk": 2.5,
+    "verge": 2
+  },
+
+  "scenery": {
+    "parkTrees": 26,
+    "gardenTrees": 34,
+    "cars": 10,
+    "mountains": 10,
+    "lakeRadius": 15,
+    "mountainRing": [150, 205]
+  }
+}

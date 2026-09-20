@@ -84,18 +84,20 @@ describe('building assets', () => {
     }
   });
 
-  it('puts the towers downtown and the houses in the suburbs', () => {
+  it('only puts a building in a zone the map admits it to', () => {
     const pivot = createGlobe();
     spawnAll(pivot);
     const built = pivot.children.filter((c) => c.userData?.type === 'building');
 
     for (const building of built) {
-      const weight = byId(building.userData.kind).districts[building.userData.district];
-      expect(weight, `${building.userData.kind} does not belong in the ${building.userData.district}`)
+      const weight = byId(building.userData.kind).zones[building.userData.zone];
+      expect(weight, `${building.userData.kind} does not belong in a "${building.userData.zone}" block`)
         .toBeGreaterThan(0);
     }
-    // Skyscrapers are downtown-only, so none may appear in a suburb block.
-    const strays = built.filter((b) => b.userData.kind === 'skyscraper' && b.userData.district !== 'downtown');
+    // Skyscrapers only belong in tower and apartment blocks.
+    const strays = built.filter(
+      (b) => b.userData.kind === 'skyscraper' && !['towers', 'apartments'].includes(b.userData.zone)
+    );
     expect(strays).toHaveLength(0);
   });
 

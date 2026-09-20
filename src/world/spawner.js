@@ -6,20 +6,16 @@ import { createTree } from '../entities/tree.js';
 import { createBuilding } from '../entities/building.js';
 import { createMountain } from '../entities/mountain.js';
 import { createCityGround } from './city-ground.js';
+import { createRng, weighted } from '../core/rng.js';
 import {
-  BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, CELL, CITY_EXTENT, MOUNTAIN_RING, LAKE_RADIUS, ROAD_OFFSET,
-  cityBlocks, randomPlot, roadLines, blockCentre, roadAt, PARK_BLOCK, lakeCentre,
+  BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, CELL, CITY_EXTENT, MOUNTAIN_RING, LAKE_RADIUS, SCENERY, SEED,
+  cityBlocks, plotIn, roadLines, parkBlock, lakeCentre,
   directionFromTangent, tangentFacing, nearestRoad, isInLake,
 } from './city-plan.js';
 import vehicles from '../data/vehicles.json';
 import npcDefs from '../data/npcs.json';
 import buildingDefs from '../data/buildings.json';
 
-const BUILDINGS_PER_BLOCK = { downtown: 3, suburb: 4, park: 0 };
-const PARK_TREES = 26;
-const GARDEN_TREES = 34;
-const CAR_COUNT = 10;
-const MOUNTAIN_COUNT = 10;
 const NPC_HEALTH = 30;
 const PLACEMENT_ATTEMPTS = 24;
 
@@ -30,17 +26,6 @@ const _basis = new THREE.Matrix4();
 const _probe = new THREE.Vector3();
 
 const safehouseDef = buildingDefs.find((d) => d.id === 'safehouse');
-
-function pickWeighted(entries) {
-  const total = entries.reduce((sum, [, weight]) => sum + weight, 0);
-  if (total <= 0) return null;
-  let roll = Math.random() * total;
-  for (const [value, weight] of entries) {
-    roll -= weight;
-    if (roll <= 0) return value;
-  }
-  return entries[entries.length - 1][0];
-}
 
 // Stands a model on the globe. Given a facing direction it is also turned to
 // look that way, so buildings front the street instead of sitting at random angles.
@@ -71,27 +56,31 @@ function remember(placed, u, v, radius) {
   placed.push({ dir: directionFromTangent(u, v).clone(), radius });
 }
 
-function spawnBuildings(worldPivot, placed) {
-  for (const block of cityBlocks()) {
-    const quota = BUILDINGS_PER_BLOCK[block.district];
-    const choices = buildingDefs
-      .map((def) => [def, def.districts[block.district] ?? 0])
-      .filter(([, weight]) => weight > 0);
-    if (!quota || choices.length === 0) continue;
+// Which building kinds a zone admits, and how common each is there.
+function choicesFor(zone) {
+  return buildingDefs
+    .map((def) => [def, def.zones?.[zone] ?? 0])
+    .filter(([, weight]) => weight > 0);
+}
 
-    for (let n = 0; n < quota; n++) {
-      const def = pickWeighted(choices);
-      const building = createBuilding(def);
+function spawnBuildings(worldPivot, placed, rng) {
+  for (const block of cityBlocks()) {
+    const choices = choicesFor(block.zone);
+    if (!block.buildings || choices.length === 0) continue;
+
+    for (let n = 0; n < block.buildings; n++) {
+      const def = weighted(rng, choices);
+      const building = createBuilding(def, rng);
       const radius = building.userData.footprint;
 
       for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
-        const plot = randomPlot(block, radius);
+        const plot = plotIn(rng, block, radius);
         if (!plot || overlaps(placed, plot.u, plot.v, radius)) continue;
 
         placeAt(building, plot.u, plot.v, nearestRoad(plot.u, plot.v).facing);
         building.userData.type = 'building';
         building.userData.id = `${def.id}_${block.i}_${block.j}_${n}`;
-        building.userData.district = block.district;
+        building.userData.zone = block.zone;
         worldPivot.add(building);
         remember(placed, plot.u, plot.v, radius);
         break;
@@ -101,12 +90,12 @@ function spawnBuildings(worldPivot, placed) {
 }
 
 // Parked along the kerb, nose pointing down the street.
-function spawnCars(worldPivot, placed, interactables) {
+function spawnCars(worldPivot, placed, interactables, rng) {
   const lines = roadLines();
-  for (let i = 0; i < CAR_COUNT; i++) {
-    const line = lines[Math.floor(Math.random() * lines.length)];
-    const along = (Math.random() * 2 - 1) * (CITY_EXTENT - CELL / 2);
-    const side = Math.random() < 0.5 ? -1 : 1;
+  for (let i = 0; i < SCENERY.cars; i++) {
+    const line = lines[Math.floor(rng() * lines.length)];
+    const along = (rng() * 2 - 1) * (CITY_EXTENT - CELL / 2);
+    const side = rng() < 0.5 ? -1 : 1;
     const offset = side * (ROAD_WIDTH / 2 - 1.3);
     const u = line.axis === 'u' ? along : line.at + offset;
     const v = line.axis === 'u' ? line.at + offset : along;
@@ -123,13 +112,13 @@ function spawnCars(worldPivot, placed, interactables) {
   }
 }
 
-function spawnNpcs(worldPivot, placed, interactables) {
+function spawnNpcs(worldPivot, placed, interactables, rng) {
   const lines = roadLines();
   for (const def of npcDefs) {
     for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
-      const line = lines[Math.floor(Math.random() * lines.length)];
-      const along = (Math.random() * 2 - 1) * (CITY_EXTENT - CELL / 2);
-      const offset = (Math.random() < 0.5 ? -1 : 1) * (ROAD_WIDTH / 2 + SIDEWALK_WIDTH / 2);
+      const line = lines[Math.floor(rng() * lines.length)];
+      const along = (rng() * 2 - 1) * (CITY_EXTENT - CELL / 2);
+      const offset = (rng() < 0.5 ? -1 : 1) * (ROAD_WIDTH / 2 + SIDEWALK_WIDTH / 2);
       const u = line.axis === 'u' ? along : line.at + offset;
       const v = line.axis === 'u' ? line.at + offset : along;
       if (overlaps(placed, u, v, NPC_RADIUS) || isInLake(u, v, NPC_RADIUS)) continue;
@@ -145,46 +134,47 @@ function spawnNpcs(worldPivot, placed, interactables) {
   }
 }
 
-function spawnTree(worldPivot, placed, u, v) {
-  const tree = createTree();
+function spawnTree(worldPivot, placed, u, v, rng) {
+  const tree = createTree(null, rng);
   const radius = tree.userData.footprint;
   if (overlaps(placed, u, v, radius) || isInLake(u, v, radius + 1.5)) return false;
   placeAt(tree, u, v);
   tree.userData.type = 'tree';
-  tree.userData.footprint = radius;
   worldPivot.add(tree);
   remember(placed, u, v, radius);
   return true;
 }
 
-function spawnTrees(worldPivot, placed) {
+function spawnTrees(worldPivot, placed, rng) {
   // The park: dense planting around the lake.
-  const park = blockCentre(PARK_BLOCK);
-  for (let i = 0; i < PARK_TREES; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = LAKE_RADIUS + 2 + Math.random() * (BLOCK / 2 - LAKE_RADIUS - 3);
-    spawnTree(worldPivot, placed, park.u + Math.cos(angle) * distance, park.v + Math.sin(angle) * distance);
+  const park = parkBlock();
+  if (park) {
+    for (let i = 0; i < SCENERY.parkTrees; i++) {
+      const angle = rng() * Math.PI * 2;
+      const distance = LAKE_RADIUS + 2 + rng() * (BLOCK / 2 - LAKE_RADIUS - 3);
+      spawnTree(worldPivot, placed, park.u + Math.cos(angle) * distance, park.v + Math.sin(angle) * distance, rng);
+    }
   }
 
   // Gardens: scattered through the blocks, wherever a building isn't.
-  const blocks = cityBlocks().filter((b) => b.district !== 'park');
-  for (let i = 0; i < GARDEN_TREES; i++) {
-    const block = blocks[Math.floor(Math.random() * blocks.length)];
-    const plot = randomPlot(block, 2);
-    if (plot) spawnTree(worldPivot, placed, plot.u, plot.v);
+  const blocks = cityBlocks().filter((block) => !block.lake);
+  for (let i = 0; i < SCENERY.gardenTrees; i++) {
+    const block = blocks[Math.floor(rng() * blocks.length)];
+    const plot = plotIn(rng, block, 2);
+    if (plot) spawnTree(worldPivot, placed, plot.u, plot.v, rng);
   }
 }
 
 // A ring of peaks just outside the city, giving the little planet a horizon.
-function spawnMountains(worldPivot, placed) {
+function spawnMountains(worldPivot, placed, rng) {
   const span = MOUNTAIN_RING.max - MOUNTAIN_RING.min;
-  for (let i = 0; i < MOUNTAIN_COUNT; i++) {
-    const mountain = createMountain();
+  for (let i = 0; i < SCENERY.mountains; i++) {
+    const mountain = createMountain(rng);
     const radius = mountain.userData.footprint;
 
     for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
-      const angle = ((i + Math.random() * 0.8) / MOUNTAIN_COUNT) * Math.PI * 2;
-      const distance = MOUNTAIN_RING.min + Math.random() * span;
+      const angle = ((i + rng() * 0.8) / SCENERY.mountains) * Math.PI * 2;
+      const distance = MOUNTAIN_RING.min + rng() * span;
       const u = Math.cos(angle) * distance;
       const v = Math.sin(angle) * distance;
       if (overlaps(placed, u, v, radius)) continue;
@@ -199,25 +189,29 @@ function spawnMountains(worldPivot, placed) {
   }
 }
 
-// Lays out the city — roads, sidewalks, park and lake, then everything standing
-// on them — as children of worldPivot. Returns the objects the player can
-// interact with (the safehouse, cars, and quest-giving NPCs).
+// Builds the town described by data/city-map.json as children of worldPivot.
+// Everything is drawn from a seeded generator, so the same map always produces
+// exactly the same town. Returns the objects the player can interact with (the
+// safehouse, cars, and quest-giving NPCs).
 export function spawnAll(worldPivot) {
+  const rng = createRng(SEED);
   const interactables = [];
   const placed = [];
 
   worldPivot.add(createCityGround());
 
   // The lake is water, not ground: an invisible collider keeps the player out of it.
-  const lake = new THREE.Object3D();
   const shore = lakeCentre();
-  placeAt(lake, shore.u, shore.v);
-  lake.userData = { type: 'lake', id: 'lake', footprint: LAKE_RADIUS };
-  worldPivot.add(lake);
-  remember(placed, shore.u, shore.v, LAKE_RADIUS);
+  if (shore) {
+    const lake = new THREE.Object3D();
+    placeAt(lake, shore.u, shore.v);
+    lake.userData = { type: 'lake', id: 'lake', footprint: LAKE_RADIUS };
+    worldPivot.add(lake);
+    remember(placed, shore.u, shore.v, LAKE_RADIUS);
+  }
 
-  // The safehouse fronts the street the player spawns beside, straight ahead of them.
-  const safehouse = createBuilding(safehouseDef);
+  // The safehouse stands in the spawn block, straight ahead of the player.
+  const safehouse = createBuilding(safehouseDef, rng);
   const safehouseRadius = safehouse.userData.footprint;
   const safehouseU = 0;
   // Far enough ahead that the player isn't standing inside its collision radius at spawn.
@@ -229,11 +223,11 @@ export function spawnAll(worldPivot) {
   remember(placed, safehouseU, safehouseV, safehouseRadius);
   interactables.push(safehouse);
 
-  spawnBuildings(worldPivot, placed);
-  spawnCars(worldPivot, placed, interactables);
-  spawnNpcs(worldPivot, placed, interactables);
-  spawnTrees(worldPivot, placed);
-  spawnMountains(worldPivot, placed);
+  spawnBuildings(worldPivot, placed, rng);
+  spawnCars(worldPivot, placed, interactables, rng);
+  spawnNpcs(worldPivot, placed, interactables, rng);
+  spawnTrees(worldPivot, placed, rng);
+  spawnMountains(worldPivot, placed, rng);
 
   return interactables;
 }

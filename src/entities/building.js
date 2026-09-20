@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { range, pick } from '../core/rng.js';
 
 // Buildings are described by data/buildings.json: footprint and height ranges,
 // wall/roof palettes, a window grid, and optional steeple or antenna. Adding a
@@ -33,14 +34,6 @@ function shellMaterials(wall, roof) {
   return shell;
 }
 
-function rand([min, max]) {
-  return min + Math.random() * (max - min);
-}
-
-function pick(list) {
-  return list[Math.floor(Math.random() * list.length)];
-}
-
 // Evenly spaced panes across a face, skipping the ground row where the door is.
 function windowPanes(width, depth, wallHeight, spec) {
   const { rows, cols, wrap = false } = spec;
@@ -65,11 +58,11 @@ function windowPanes(width, depth, wallHeight, spec) {
 // Low-poly building. Every part is merged into one geometry with material
 // groups, so a whole skyline still costs one draw call per building, and the
 // origin sits at the doorstep so it stands on the globe's surface.
-export function createBuilding(def) {
-  const width = rand(def.width);
-  const depth = rand(def.depth);
-  const wallHeight = rand(def.wallHeight);
-  const roofHeight = rand(def.roof.height);
+export function createBuilding(def, rng = Math.random) {
+  const width = range(rng, def.width);
+  const depth = range(rng, def.depth);
+  const wallHeight = range(rng, def.wallHeight);
+  const roofHeight = range(rng, def.roof.height);
 
   const walls = [new THREE.BoxGeometry(width, wallHeight, depth).translate(0, wallHeight / 2, 0)];
   const roofs = [];
@@ -91,9 +84,9 @@ export function createBuilding(def) {
   }
 
   if (def.steeple) {
-    const towerWidth = rand(def.steeple.width);
-    const towerHeight = rand(def.steeple.height);
-    const spireHeight = rand(def.steeple.spire);
+    const towerWidth = range(rng, def.steeple.width);
+    const towerHeight = range(rng, def.steeple.height);
+    const spireHeight = range(rng, def.steeple.spire);
     const z = depth / 2 - towerWidth / 2;
     walls.push(new THREE.BoxGeometry(towerWidth, towerHeight, towerWidth).translate(0, towerHeight / 2, z));
     roofs.push(
@@ -104,7 +97,7 @@ export function createBuilding(def) {
   }
 
   if (def.antenna) {
-    const height = rand(def.antenna);
+    const height = range(rng, def.antenna);
     roofs.push(
       new THREE.CylinderGeometry(0.03, 0.05, height, 5)
         .translate(0, wallHeight + roofHeight + height / 2, 0)
@@ -119,7 +112,7 @@ export function createBuilding(def) {
 
   if (def.windows) glass.push(...windowPanes(width, depth, wallHeight, def.windows));
 
-  const shell = shellMaterials(pick(def.walls), pick(def.roof.colors));
+  const shell = shellMaterials(pick(rng, def.walls), pick(rng, def.roof.colors));
   const slots = [
     [walls, shell.wall],
     [roofs, shell.roof],
