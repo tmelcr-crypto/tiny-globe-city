@@ -1,10 +1,13 @@
 // On-screen drag control for mobile; writes into the same state as core/input.js.
+import { emit } from '../core/events.js';
+
 const DEAD_ZONE = 12; // px, ignore jitter near the touch origin
 
 export function createTouchControls(inputState) {
   let originX = 0;
   let originY = 0;
   let activeId = null;
+  let dragged = false;
 
   function reset() {
     inputState.up = false;
@@ -21,6 +24,7 @@ export function createTouchControls(inputState) {
     inputState.down = dy < -DEAD_ZONE;
     inputState.left = dx < -DEAD_ZONE;
     inputState.right = dx > DEAD_ZONE;
+    if (inputState.up || inputState.down || inputState.left || inputState.right) dragged = true;
   }
 
   addEventListener('pointerdown', (e) => {
@@ -28,6 +32,7 @@ export function createTouchControls(inputState) {
     activeId = e.pointerId;
     originX = e.clientX;
     originY = e.clientY;
+    dragged = false;
   });
 
   addEventListener('pointermove', (e) => {
@@ -38,6 +43,8 @@ export function createTouchControls(inputState) {
   function end(e) {
     if (e.pointerId !== activeId) return;
     activeId = null;
+    // A tap (no drag past the dead zone) is an interact, not a movement gesture.
+    if (!dragged) emit('interact');
     reset();
   }
   addEventListener('pointerup', end);

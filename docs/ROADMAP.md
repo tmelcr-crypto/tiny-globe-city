@@ -1,10 +1,10 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
-- [ ] Touch controls
-- [ ] Buildings on globe
+- [x] Touch controls
+- [x] Buildings on globe
 - [ ] Enter/exit building
-- [ ] One car
-- [ ] NPCs
+- [x] One car
+- [x] NPCs
 - [ ] Weapons
 - [ ] Quests
 - [ ] Activities

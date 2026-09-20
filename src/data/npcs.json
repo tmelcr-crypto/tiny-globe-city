@@ -1,0 +1,5 @@
+[
+  { "id": "npc_placeholder", "name": "Old Sailor", "role": "quest_giver", "questId": "quest_001" },
+  { "id": "npc_villager_01", "name": "Villager", "role": "wanderer" },
+  { "id": "npc_villager_02", "name": "Villager", "role": "wanderer" }
+]
