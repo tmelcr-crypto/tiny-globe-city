@@ -36,7 +36,7 @@ describe('npc wander', () => {
     spawnAll(pivot);
     const npcs = pivot.children.filter((c) => c.userData?.type === 'npc');
     const obstacles = pivot.children.filter((c) =>
-      ['building', 'safehouse', 'car', 'tree'].includes(c.userData?.type)
+      ['building', 'safehouse', 'car', 'tree', 'mountain', 'lake'].includes(c.userData?.type)
     );
     const start = npcs.map((n) => n.position.clone());
 
@@ -52,7 +52,7 @@ describe('npc wander', () => {
     spawnAll(pivot);
     const npcs = pivot.children.filter((c) => c.userData?.type === 'npc');
     const obstacles = pivot.children.filter((c) =>
-      ['building', 'safehouse', 'car', 'tree'].includes(c.userData?.type)
+      ['building', 'safehouse', 'car', 'tree', 'mountain', 'lake'].includes(c.userData?.type)
     );
 
     const wander = createNpcWander(npcs, obstacles);

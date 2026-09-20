@@ -2,8 +2,7 @@
   {
     "id": "house",
     "name": "House",
-    "weight": 30,
-    "minSpawnDistance": 8,
+    "districts": { "suburb": 10, "downtown": 1 },
     "width": [7, 9],
     "depth": [6.5, 8],
     "wallHeight": [5.5, 6.5],
@@ -15,8 +14,7 @@
   {
     "id": "church",
     "name": "Church",
-    "weight": 3,
-    "minSpawnDistance": 30,
+    "districts": { "suburb": 1.2, "downtown": 0.8 },
     "width": [11, 13],
     "depth": [18, 22],
     "wallHeight": [8.5, 10],
@@ -29,8 +27,7 @@
   {
     "id": "apartment",
     "name": "Apartment Block",
-    "weight": 10,
-    "minSpawnDistance": 30,
+    "districts": { "suburb": 2, "downtown": 5 },
     "width": [15, 19],
     "depth": [13, 16],
     "wallHeight": [15, 18],
@@ -42,8 +39,7 @@
   {
     "id": "skyscraper",
     "name": "Skyscraper",
-    "weight": 7,
-    "minSpawnDistance": 45,
+    "districts": { "suburb": 0, "downtown": 8 },
     "width": [12, 15],
     "depth": [12, 15],
     "wallHeight": [28, 38],
@@ -56,8 +52,7 @@
   {
     "id": "safehouse",
     "name": "Safehouse",
-    "weight": 0,
-    "minSpawnDistance": 8,
+    "districts": { "suburb": 0, "downtown": 0 },
     "width": [8, 9],
     "depth": [7, 8],
     "wallHeight": [5.5, 6.5],

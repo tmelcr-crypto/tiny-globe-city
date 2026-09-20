@@ -6,7 +6,9 @@
 - [x] One car
 - [x] NPCs
 - [x] Weapons
-- [x] Collision (houses/cars block movement)
+- [x] Collision (buildings/trees/cars block movement)
+- [x] Human scale (1 unit = 1 m, 1.5 m player)
+- [x] City layout (roads, sidewalks, downtown, suburb, park, lake, mountains)
 - [ ] Quests
 - [ ] Activities
 - [ ] World events

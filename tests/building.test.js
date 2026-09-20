@@ -84,17 +84,19 @@ describe('building assets', () => {
     }
   });
 
-  it('keeps the tall kinds away from the spawn point', () => {
+  it('puts the towers downtown and the houses in the suburbs', () => {
     const pivot = createGlobe();
     spawnAll(pivot);
-    const spawn = new THREE.Vector3(0, GLOBE_RADIUS, 0);
+    const built = pivot.children.filter((c) => c.userData?.type === 'building');
 
-    for (const building of pivot.children.filter((c) => c.userData?.type === 'building')) {
-      const def = byId(building.userData.kind);
-      const distance = building.position.angleTo(spawn) * GLOBE_RADIUS;
-      expect(distance, `${building.userData.kind} spawned too close`)
-        .toBeGreaterThanOrEqual(def.minSpawnDistance - 1e-6);
+    for (const building of built) {
+      const weight = byId(building.userData.kind).districts[building.userData.district];
+      expect(weight, `${building.userData.kind} does not belong in the ${building.userData.district}`)
+        .toBeGreaterThan(0);
     }
+    // Skyscrapers are downtown-only, so none may appear in a suburb block.
+    const strays = built.filter((b) => b.userData.kind === 'skyscraper' && b.userData.district !== 'downtown');
+    expect(strays).toHaveLength(0);
   });
 
   it('spawns a mix of kinds, not just houses', () => {
