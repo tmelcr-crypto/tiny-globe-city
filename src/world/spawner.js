@@ -11,15 +11,19 @@ const CAR_COUNT = 5;
 const TREE_COUNT = 60;
 const NPC_HEALTH = 30;
 const TOWN_RADIUS = degToRad(32); // colatitude cap around the spawn point, so the town is actually reachable
+// Keep the spawn point itself clear: an object landing on top of the player
+// leaves them wedged against it with the way forward blocked from frame one.
+const SPAWN_CLEARANCE = 4 / GLOBE_RADIUS; // radians of arc
 
 function degToRad(d) {
   return (d * Math.PI) / 180;
 }
 
-// Area-uniform direction within a colatitude cap around the north pole (the player's spawn point).
+// Area-uniform direction in a colatitude band around the north pole (the player's spawn point).
 function randomCapDirection(maxColatitude, phi = Math.random() * Math.PI * 2) {
   const cosMax = Math.cos(maxColatitude);
-  const y = cosMax + Math.random() * (1 - cosMax);
+  const cosMin = Math.cos(SPAWN_CLEARANCE);
+  const y = cosMax + Math.random() * (cosMin - cosMax);
   const sinTheta = Math.sqrt(1 - y * y);
   return new THREE.Vector3(sinTheta * Math.cos(phi), y, sinTheta * Math.sin(phi));
 }

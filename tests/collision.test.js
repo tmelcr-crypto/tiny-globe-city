@@ -42,6 +42,23 @@ describe('collision system', () => {
     expect(pivot.quaternion.equals(before)).toBe(false);
   });
 
+  it('still lets the player move away when they start out overlapping an obstacle', () => {
+    // Spawning inside an obstacle's radius used to block every direction,
+    // freezing the player completely.
+    const pivot = new THREE.Group();
+    const R = 50;
+    const theta = 0.02; // obstacle ~1 unit away, already inside COLLISION_RADIUS
+    const obstacle = makeObstacle(new THREE.Vector3(0, R * Math.cos(theta), -R * Math.sin(theta)));
+    pivot.add(obstacle);
+    const playerPos = new THREE.Vector3(0, R, 0);
+
+    const collision = createCollisionSystem(pivot, [obstacle]);
+    // Rotating the other way carries the obstacle further from the player.
+    const moved = collision.tryRotate(AXIS, -0.05, playerPos);
+
+    expect(moved).toBe(true);
+  });
+
   it('ignores an excluded obstacle (e.g. the car currently being driven)', () => {
     const pivot = new THREE.Group();
     const car = makeObstacle(new THREE.Vector3(0, 50, -1));

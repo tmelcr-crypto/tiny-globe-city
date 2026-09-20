@@ -86,9 +86,12 @@ addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-const WALK_SPEED = 0.5;  // world units ("meters") per second, on foot
-const ACCEL = 1.5;       // units/sec^2 speeding up
-const DECEL = 3.5;       // units/sec^2 slowing down (brakes faster than it accelerates)
+const WALK_SPEED = 1.0;  // world units ("meters") per second, on foot
+const ACCEL = 3.0;       // units/sec^2 speeding up
+const DECEL = 7.0;       // units/sec^2 slowing down (brakes faster than it accelerates)
+// Turning spins the world around the fixed player rather than covering ground,
+// so it's a rate in rad/sec — scaling it by 1/GLOBE_RADIUS made turns glacial.
+const TURN_SPEED = 1.2;
 const STEER_MAX = 0.5;   // radians the car visibly turns into a curve
 const STEER_RATE = 4;    // radians/sec toward the target steer angle
 const X_AXIS = new THREE.Vector3(1, 0, 0);
@@ -101,16 +104,17 @@ function approach(current, target, maxDelta) {
 
 let currentSpeed = 0;
 createLoop((dt) => {
-  const moving = input.up || input.down || input.left || input.right;
-  const targetSpeed = moving ? WALK_SPEED * speedMultiplier : 0;
+  const walking = input.up || input.down;
+  const targetSpeed = walking ? WALK_SPEED * speedMultiplier : 0;
   currentSpeed = approach(currentSpeed, targetSpeed, (targetSpeed > currentSpeed ? ACCEL : DECEL) * dt);
   const angularSpeed = currentSpeed / GLOBE_RADIUS;
+  const turn = TURN_SPEED * dt;
 
   // Movement = rotate the globe under the fixed player, blocked by collision.
   if (input.up)    collision.tryRotate(X_AXIS,  angularSpeed * dt, player.position);
   if (input.down)  collision.tryRotate(X_AXIS, -angularSpeed * dt, player.position);
-  if (input.left)  collision.tryRotate(Y_AXIS, -angularSpeed * dt, player.position);
-  if (input.right) collision.tryRotate(Y_AXIS,  angularSpeed * dt, player.position);
+  if (input.left)  collision.tryRotate(Y_AXIS, -turn, player.position);
+  if (input.right) collision.tryRotate(Y_AXIS,  turn, player.position);
 
   if (drivingCar) {
     const targetSteer = input.left ? STEER_MAX : input.right ? -STEER_MAX : 0;
