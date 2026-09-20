@@ -1,34 +1,37 @@
 import * as THREE from 'three';
 import { GLOBE_RADIUS } from './globe.js';
-import { createCar } from '../entities/car.js';
-import { createNpc } from '../entities/npc.js';
-import { createTree } from '../entities/tree.js';
+import { createCar, CAR_RADIUS } from '../entities/car.js';
+import { createNpc, NPC_RADIUS } from '../entities/npc.js';
+import { createTree, TREE_RADIUS } from '../entities/tree.js';
 import { createBuilding } from '../entities/building.js';
 import vehicles from '../data/vehicles.json';
 import npcDefs from '../data/npcs.json';
 import buildingDefs from '../data/buildings.json';
 
-const BUILDING_COUNT = 50;
-const CAR_COUNT = 5;
+const BUILDING_COUNT = 45;
+const CAR_COUNT = 8;
 const TREE_COUNT = 60;
 const NPC_HEALTH = 30;
-const TOWN_RADIUS = degToRad(32); // colatitude cap around the spawn point, so the town is actually reachable
+// Distances below are metres of ground, converted to the angles the globe works in.
+const TOWN_RADIUS = arc(120); // the city covers a 120 m-radius patch of the planet
 // Keep the spawn point itself clear: an object landing on top of the player
 // leaves them wedged against it with the way forward blocked from frame one.
-const SPAWN_CLEARANCE = 4 / GLOBE_RADIUS; // radians of arc
+const SPAWN_CLEARANCE = arc(12);
+const SAFEHOUSE_RANGE = arc(30); // how far ahead of spawn the safehouse can sit
 // Ground radius each kind of object occupies, used both to keep spawns from
-// overlapping each other and to size collision against the player. Houses vary
-// in size, so each one carries its own footprint instead.
-const FOOTPRINT = { car: 1.7, tree: 0.6, npc: 0.4 };
-const PLACEMENT_ATTEMPTS = 40;
+// overlapping each other and to size collision against the player. Buildings
+// vary in size, so each one carries its own footprint instead.
+const FOOTPRINT = { car: CAR_RADIUS, tree: TREE_RADIUS, npc: NPC_RADIUS };
+const PLACEMENT_ATTEMPTS = 60;
 
 const UP = new THREE.Vector3(0, 1, 0);
 
 const safehouseDef = buildingDefs.find((d) => d.id === 'safehouse');
 const spawnableBuildings = buildingDefs.filter((d) => d.weight > 0);
 
-function degToRad(d) {
-  return (d * Math.PI) / 180;
+// Metres of ground, as an angle at the globe's centre.
+function arc(metres) {
+  return metres / GLOBE_RADIUS;
 }
 
 function pickWeighted(defs) {
@@ -84,7 +87,7 @@ export function spawnAll(worldPivot) {
   const placed = [];
 
   // The safehouse goes down first, close and directly ahead of spawn so it's easy to find.
-  const safehouseBand = { max: degToRad(12), min: safehouseDef.minSpawnDistance / GLOBE_RADIUS, phi: -Math.PI / 2 };
+  const safehouseBand = { max: SAFEHOUSE_RANGE, min: arc(safehouseDef.minSpawnDistance), phi: -Math.PI / 2 };
   const safehouse = createBuilding(safehouseDef);
   const safehouseRadius = safehouse.userData.footprint;
   const safehouseDir = findFreeDirection(placed, safehouseRadius, safehouseBand) ?? randomCapDirection(safehouseBand);
@@ -101,7 +104,7 @@ export function spawnAll(worldPivot) {
     const radius = building.userData.footprint;
     // Taller kinds keep their distance, so the skyline sits out in the city
     // rather than walling in the spot the player starts on.
-    const dir = findFreeDirection(placed, radius, { min: def.minSpawnDistance / GLOBE_RADIUS });
+    const dir = findFreeDirection(placed, radius, { min: arc(def.minSpawnDistance) });
     if (!dir) continue;
 
     placeOnSurface(building, dir);
@@ -113,7 +116,7 @@ export function spawnAll(worldPivot) {
 
   for (let i = 0; i < CAR_COUNT; i++) {
     const radius = FOOTPRINT.car;
-    const dir = findFreeDirection(placed, radius, TOWN_RADIUS);
+    const dir = findFreeDirection(placed, radius);
     if (!dir) continue;
 
     const def = vehicles[i % vehicles.length];
@@ -127,7 +130,7 @@ export function spawnAll(worldPivot) {
 
   for (const def of npcDefs) {
     const radius = FOOTPRINT.npc;
-    const dir = findFreeDirection(placed, radius, TOWN_RADIUS);
+    const dir = findFreeDirection(placed, radius);
     if (!dir) continue;
 
     const npc = createNpc(def);
@@ -140,7 +143,7 @@ export function spawnAll(worldPivot) {
 
   for (let i = 0; i < TREE_COUNT; i++) {
     const radius = FOOTPRINT.tree;
-    const dir = findFreeDirection(placed, radius, TOWN_RADIUS);
+    const dir = findFreeDirection(placed, radius);
     if (!dir) continue;
 
     const tree = createTree();

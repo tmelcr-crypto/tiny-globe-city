@@ -3,7 +3,9 @@ import { on, emit } from '../core/events.js';
 import { state } from '../core/state.js';
 import { startQuest } from './quests.js';
 
-const RANGE = 5; // world units
+// Metres. Has to exceed the largest footprint collision stops you at, otherwise
+// a big building holds you further away than you can interact from.
+const RANGE = 12;
 const _worldPos = new THREE.Vector3();
 
 // Tracks the nearest interactable to the (fixed) player and reacts to 'interact' events.

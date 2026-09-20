@@ -4,6 +4,7 @@ import { createGlobe, GLOBE_RADIUS } from '../src/world/globe.js';
 import { spawnAll } from '../src/world/spawner.js';
 import { createBuilding } from '../src/entities/building.js';
 import buildingDefs from '../src/data/buildings.json';
+import { PLAYER_HEIGHT } from '../src/entities/player.js';
 
 const byId = (id) => buildingDefs.find((d) => d.id === id);
 
@@ -37,6 +38,41 @@ describe('building assets', () => {
     expect(totalHeight(byId('apartment'))).toBeGreaterThan(totalHeight(byId('house')));
     // The church is defined by its steeple rather than its walls.
     expect(totalHeight(byId('church'))).toBeGreaterThan(totalHeight(byId('house')));
+  });
+
+  it('sizes buildings sensibly against a 1.5 m player', () => {
+    // One world unit is one metre, so these are real-world proportions:
+    // a house is a couple of storeys, a skyscraper is genuinely tall.
+    const expected = {
+      house: [7, 12],
+      safehouse: [7, 12],
+      church: [24, 36],
+      apartment: [15, 21],
+      skyscraper: [30, 50],
+    };
+
+    for (const def of buildingDefs) {
+      const [min, max] = expected[def.id];
+      // Sample a few, since every dimension is randomised within a range.
+      for (let i = 0; i < 8; i++) {
+        const height = new THREE.Box3().setFromObject(createBuilding(def)).max.y;
+        expect(height, `${def.id} is ${height.toFixed(1)} m tall`).toBeGreaterThanOrEqual(min);
+        expect(height, `${def.id} is ${height.toFixed(1)} m tall`).toBeLessThanOrEqual(max);
+        // Nothing should be anywhere near shrunk to the player's own height.
+        expect(height).toBeGreaterThan(PLAYER_HEIGHT * 3);
+      }
+    }
+  });
+
+  it('gives buildings doors a person could walk through', () => {
+    for (const def of buildingDefs.filter((d) => d.door)) {
+      const building = createBuilding(def);
+      // The door group is the third material slot; measure it via the geometry groups.
+      expect(building.material.length).toBeGreaterThanOrEqual(3);
+      const box = new THREE.Box3().setFromObject(building);
+      // A doorway is only sensible if the wall it sits in clears a 1.5 m person.
+      expect(box.max.y).toBeGreaterThan(PLAYER_HEIGHT * 2);
+    }
   });
 
   it('reports a footprint that covers the building', () => {

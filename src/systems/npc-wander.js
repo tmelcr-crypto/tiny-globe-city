@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { GLOBE_RADIUS } from '../world/globe.js';
 import { NPC_RADIUS } from '../entities/npc.js';
 
-const SPEED = 0.4;         // world units per second along the ground
-const LEASH = 7;           // how far an NPC strays from where it spawned
+const SPEED = 0.9;         // metres per second along the ground, a walking pace
+const LEASH = 25;          // metres an NPC strays from where it spawned
 const RETARGET_MIN = 2;    // seconds before picking a new heading
 const RETARGET_MAX = 5;
 

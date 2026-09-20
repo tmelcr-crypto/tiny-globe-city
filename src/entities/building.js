@@ -8,6 +8,12 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 const DOOR_COLOR = '#4a3524';
 const GLASS_COLOR = '#9fc6d8';
 const ROOF_OVERHANG = 1.08;
+// Metres — one world unit is one metre, so openings are sized like real ones.
+const MAX_WINDOW_WIDTH = 1.5;
+const MAX_WINDOW_HEIGHT = 1.6;
+const MAX_DOOR_WIDTH = 1.2;
+const MAX_DOOR_HEIGHT = 2.2;
+const INSET = 0.12;
 
 const doorMaterial = new THREE.MeshStandardMaterial({ color: DOOR_COLOR, flatShading: true });
 const glassMaterial = new THREE.MeshStandardMaterial({ color: GLASS_COLOR, flatShading: true });
@@ -38,19 +44,19 @@ function pick(list) {
 // Evenly spaced panes across a face, skipping the ground row where the door is.
 function windowPanes(width, depth, wallHeight, spec) {
   const { rows, cols, wrap = false } = spec;
-  const paneW = Math.min(0.24, (width / cols) * 0.42);
-  const paneH = Math.min(0.28, (wallHeight / rows) * 0.45);
+  const paneW = Math.min(MAX_WINDOW_WIDTH, (width / cols) * 0.42);
+  const paneH = Math.min(MAX_WINDOW_HEIGHT, (wallHeight / rows) * 0.45);
   const panes = [];
 
   for (let row = 0; row < rows; row++) {
     const y = wallHeight * ((row + 1) / (rows + 1));
     for (let col = 0; col < cols; col++) {
       const across = (col + 1) / (cols + 1) - 0.5;
-      panes.push(new THREE.BoxGeometry(paneW, paneH, 0.06).translate(width * across, y, depth / 2 + 0.02));
+      panes.push(new THREE.BoxGeometry(paneW, paneH, INSET).translate(width * across, y, depth / 2));
       if (!wrap) continue;
-      panes.push(new THREE.BoxGeometry(paneW, paneH, 0.06).translate(width * across, y, -depth / 2 - 0.02));
-      panes.push(new THREE.BoxGeometry(0.06, paneH, paneW).translate(width / 2 + 0.02, y, depth * across));
-      panes.push(new THREE.BoxGeometry(0.06, paneH, paneW).translate(-width / 2 - 0.02, y, depth * across));
+      panes.push(new THREE.BoxGeometry(paneW, paneH, INSET).translate(width * across, y, -depth / 2));
+      panes.push(new THREE.BoxGeometry(INSET, paneH, paneW).translate(width / 2, y, depth * across));
+      panes.push(new THREE.BoxGeometry(INSET, paneH, paneW).translate(-width / 2, y, depth * across));
     }
   }
   return panes;
@@ -106,9 +112,9 @@ export function createBuilding(def) {
   }
 
   if (def.door) {
-    const doorWidth = Math.min(0.34, width * 0.22);
-    const doorHeight = Math.min(0.62, wallHeight * 0.4);
-    trim.push(new THREE.BoxGeometry(doorWidth, doorHeight, 0.06).translate(0, doorHeight / 2, depth / 2 + 0.02));
+    const doorWidth = Math.min(MAX_DOOR_WIDTH, width * 0.22);
+    const doorHeight = Math.min(MAX_DOOR_HEIGHT, wallHeight * 0.4);
+    trim.push(new THREE.BoxGeometry(doorWidth, doorHeight, INSET).translate(0, doorHeight / 2, depth / 2));
   }
 
   if (def.windows) glass.push(...windowPanes(width, depth, wallHeight, def.windows));

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { on, emit } from '../core/events.js';
 import weapons from '../data/weapons.json';
 
-const WEAPON_RANGE = 8; // world units
+const WEAPON_RANGE = 25; // metres
 const _worldPos = new THREE.Vector3();
 
 // Hitscan combat: firing damages the nearest living NPC within weapon range.

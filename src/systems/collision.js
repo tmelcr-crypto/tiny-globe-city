@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { GLOBE_RADIUS } from '../world/globe.js';
+import { PLAYER_RADIUS } from '../entities/player.js';
 
-const PLAYER_RADIUS = 0.5;    // the player's own footprint on the ground
-const DEFAULT_FOOTPRINT = 1;  // for obstacles that didn't declare one
+const DEFAULT_FOOTPRINT = 1;  // metres, for obstacles that didn't declare one
 // Well below a real frame's movement (~0.016 units) but above float32 noise, so
 // turning on the spot — which leaves obstacle distances unchanged — is never blocked.
 const EPSILON = 1e-4;

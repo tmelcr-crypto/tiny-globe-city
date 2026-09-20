@@ -42,7 +42,7 @@ describe('world population', () => {
     const playerPos = new THREE.Vector3(0, GLOBE_RADIUS + 0.8, 0);
     const worldPos = new THREE.Vector3();
     safehouse.getWorldPosition(worldPos);
-    expect(worldPos.distanceTo(playerPos)).toBeLessThan(12);
+    expect(worldPos.distanceTo(playerPos)).toBeLessThan(35); // within SAFEHOUSE_RANGE (30 m of arc)
   });
 });
 

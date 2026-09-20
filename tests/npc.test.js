@@ -61,7 +61,7 @@ describe('npc wander', () => {
     for (const npc of npcs) {
       expect(npc.position.length()).toBeCloseTo(GLOBE_RADIUS, 3);
       const fromHome = npc.position.angleTo(npc.userData.home) * GLOBE_RADIUS;
-      expect(fromHome).toBeLessThan(12); // leash is 7, allow overshoot before it turns back
+      expect(fromHome).toBeLessThan(40); // leash is 25 m, allow overshoot before it turns back
     }
   });
 

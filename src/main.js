@@ -73,7 +73,7 @@ on('vehicle:toggle', ({ entered, multiplier, car }) => {
     // (parking it exactly at the player's spot hid the player behind/inside it).
     scene.remove(car);
     worldPivot.add(car);
-    const dropWorldPos = player.position.clone().add(new THREE.Vector3(1.6, 0, 0));
+    const dropWorldPos = player.position.clone().add(new THREE.Vector3(3.5, 0, 0));
     const local = worldPivot.worldToLocal(dropWorldPos);
     car.position.copy(local);
     car.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), local.clone().normalize());
