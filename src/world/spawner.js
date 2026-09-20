@@ -3,6 +3,7 @@ import { GLOBE_RADIUS } from './globe.js';
 import { createCar } from '../entities/car.js';
 import { createNpc } from '../entities/npc.js';
 import { createTree } from '../entities/tree.js';
+import { createHouse } from '../entities/house.js';
 import vehicles from '../data/vehicles.json';
 import npcDefs from '../data/npcs.json';
 
@@ -15,8 +16,9 @@ const TOWN_RADIUS = degToRad(32); // colatitude cap around the spawn point, so t
 // leaves them wedged against it with the way forward blocked from frame one.
 const SPAWN_CLEARANCE = 4 / GLOBE_RADIUS; // radians of arc
 // Ground radius each kind of object occupies, used both to keep spawns from
-// overlapping each other and to size collision against the player.
-const FOOTPRINT = { house: 1.2, safehouse: 1.2, car: 1.7, tree: 0.6, npc: 0.4 };
+// overlapping each other and to size collision against the player. Houses vary
+// in size, so each one carries its own footprint instead.
+const FOOTPRINT = { car: 1.7, tree: 0.6, npc: 0.4 };
 const PLACEMENT_ATTEMPTS = 40;
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -69,24 +71,17 @@ export function spawnAll(worldPivot) {
 
   for (let i = 0; i < HOUSE_COUNT; i++) {
     const isSafehouse = i === 0;
-    const type = isSafehouse ? 'safehouse' : 'house';
-    const radius = FOOTPRINT[type];
+    const house = createHouse({ safehouse: isSafehouse });
+    const radius = house.userData.footprint;
     // Put the safehouse close and directly ahead of spawn so it's easy to find.
     const dir = isSafehouse
       ? findFreeDirection(placed, radius, degToRad(12), -Math.PI / 2) ?? randomCapDirection(degToRad(12), -Math.PI / 2)
       : findFreeDirection(placed, radius, TOWN_RADIUS);
     if (!dir) continue;
 
-    // Kept below the camera's height above the surface so a building next to
-    // the player doesn't black out the view. Previously buildings were sunk
-    // halfway into the globe, which is what made them look this tall.
-    const height = 1.2 + Math.random() * 1.8;
-    const house = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, height, 1.5),
-      new THREE.MeshStandardMaterial({ color: isSafehouse ? 0x3388ff : 0xcccccc })
-    );
-    placeOnSurface(house, dir, height / 2); // box is centred on its origin, so lift it to sit on the ground
-    house.userData = { type, id: isSafehouse ? 'safehouse' : `house_${i}`, footprint: radius };
+    placeOnSurface(house, dir); // house model's origin sits at its doorstep
+    house.userData.type = isSafehouse ? 'safehouse' : 'house';
+    house.userData.id = isSafehouse ? 'safehouse' : `house_${i}`;
     worldPivot.add(house);
     placed.push({ dir, radius });
     if (isSafehouse) interactables.push(house);
