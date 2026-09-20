@@ -1,11 +1,11 @@
 # Architecture
 - `core/` loop, input, camera, state, event bus
 - `world/` globe, city (static streets/buildings from data), spawner (dynamic NPCs/cars/pickups)
-- `entities/` player, car, npc, weapon
+- `entities/` player, car (modular parts + driving physics), npc, weapon
 - `interiors/` enterable buildings
-- `systems/` collision, quests, activities, world events
+- `systems/` collision, vehicles (enter/exit + proximity), pickups, quests, activities, world events
 - `data/` JSON content
-- `ui/` HUD, touch controls
+- `ui/` HUD, touch controls, vehicle enter/exit prompt
 
 Rule: player is fixed at the top of the globe; `worldPivot` rotates.
 

@@ -1,7 +1,9 @@
+import * as THREE from 'three';
 import { describe, it, expect } from 'vitest';
 import vehicles from '../src/data/vehicles.json';
 import carParts from '../src/data/car-parts.json';
-import { createCar, setCarPart, getCarParts } from '../src/entities/car.js';
+import { createCar, setCarPart, getCarParts, driveCar } from '../src/entities/car.js';
+import { ANGULAR_SPEED } from '../src/world/globe.js';
 
 describe('car data', () => {
   it('vehicles load', () => expect(vehicles.length).toBeGreaterThan(0));
@@ -63,5 +65,59 @@ describe('modular car assembly', () => {
     const car = createCar('car_basic');
     expect(() => setCarPart(car, 'wheel', 'wheel_nonexistent')).toThrow();
     expect(() => setCarPart(car, 'bumper', 'anything')).toThrow();
+  });
+});
+
+describe('driveCar', () => {
+  it('reads maxSpeed from the vehicle def\'s speedMultiplier over on-foot ANGULAR_SPEED', () => {
+    const car = createCar('car_basic');
+    expect(car.userData.maxSpeed).toBeCloseTo(ANGULAR_SPEED * 2.0);
+    const sport = createCar('car_sport');
+    expect(sport.userData.maxSpeed).toBeCloseTo(ANGULAR_SPEED * 2.6);
+  });
+
+  it('accelerates toward max speed while throttled, never overshooting', () => {
+    const car = createCar('car_basic');
+    const worldPivot = new THREE.Object3D();
+    const input = { x: 0, y: 1 };
+
+    let prevSpeed = 0;
+    for (let i = 0; i < 200; i++) {
+      driveCar(car, worldPivot, input, 1 / 60);
+      expect(car.userData.speed).toBeGreaterThanOrEqual(prevSpeed);
+      expect(car.userData.speed).toBeLessThanOrEqual(car.userData.maxSpeed);
+      prevSpeed = car.userData.speed;
+    }
+    expect(car.userData.speed).toBeCloseTo(car.userData.maxSpeed);
+  });
+
+  it('decelerates to a stop once throttle is released', () => {
+    const car = createCar('car_basic');
+    const worldPivot = new THREE.Object3D();
+
+    for (let i = 0; i < 200; i++) driveCar(car, worldPivot, { x: 0, y: 1 }, 1 / 60);
+    expect(car.userData.speed).toBeGreaterThan(0);
+
+    for (let i = 0; i < 200; i++) driveCar(car, worldPivot, { x: 0, y: 0 }, 1 / 60);
+    expect(car.userData.speed).toBe(0);
+  });
+
+  it('rotates worldPivot while moving, and stops rotating once fully stopped', () => {
+    const car = createCar('car_basic');
+    const worldPivot = new THREE.Object3D();
+
+    driveCar(car, worldPivot, { x: 0, y: 1 }, 1 / 60);
+    expect(worldPivot.quaternion.equals(new THREE.Quaternion())).toBe(false);
+
+    for (let i = 0; i < 200; i++) driveCar(car, worldPivot, { x: 0, y: 0 }, 1 / 60);
+    const stoppedQuaternion = worldPivot.quaternion.clone();
+    driveCar(car, worldPivot, { x: 0, y: 0 }, 1 / 60);
+    expect(worldPivot.quaternion.equals(stoppedQuaternion)).toBe(true);
+  });
+
+  it('has an entry point positioned above the chassis for proximity checks', () => {
+    const car = createCar('car_basic');
+    expect(car.userData.entryPoint).toBeDefined();
+    expect(car.userData.entryPoint.position.y).toBeGreaterThan(0);
   });
 });
