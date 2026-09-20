@@ -3,7 +3,7 @@
 - [ ] Touch controls
 - [ ] Buildings on globe
 - [ ] Enter/exit building
-- [ ] One car
+- [x] One car (modular: interchangeable wheels/spoiler/exhaust/hood)
 - [ ] NPCs
 - [ ] Weapons
 - [ ] Quests
