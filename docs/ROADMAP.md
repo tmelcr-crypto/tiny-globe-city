@@ -5,7 +5,8 @@
 - [ ] Enter/exit building
 - [x] One car
 - [x] NPCs
-- [ ] Weapons
+- [x] Weapons
+- [x] Collision (houses/cars block movement)
 - [ ] Quests
 - [ ] Activities
 - [ ] World events

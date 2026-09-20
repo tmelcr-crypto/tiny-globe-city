@@ -8,6 +8,7 @@ export function createInput() {
   addEventListener('keydown', (e) => {
     if (map[e.key]) state[map[e.key]] = true;
     if ((e.key === 'e' || e.key === 'Enter') && !e.repeat) emit('interact');
+    if (e.key === ' ') emit('shoot');
   });
   addEventListener('keyup',   (e) => { if (map[e.key]) state[map[e.key]] = false; });
   return state;

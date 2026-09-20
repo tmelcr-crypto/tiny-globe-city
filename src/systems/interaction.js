@@ -15,7 +15,7 @@ export function createInteractionSystem(interactables, playerPosition) {
     const { type, def } = nearest.userData;
     if (type === 'car') {
       state.inVehicle = !state.inVehicle;
-      emit('vehicle:toggle', { entered: state.inVehicle, multiplier: def.speedMultiplier });
+      emit('vehicle:toggle', { entered: state.inVehicle, multiplier: def.speedMultiplier, car: nearest });
     } else if (type === 'npc' && def?.role === 'quest_giver') {
       startQuest(def.questId);
     } else if (type === 'safehouse') {

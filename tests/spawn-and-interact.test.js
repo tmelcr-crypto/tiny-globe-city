@@ -47,11 +47,11 @@ describe('interaction system', () => {
     on('vehicle:toggle', (payload) => { toggle = payload; });
 
     emit('interact');
-    expect(toggle).toEqual({ entered: true, multiplier: car.userData.def.speedMultiplier });
+    expect(toggle).toEqual({ entered: true, multiplier: car.userData.def.speedMultiplier, car });
     expect(state.inVehicle).toBe(true);
 
     emit('interact');
-    expect(toggle).toEqual({ entered: false, multiplier: car.userData.def.speedMultiplier });
+    expect(toggle).toEqual({ entered: false, multiplier: car.userData.def.speedMultiplier, car });
     expect(state.inVehicle).toBe(false);
   });
 

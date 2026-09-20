@@ -7,6 +7,7 @@ import npcDefs from '../data/npcs.json';
 
 const HOUSE_COUNT = 50;
 const CAR_COUNT = 5;
+const NPC_HEALTH = 30;
 const TOWN_RADIUS = degToRad(32); // colatitude cap around the spawn point, so the town is actually reachable
 
 function degToRad(d) {
@@ -59,7 +60,7 @@ export function spawnAll(worldPivot) {
   for (const def of npcDefs) {
     const npc = createNpc(def);
     placeOnSurface(npc, randomCapDirection(TOWN_RADIUS));
-    npc.userData = { type: 'npc', id: def.id, def };
+    npc.userData = { type: 'npc', id: def.id, def, health: NPC_HEALTH };
     worldPivot.add(npc);
     interactables.push(npc);
   }
