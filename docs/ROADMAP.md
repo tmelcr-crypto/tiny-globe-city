@@ -9,6 +9,12 @@
 - [x] Collision (buildings/trees/cars block movement)
 - [x] Human scale (1 unit = 1 m, 1.5 m player)
 - [x] City layout (roads, sidewalks, downtown, suburb, park, lake, mountains)
+- [x] Authored town (city-map.json, no procedural layout per run)
+- [x] Lot markers + explicit placements ("on lot B3A place a playground")
+- [x] Data-described props (props.json)
+- [x] Dev free-float globe view
+- [ ] Asset catalogue (PDF, Prague reference)
+- [ ] Curved street network
 - [ ] Quests
 - [ ] Activities
 - [ ] World events

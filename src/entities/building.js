@@ -58,7 +58,10 @@ function windowPanes(width, depth, wallHeight, spec) {
 // Low-poly building. Every part is merged into one geometry with material
 // groups, so a whole skyline still costs one draw call per building, and the
 // origin sits at the doorstep so it stands on the globe's surface.
-export function createBuilding(def, rng = Math.random) {
+//
+// `look` overrides the colours the palette would otherwise roll, so an
+// individual building can be asked for by name: { roof: '#b03a2e' }.
+export function createBuilding(def, rng = Math.random, look = {}) {
   const width = range(rng, def.width);
   const depth = range(rng, def.depth);
   const wallHeight = range(rng, def.wallHeight);
@@ -112,7 +115,11 @@ export function createBuilding(def, rng = Math.random) {
 
   if (def.windows) glass.push(...windowPanes(width, depth, wallHeight, def.windows));
 
-  const shell = shellMaterials(pick(rng, def.walls), pick(rng, def.roof.colors));
+  // Always draw from the palette so the seeded stream advances the same way
+  // whether or not this building's colours were overridden.
+  const rolledWalls = pick(rng, def.walls);
+  const rolledRoof = pick(rng, def.roof.colors);
+  const shell = shellMaterials(look.walls ?? rolledWalls, look.roof ?? rolledRoof);
   const slots = [
     [walls, shell.wall],
     [roofs, shell.roof],

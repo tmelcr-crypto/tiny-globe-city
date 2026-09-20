@@ -1,5 +1,6 @@
 // On-screen drag control for mobile; writes into the same state as core/input.js.
 import { emit } from '../core/events.js';
+import { state } from '../core/state.js';
 
 const DEAD_ZONE = 12; // px, ignore jitter near the touch origin
 
@@ -28,6 +29,7 @@ export function createTouchControls(inputState) {
   }
 
   addEventListener('pointerdown', (e) => {
+    if (state.freeFloat) return; // dragging spins the globe instead of walking
     if (activeId !== null) return;
     // Ignore taps on UI chrome (HUD, dialogs, buttons) — only the game canvas drives movement.
     if (e.target.tagName !== 'CANVAS') return;

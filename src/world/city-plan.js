@@ -14,6 +14,7 @@ export const ROAD_WIDTH = cityMap.street.road;
 export const SIDEWALK_WIDTH = cityMap.street.sidewalk;
 export const VERGE = cityMap.street.verge;
 export const CELL = BLOCK + ROAD_WIDTH;
+export const QUARTER_SPAN = BLOCK / 2; // a lot is a quarter of a block
 export const SCENERY = cityMap.scenery;
 export const LAKE_RADIUS = SCENERY.lakeRadius;
 export const MOUNTAIN_RING = { min: SCENERY.mountainRing[0], max: SCENERY.mountainRing[1] };
@@ -115,6 +116,18 @@ export function directionFromTangent(u, v, target = new THREE.Vector3()) {
 export function surfacePoint(u, v, lift = 0, target = new THREE.Vector3()) {
   return directionFromTangent(u, v, target).multiplyScalar(GLOBE_RADIUS + lift);
 }
+
+// The reverse: which point on the flat map a direction on the globe corresponds
+// to. Used to work out which plot the player is currently standing on.
+export function tangentFromDirection(dir) {
+  const y = Math.min(1, Math.max(-1, dir.y / dir.length()));
+  const distance = Math.acos(y) * GLOBE_RADIUS;
+  const flat = Math.hypot(dir.x, dir.z);
+  if (flat < 1e-9) return { u: 0, v: 0 };
+  return { u: (dir.x / flat) * distance, v: (dir.z / flat) * distance };
+}
+
+export { ROWS, COLS };
 
 // Road centrelines, as straight runs across the city on the flat map.
 export function roadLines() {

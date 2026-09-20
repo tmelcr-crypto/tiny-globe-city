@@ -1,10 +1,11 @@
 # Architecture
 - `core/` loop, input, camera, state, event bus
-- `world/` globe, spawner
+- `world/` globe, spawner, city plan, lot markers
 - `entities/` player, car, npc, weapon
 - `interiors/` enterable buildings
-- `systems/` quests, activities, world events
-- `data/` JSON content, including `city-map.json` — the town layout (see `docs/CITY.md`)
-- `ui/` HUD, touch controls
+- `systems/` quests, activities, world events, dev free-float globe view
+- `data/` JSON content: `city-map.json` (town layout), `placements.json` (exact
+  placements by lot marker), `props.json` (street furniture) — see `docs/CITY.md`
+- `ui/` HUD, touch controls, lot-grid overlay, dev buttons
 
 Rule: player is fixed at the top of the globe; `worldPivot` rotates.

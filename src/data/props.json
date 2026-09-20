@@ -1,0 +1,148 @@
+[
+  {
+    "id": "playground",
+    "name": "Children's playground",
+    "category": "recreation",
+    "footprint": 5.5,
+    "reference": "Prague sídliště courtyard playgrounds — sand pit, frame, slide, swings",
+    "parts": [
+      { "shape": "box", "size": [9, 0.12, 9], "at": [0, 0.06, 0], "color": "#c8b183" },
+      { "shape": "box", "size": [9, 0.35, 0.3], "at": [0, 0.2, 4.5], "color": "#8a5a2b" },
+      { "shape": "box", "size": [9, 0.35, 0.3], "at": [0, 0.2, -4.5], "color": "#8a5a2b" },
+      { "shape": "box", "size": [0.3, 0.35, 9], "at": [4.5, 0.2, 0], "color": "#8a5a2b" },
+      { "shape": "box", "size": [0.3, 0.35, 9], "at": [-4.5, 0.2, 0], "color": "#8a5a2b" },
+
+      { "shape": "cylinder", "size": [0.09, 2.6], "at": [-2.6, 1.3, -1.6], "color": "#c8442e" },
+      { "shape": "cylinder", "size": [0.09, 2.6], "at": [-0.6, 1.3, -1.6], "color": "#c8442e" },
+      { "shape": "box", "size": [2.4, 0.14, 0.14], "at": [-1.6, 2.6, -1.6], "color": "#c8442e" },
+      { "shape": "cylinder", "size": [0.03, 1.5], "at": [-2.2, 1.85, -1.6], "color": "#4a4a50" },
+      { "shape": "cylinder", "size": [0.03, 1.5], "at": [-1.0, 1.85, -1.6], "color": "#4a4a50" },
+      { "shape": "box", "size": [0.7, 0.08, 0.3], "at": [-1.6, 1.1, -1.6], "color": "#2f7d3a" },
+
+      { "shape": "box", "size": [1.6, 1.6, 1.6], "at": [2.2, 0.85, 1.4], "color": "#f0a92b" },
+      { "shape": "box", "size": [0.9, 0.12, 3.2], "at": [2.2, 1.0, 3.4], "turn": [22, 0, 0], "color": "#3f7fc4" },
+      { "shape": "cylinder", "size": [0.08, 1.7], "at": [1.5, 0.85, 0.7], "color": "#4a4a50" },
+      { "shape": "cylinder", "size": [0.08, 1.7], "at": [2.9, 0.85, 0.7], "color": "#4a4a50" },
+
+      { "shape": "cylinder", "size": [0.35, 0.5], "at": [-3.2, 0.25, 2.8], "color": "#7fb069" },
+      { "shape": "sphere", "size": [0.45], "at": [-3.2, 0.7, 2.8], "color": "#2f7d3a" }
+    ]
+  },
+  {
+    "id": "bench",
+    "name": "Park bench",
+    "category": "street furniture",
+    "footprint": 1.1,
+    "reference": "Cast-iron and slat benches along Prague embankments",
+    "turnable": false,
+    "parts": [
+      { "shape": "box", "size": [1.9, 0.09, 0.55], "at": [0, 0.45, 0], "color": "#8a5a2b" },
+      { "shape": "box", "size": [1.9, 0.5, 0.09], "at": [0, 0.72, -0.24], "color": "#8a5a2b" },
+      { "shape": "box", "size": [0.09, 0.45, 0.5], "at": [-0.8, 0.22, 0], "color": "#3c3f45" },
+      { "shape": "box", "size": [0.09, 0.45, 0.5], "at": [0.8, 0.22, 0], "color": "#3c3f45" }
+    ]
+  },
+  {
+    "id": "lamppost",
+    "name": "Street lamp",
+    "category": "street furniture",
+    "footprint": 0.6,
+    "reference": "Prague's cast-iron gas-style lamps in the old town",
+    "parts": [
+      { "shape": "cylinder", "size": [0.16, 0.25], "at": [0, 0.12, 0], "color": "#2b2e33" },
+      { "shape": "cylinder", "size": [0.08, 4.2, 0.11], "at": [0, 2.1, 0], "color": "#2b2e33" },
+      { "shape": "box", "size": [0.34, 0.5, 0.34], "at": [0, 4.45, 0], "color": "#3c4047" },
+      { "shape": "cone", "size": [0.28, 0.3], "at": [0, 4.82, 0], "color": "#2b2e33" },
+      { "shape": "box", "size": [0.24, 0.3, 0.24], "at": [0, 4.4, 0], "color": "#ffe9a8" }
+    ]
+  },
+  {
+    "id": "fountain",
+    "name": "Stone fountain",
+    "category": "recreation",
+    "footprint": 2.8,
+    "reference": "Baroque fountains on Prague squares",
+    "parts": [
+      { "shape": "cylinder", "size": [2.6, 0.55, 2.8], "at": [0, 0.27, 0], "color": "#b9b2a4" },
+      { "shape": "cylinder", "size": [2.3, 0.18], "at": [0, 0.56, 0], "color": "#3f7fa8" },
+      { "shape": "cylinder", "size": [0.4, 1.3], "at": [0, 1.1, 0], "color": "#c6bfb1" },
+      { "shape": "cylinder", "size": [1.0, 0.22], "at": [0, 1.8, 0], "color": "#c6bfb1" },
+      { "shape": "sphere", "size": [0.3], "at": [0, 2.1, 0], "color": "#c6bfb1" }
+    ]
+  },
+  {
+    "id": "kiosk",
+    "name": "Newspaper kiosk",
+    "category": "commerce",
+    "footprint": 1.8,
+    "reference": "Trafika kiosks at Prague tram stops",
+    "parts": [
+      { "shape": "box", "size": [2.6, 2.5, 2.0], "at": [0, 1.25, 0], "color": "#2f6f4f" },
+      { "shape": "box", "size": [2.9, 0.16, 2.3], "at": [0, 2.58, 0], "color": "#24523c" },
+      { "shape": "box", "size": [1.8, 1.0, 0.1], "at": [0, 1.5, 1.02], "color": "#9fc6d8" },
+      { "shape": "box", "size": [2.9, 0.5, 0.9], "at": [0, 2.25, 1.35], "color": "#c8442e" }
+    ]
+  },
+  {
+    "id": "tram_stop",
+    "name": "Tram stop shelter",
+    "category": "transport",
+    "footprint": 2.6,
+    "reference": "Prague DPP tram shelters with route boards",
+    "parts": [
+      { "shape": "box", "size": [4.6, 0.12, 1.8], "at": [0, 2.55, 0], "color": "#43474e" },
+      { "shape": "cylinder", "size": [0.07, 2.5], "at": [-2.1, 1.25, 0.7], "color": "#5a5f66" },
+      { "shape": "cylinder", "size": [0.07, 2.5], "at": [2.1, 1.25, 0.7], "color": "#5a5f66" },
+      { "shape": "box", "size": [4.6, 2.0, 0.08], "at": [0, 1.25, -0.85], "color": "#9fc6d8" },
+      { "shape": "box", "size": [4.0, 0.08, 0.42], "at": [0, 0.5, -0.5], "color": "#8a5a2b" },
+      { "shape": "box", "size": [0.5, 0.7, 0.06], "at": [1.7, 1.7, -0.78], "color": "#d8332a" }
+    ]
+  },
+  {
+    "id": "statue",
+    "name": "Monument statue",
+    "category": "landmark",
+    "footprint": 1.6,
+    "reference": "Charles Bridge saints and square monuments",
+    "parts": [
+      { "shape": "box", "size": [2.0, 0.3, 2.0], "at": [0, 0.15, 0], "color": "#a49c8c" },
+      { "shape": "box", "size": [1.4, 2.0, 1.4], "at": [0, 1.3, 0], "color": "#b6ae9e" },
+      { "shape": "cylinder", "size": [0.38, 1.6], "at": [0, 3.1, 0], "color": "#8e8878" },
+      { "shape": "sphere", "size": [0.32], "at": [0, 4.05, 0], "color": "#8e8878" }
+    ]
+  },
+  {
+    "id": "planter",
+    "name": "Street planter",
+    "category": "street furniture",
+    "footprint": 0.9,
+    "reference": "Concrete planters along Prague pedestrian streets",
+    "parts": [
+      { "shape": "box", "size": [1.4, 0.6, 1.4], "at": [0, 0.3, 0], "color": "#b0aba1" },
+      { "shape": "box", "size": [1.2, 0.1, 1.2], "at": [0, 0.62, 0], "color": "#5a4632" },
+      { "shape": "sphere", "size": [0.55], "at": [0, 1.05, 0], "color": "#3f8b3f" }
+    ]
+  },
+  {
+    "id": "bin",
+    "name": "Litter bin",
+    "category": "street furniture",
+    "footprint": 0.45,
+    "reference": "Perforated metal bins on Prague pavements",
+    "parts": [
+      { "shape": "cylinder", "size": [0.3, 0.9, 0.26], "at": [0, 0.45, 0], "color": "#3f4349" },
+      { "shape": "cylinder", "size": [0.33, 0.08], "at": [0, 0.93, 0], "color": "#2b2e33" }
+    ]
+  },
+  {
+    "id": "bollard",
+    "name": "Bollard",
+    "category": "street furniture",
+    "footprint": 0.3,
+    "reference": "Stone bollards keeping cars off Prague pavements",
+    "parts": [
+      { "shape": "cylinder", "size": [0.14, 0.9], "at": [0, 0.45, 0], "color": "#54585f" },
+      { "shape": "sphere", "size": [0.16], "at": [0, 0.92, 0], "color": "#54585f" }
+    ]
+  }
+]

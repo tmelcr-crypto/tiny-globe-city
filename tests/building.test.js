@@ -87,7 +87,8 @@ describe('building assets', () => {
   it('only puts a building in a zone the map admits it to', () => {
     const pivot = createGlobe();
     spawnAll(pivot);
-    const built = pivot.children.filter((c) => c.userData?.type === 'building');
+    // Explicit placements override the zoning on purpose, so skip those.
+    const built = pivot.children.filter((c) => c.userData?.type === 'building' && !c.userData.marker);
 
     for (const building of built) {
       const weight = byId(building.userData.kind).zones[building.userData.zone];

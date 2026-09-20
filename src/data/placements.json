@@ -1,0 +1,13 @@
+[
+  { "at": "B3A", "place": "apartment", "roof": "#b03a2e" },
+  { "at": "C4B", "place": "skyscraper", "walls": "#7e8f9c", "roof": "#2f3338" },
+  {
+    "at": "A3D",
+    "place": "playground",
+    "with": [
+      { "place": "pine", "count": 7 },
+      { "place": "bush", "count": 1 },
+      { "place": "bench", "count": 2 }
+    ]
+  }
+]

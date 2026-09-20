@@ -71,11 +71,78 @@ So an apartment block is the usual thing in an `a` block, turns up occasionally
 among the houses, and sometimes fills a gap downtown. A new kind of building is
 a new entry here plus a weight in whichever zones should have it — no new code.
 
+## Pointing at a plot: markers
+
+Every block is split into four plots, and each plot has a code you can read off
+the ground in game:
+
+```
+B3C
+││└─ plot: quarters of the block — A B along the north side, C D the south
+│└── row: 1 at the north edge of the map, counting south
+└─── column: A at the west edge of the map, counting east
+```
+
+`B3` is literally row 3, column B of the `rows` block in `city-map.json`, so a
+code and the map agree by construction.
+
+In game, press **M** (or the **◻︎ Lot grid** button) to draw the grid: yellow
+outlines the blocks, cyan splits each one into its four plots, and a label
+stands in the middle of each. The HUD shows the plot you are standing in, so
+walking around is enough to find the code for a spot.
+
+## Placing a specific thing: `src/data/placements.json`
+
+The spawner honours this list before it fills anything else in, so a placement
+never gets shuffled by the seed and adding one does not move the rest of town.
+
+```json
+[
+  { "at": "B3A", "place": "apartment", "roof": "#b03a2e" },
+  { "at": "C4B", "place": "skyscraper", "walls": "#7e8f9c", "roof": "#2f3338" },
+  { "at": "A3D", "place": "playground",
+    "with": [ { "place": "pine", "count": 7 }, { "place": "bush", "count": 1 } ] }
+]
+```
+
+- `at` — the marker code.
+- `place` — any building (`house`, `apartment`, `church`, `skyscraper`,
+  `safehouse`), any tree (`pine`, `oak`, `birch`, `shrub`, `bush`) or any prop
+  from `src/data/props.json`.
+- `walls` / `roof` — optional colour overrides, any CSS colour.
+- `with` — extra things scattered around the main one inside the same plot.
+
+So "on lot B3A place a children playground with 7 trees and 1 bush" is one
+entry, and the change is reviewable as a diff.
+
+## Props: `src/data/props.json`
+
+Street furniture and small scenery are described as primitives, not code:
+
+```json
+{ "id": "bench", "footprint": 1.1,
+  "parts": [ { "shape": "box", "size": [1.9, 0.09, 0.55], "at": [0, 0.45, 0], "color": "#8a5a2b" } ] }
+```
+
+`shape` is `box`, `cylinder`, `cone` or `sphere`; `at` positions it in metres
+with the origin at ground level, `turn` rotates it in degrees. Parts sharing a
+colour merge into one mesh, so a prop costs a draw call per colour. A new asset
+is a new entry here — no new code, and it is immediately placeable by name.
+
+## Getting around while you work
+
+The **🌍 Spin globe** button (or **G**) pulls the camera off the surface and
+lets you drag the planet round like a desk globe, with a flick carrying on and
+settling. Whatever ends up at the top is where you are standing, so switching
+back drops you there. Everything else — walking, driving, NPCs, shooting —
+stops while the globe view is up, so nothing moves under you.
+
 ## What is still not authored
 
 The map fixes the plan; the seed fixes everything below it. Individual plots,
 building sizes, colours, tree kinds, parked cars and mountains are all drawn
 from the seeded generator rather than listed by hand. They never change between
-runs, but they are not something you can point at in the map. If a *specific*
-building needs to sit in a *specific* spot, that is the next thing to add —
-an explicit list of placements the spawner honours before it fills the rest.
+runs, but they are not something you can point at in the map. When a *specific*
+thing has to sit in a *specific* spot, that is what `placements.json` is for:
+everything listed there is placed exactly, and the seeded filler works around
+it.

@@ -9,6 +9,9 @@ import { createWeapon } from './entities/weapon.js';
 import { createHud } from './ui/hud.js';
 import { createTouchControls } from './ui/touch-controls.js';
 import { createSaveDialog, loadSave } from './ui/save-dialog.js';
+import { createMarkerOverlay } from './ui/markers-overlay.js';
+import { createDevButtons } from './ui/dev-buttons.js';
+import { createFreeFloat } from './systems/free-float.js';
 import { createInteractionSystem } from './systems/interaction.js';
 import { createCollisionSystem } from './systems/collision.js';
 import { createCombatSystem } from './systems/combat.js';
@@ -47,11 +50,33 @@ const collision = createCollisionSystem(worldPivot, obstacles);
 const combat = createCombatSystem(npcs, player.position);
 const wander = createNpcWander(npcs, obstacles);
 const saveDialog = createSaveDialog();
+const markers = createMarkerOverlay(worldPivot);
+const freeFloat = createFreeFloat(camera, worldPivot);
+createDevButtons();
 
 const saved = loadSave();
 if (saved) Object.assign(state, saved);
 
 on('safehouse:interact', () => saveDialog.show());
+
+// Entering the globe view must not leave a held key pressed behind it.
+on('freefloat:changed', () => {
+  input.up = input.down = input.left = input.right = false;
+  currentSpeed = 0;
+  turnRate = 0;
+});
+
+const EXIT_STEP = 3.5; // metres the player steps aside when getting out
+
+// Turns the world so a point of the map ends up under the fixed player.
+const _delta = new THREE.Quaternion();
+const _aligned = new THREE.Vector3();
+function bringUnderPlayer(localDirection) {
+  _aligned.copy(localDirection).applyQuaternion(worldPivot.quaternion).normalize();
+  _delta.setFromUnitVectors(_aligned, new THREE.Vector3(0, 1, 0));
+  worldPivot.quaternion.premultiply(_delta);
+  worldPivot.updateMatrixWorld(true);
+}
 
 let speedMultiplier = 1;
 let drivingCar = null;
@@ -61,7 +86,9 @@ on('vehicle:toggle', ({ entered, multiplier, car }) => {
   drivingCar = entered ? car : null;
   carSteer = 0;
   if (entered) {
-    // Swap the player for the car: fixed in place like the player, world rotates beneath it.
+    // The car does not come to the player: the player arrives at the car. Turn
+    // the world so the car's own spot is under the player, then take it over.
+    bringUnderPlayer(car.position.clone().normalize());
     collision.exclude(car);
     worldPivot.remove(car);
     scene.add(car);
@@ -69,18 +96,23 @@ on('vehicle:toggle', ({ entered, multiplier, car }) => {
     car.quaternion.identity();
     player.visible = false;
   } else {
-    // Drop the car back onto the globe beside the player, not on top of them
-    // (parking it exactly at the player's spot hid the player behind/inside it).
+    // Park it exactly where it stopped — it must not jump on the way out.
     scene.remove(car);
     worldPivot.add(car);
-    const dropWorldPos = player.position.clone().add(new THREE.Vector3(3.5, 0, 0));
-    const local = worldPivot.worldToLocal(dropWorldPos);
+    const local = worldPivot.worldToLocal(player.position.clone());
     car.position.copy(local);
     car.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), local.clone().normalize());
     collision.include(car);
     player.visible = true;
+
+    // Step out alongside it: the world turns, the parked car stays where it is.
+    const aside = worldPivot.worldToLocal(
+      player.position.clone().add(new THREE.Vector3(EXIT_STEP, 0, 0))
+    );
+    bringUnderPlayer(aside.normalize());
   }
 });
+
 
 addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
@@ -95,11 +127,12 @@ const DECEL = 7.0;       // units/sec^2 slowing down (brakes faster than it acce
 // so it's a rate in rad/sec — scaling it by 1/GLOBE_RADIUS made turns glacial.
 const TURN_SPEED = 1.2;
 const STEER_MAX = 0.5;   // radians the car visibly leans into a curve
-// How quickly the turn rate eases in and out. On foot it's near-instant; a car
-// leans into and out of a corner rather than snapping to full lock.
-const TURN_DAMP_ON_FOOT = 14;
-const TURN_DAMP_DRIVING = 3.5;
-const STEER_DAMP = 6;    // how closely the car's visible yaw follows its turn rate
+// Turning ramps at a constant rate rather than easing asymptotically, so how
+// far you turn is proportional to how long you hold — predictable, not wobbly.
+const TURN_RAMP_ON_FOOT = 9;   // rad/sec^2
+const TURN_RAMP_DRIVING = 2.6;
+const DRIVING_TURN = 0.8;      // a car turns less sharply than a person
+const STEER_DAMP = 10;         // the car's visible yaw tracks its actual turn closely
 const X_AXIS = new THREE.Vector3(1, 0, 0);
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
@@ -116,13 +149,26 @@ function damp(current, target, lambda, dt) {
 let currentSpeed = 0;
 let turnRate = 0;
 createLoop((dt) => {
+  freeFloat.update(dt);
+  if (state.freeFloat) {
+    // Nothing else runs: the world is being steered, not lived in.
+    hud.update();
+    renderer.render(scene, camera);
+    return;
+  }
+
   const walking = input.up || input.down;
   const targetSpeed = walking ? WALK_SPEED * speedMultiplier : 0;
   currentSpeed = approach(currentSpeed, targetSpeed, (targetSpeed > currentSpeed ? ACCEL : DECEL) * dt);
   const angularSpeed = currentSpeed / GLOBE_RADIUS;
 
   const turnInput = (input.left ? -1 : 0) + (input.right ? 1 : 0);
-  turnRate = damp(turnRate, turnInput * TURN_SPEED, drivingCar ? TURN_DAMP_DRIVING : TURN_DAMP_ON_FOOT, dt);
+  // A car steers through its wheels, so it only turns while it is rolling, and
+  // more slowly than a person can pivot.
+  const rolling = drivingCar ? currentSpeed / (WALK_SPEED * speedMultiplier) : 1;
+  const maxTurn = TURN_SPEED * (drivingCar ? DRIVING_TURN * rolling : 1);
+  const ramp = drivingCar ? TURN_RAMP_DRIVING : TURN_RAMP_ON_FOOT;
+  turnRate = approach(turnRate, turnInput * maxTurn, ramp * dt);
   if (Math.abs(turnRate) < 1e-4) turnRate = 0;
 
   // Movement = rotate the globe under the fixed player, blocked by collision.
@@ -131,10 +177,11 @@ createLoop((dt) => {
   if (turnRate)   collision.tryRotate(Y_AXIS,  turnRate * dt, player.position);
 
   if (drivingCar) {
-    carSteer = damp(carSteer, -(turnRate / TURN_SPEED) * STEER_MAX, STEER_DAMP, dt);
+    carSteer = damp(carSteer, -(turnRate / (TURN_SPEED * DRIVING_TURN)) * STEER_MAX, STEER_DAMP, dt);
     drivingCar.rotation.y = carSteer;
   }
 
+  markers.update();
   wander.update(dt);
   interaction.update();
   combat.update(dt);
