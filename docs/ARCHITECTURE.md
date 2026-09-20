@@ -3,7 +3,7 @@
 - `world/` globe, city (static streets/buildings from data), spawner (dynamic NPCs/cars/pickups)
 - `entities/` player, car, npc, weapon
 - `interiors/` enterable buildings
-- `systems/` quests, activities, world events
+- `systems/` collision, quests, activities, world events
 - `data/` JSON content
 - `ui/` HUD, touch controls
 

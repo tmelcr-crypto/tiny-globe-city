@@ -14,6 +14,7 @@ export function createPlayer(globeRadius) {
   );
   mesh.position.set(0, globeRadius + PLAYER_HEIGHT / 2, 0);
   mesh.userData.facing = 0; // 0 = forward, matches atan2(x, y) of the movement vector
+  mesh.userData.collider = { radius: CAPSULE_RADIUS };
 
   const nose = new THREE.Mesh(
     new THREE.ConeGeometry(CAPSULE_RADIUS / 2, CAPSULE_RADIUS, 6),

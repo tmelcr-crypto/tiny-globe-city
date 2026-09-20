@@ -84,9 +84,11 @@ export function createGlobe() {
   // Hand-authored districts with street grids (src/data/world.json).
   buildCity(pivot, GLOBE_RADIUS);
 
-  // Ambient trees scattered outside the districts.
+  // Ambient trees scattered outside the districts. Trunk-radius collider so
+  // the player bumps the trunk but can still see/walk near the canopy.
   for (let i = 0; i < 80; i++) {
     const tree = createRandomTree();
+    tree.userData.collider = { radius: 0.3 };
     seatOnSurface(tree, new THREE.Vector3().randomDirection());
     pivot.add(tree);
   }

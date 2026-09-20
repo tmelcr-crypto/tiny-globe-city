@@ -2,6 +2,7 @@
 - [x] Scaffold (globe + fixed player + rotate with arrows)
 - [x] Touch controls
 - [x] Buildings on globe (hand-authored districts + street grids, `src/data/world.json`)
+- [x] Collision (stop on head-on hit, slide along obstacles on glancing hit)
 - [ ] Enter/exit building
 - [ ] One car
 - [ ] NPCs
