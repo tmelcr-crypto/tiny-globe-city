@@ -5,6 +5,7 @@ import { createCamera } from './core/camera.js';
 import { createGlobe, GLOBE_RADIUS } from './world/globe.js';
 import { createPlayer } from './entities/player.js';
 import { createHud } from './ui/hud.js';
+import { createTouchControls } from './ui/touch-controls.js';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -21,6 +22,7 @@ scene.add(worldPivot);
 scene.add(createPlayer(GLOBE_RADIUS)); // player is NOT a child of worldPivot
 
 const input = createInput();
+createTouchControls(input);
 const hud = createHud();
 
 addEventListener('resize', () => {
