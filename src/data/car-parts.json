@@ -1,0 +1,22 @@
+{
+  "wheels": [
+    { "id": "wheel_standard", "name": "Standard Wheel", "radius": 0.4, "width": 0.28, "tireColor": "0x222222", "hubRadius": 0.2, "hubColor": "0x888888" },
+    { "id": "wheel_sport", "name": "Sport Wheel", "radius": 0.42, "width": 0.26, "tireColor": "0x111111", "hubRadius": 0.24, "hubColor": "0xdddddd" },
+    { "id": "wheel_offroad", "name": "Off-Road Wheel", "radius": 0.5, "width": 0.36, "tireColor": "0x1a1a1a", "hubRadius": 0.22, "hubColor": "0x555555" }
+  ],
+  "spoilers": [
+    { "id": "spoiler_none" },
+    { "id": "spoiler_lip", "name": "Lip Spoiler", "width": 1.0, "thickness": 0.06, "depth": 0.16, "riserHeight": 0.06, "color": "0x111111" },
+    { "id": "spoiler_wing", "name": "Wing Spoiler", "width": 1.1, "thickness": 0.05, "depth": 0.3, "riserHeight": 0.32, "color": "0x111111" }
+  ],
+  "exhausts": [
+    { "id": "exhaust_single", "name": "Single Pipe", "pipes": 1, "radius": 0.06, "length": 0.28, "color": "0x999999" },
+    { "id": "exhaust_dual", "name": "Dual Pipe", "pipes": 2, "radius": 0.055, "length": 0.28, "color": "0x999999" },
+    { "id": "exhaust_race", "name": "Race Side-Exit", "pipes": 2, "radius": 0.08, "length": 0.22, "color": "0xdddddd", "sideExit": true }
+  ],
+  "hoods": [
+    { "id": "hood_flat", "name": "Flat Hood" },
+    { "id": "hood_scoop", "name": "Scoop Hood", "scoopWidth": 0.36, "scoopHeight": 0.1, "scoopDepth": 0.5, "color": "0x1a1a1a" },
+    { "id": "hood_vented", "name": "Vented Hood", "vents": 3, "ventWidth": 0.06, "ventDepth": 0.6, "color": "0x1a1a1a" }
+  ]
+}

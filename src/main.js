@@ -22,7 +22,7 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.2));
 const camera = createCamera(GLOBE_RADIUS);
 const worldPivot = createGlobe();      // everything in the world is a child of this
 scene.add(worldPivot);
-const world = spawnAll(worldPivot); // NPCs, pickups; move/track independent of the player
+const world = spawnAll(worldPivot); // NPCs, cars, pickups; move/track independent of the player
 const player = createPlayer(GLOBE_RADIUS); // player is NOT a child of worldPivot
 scene.add(player);
 const colliders = collectColliders(worldPivot);

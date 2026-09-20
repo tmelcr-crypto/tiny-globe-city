@@ -4,7 +4,7 @@
 - [x] Buildings on globe (hand-authored districts + street grids, `src/data/world.json`)
 - [x] Collision (stop on head-on hit, slide along obstacles on glancing hit)
 - [ ] Enter/exit building
-- [ ] One car
+- [x] One car (modular: interchangeable wheels/spoiler/exhaust/hood)
 - [ ] NPCs
 - [ ] Weapons
 - [ ] Quests
