@@ -14,7 +14,7 @@
 - [x] Data-described props (props.json)
 - [x] Dev free-float globe view
 - [ ] Asset catalogue (PDF, Prague reference)
-- [ ] Curved street network
+- [x] Curved street network (avenues, rounded corners)
 - [ ] Quests
 - [ ] Activities
 - [ ] World events

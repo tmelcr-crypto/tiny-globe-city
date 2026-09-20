@@ -9,9 +9,9 @@ import { createProp } from '../entities/prop.js';
 import { createCityGround } from './city-ground.js';
 import { createRng, weighted } from '../core/rng.js';
 import {
-  BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, CELL, CITY_EXTENT, MOUNTAIN_RING, LAKE_RADIUS, SCENERY, SEED,
+  BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, MOUNTAIN_RING, LAKE_RADIUS, SCENERY, SEED,
   QUARTER_SPAN,
-  cityBlocks, plotIn, roadLines, parkBlock, lakeCentre,
+  cityBlocks, plotIn, kerbSpot, parkBlock, lakeCentre, isOnAvenue,
   directionFromTangent, tangentFacing, nearestRoad, isInLake,
 } from './city-plan.js';
 import { markerPoint, markerAt, blockRef } from './markers.js';
@@ -194,19 +194,12 @@ function spawnBuildings(worldPivot, placed, rng, taken) {
 
 // Parked along the kerb, nose pointing down the street.
 function spawnCars(worldPivot, placed, interactables, rng) {
-  const lines = roadLines();
   for (let i = 0; i < SCENERY.cars; i++) {
-    const line = lines[Math.floor(rng() * lines.length)];
-    const along = (rng() * 2 - 1) * (CITY_EXTENT - CELL / 2);
-    const side = rng() < 0.5 ? -1 : 1;
-    const offset = side * (ROAD_WIDTH / 2 - 1.3);
-    const u = line.axis === 'u' ? along : line.at + offset;
-    const v = line.axis === 'u' ? line.at + offset : along;
+    const { u, v, facing } = kerbSpot(rng, ROAD_WIDTH / 2 - 1.3);
     if (overlaps(placed, u, v, CAR_RADIUS) || isInLake(u, v, CAR_RADIUS)) continue;
 
     const def = vehicles[i % vehicles.length];
     const car = createCar(def);
-    const facing = line.axis === 'u' ? { u: side, v: 0 } : { u: 0, v: side };
     placeAt(car, u, v, facing);
     car.userData = { type: 'car', id: `${def.id}_${i}`, def, footprint: CAR_RADIUS };
     worldPivot.add(car);
@@ -216,14 +209,9 @@ function spawnCars(worldPivot, placed, interactables, rng) {
 }
 
 function spawnNpcs(worldPivot, placed, interactables, rng) {
-  const lines = roadLines();
   for (const def of npcDefs) {
     for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
-      const line = lines[Math.floor(rng() * lines.length)];
-      const along = (rng() * 2 - 1) * (CITY_EXTENT - CELL / 2);
-      const offset = (rng() < 0.5 ? -1 : 1) * (ROAD_WIDTH / 2 + SIDEWALK_WIDTH / 2);
-      const u = line.axis === 'u' ? along : line.at + offset;
-      const v = line.axis === 'u' ? line.at + offset : along;
+      const { u, v } = kerbSpot(rng, ROAD_WIDTH / 2 + SIDEWALK_WIDTH / 2);
       if (overlaps(placed, u, v, NPC_RADIUS) || isInLake(u, v, NPC_RADIUS)) continue;
 
       const npc = createNpc(def);
@@ -241,6 +229,9 @@ function spawnTree(worldPivot, placed, u, v, rng) {
   const tree = createTree(null, rng);
   const radius = tree.userData.footprint;
   if (overlaps(placed, u, v, radius) || isInLake(u, v, radius + 1.5)) return false;
+  // Trees go where the plan leaves room, and an avenue crossing the park is
+  // still a street.
+  if (isOnAvenue(u, v, radius)) return false;
   placeAt(tree, u, v);
   tree.userData.type = 'tree';
   worldPivot.add(tree);

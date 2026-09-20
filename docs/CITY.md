@@ -22,7 +22,9 @@ One character per block. **Row 0 is the north edge, column 0 the west edge.**
 The player faces south, so they look *down* the map from wherever `@` is.
 
 Roads run between every pair of blocks, with sidewalks either side, so the road
-grid follows from the shape of the map — you never place a road by hand.
+grid follows from the shape of the map — you never place a road by hand. Every
+junction is rounded off by `street.corner` metres, so the kerb sweeps around
+the corner rather than meeting at a right angle.
 
 ## Legend
 
@@ -70,6 +72,35 @@ appear in and how common it is in each:
 So an apartment block is the usual thing in an `a` block, turns up occasionally
 among the houses, and sometimes fills a gap downtown. A new kind of building is
 a new entry here plus a weight in whichever zones should have it — no new code.
+
+## Streets that leave the grid: avenues
+
+A grid alone reads as a suburb. Prague's streets bend with the river and cut
+across the blocks at whatever angle gets them where they are going, so the map
+also carries avenues — streets that ignore the grid:
+
+```json
+"avenues": [
+  { "id": "narodni", "width": 11,
+    "through": [[0.35, 4.0], [1.3, 3.8], [2.2, 3.75], [3.1, 3.6], [4.0, 3.25]] }
+]
+```
+
+`through` is a handful of points the street passes through, smoothed into a
+curve. The points are in **grid coordinates**: the first number is the column
+line counting from the west edge, the second the row line counting from the
+north, and fractions land in between. So `[0, 0]` is the north-west corner of
+the map, `[4, 4]` the south-east, and `[2.2, 3.75]` is three-quarters of the
+way down the third row of blocks.
+
+Ending an avenue on a whole number puts it on a grid road, which is what makes
+it look like it joins the street network rather than stopping in a field.
+
+An avenue takes precedence over whatever the blocks would have held: buildings
+and trees keep clear of it, parked cars and pedestrians use its kerb, and
+buildings beside it face it instead of the grid road behind them. Three of
+them is enough to break the grid up; more is fine, they just eat buildable
+land.
 
 ## Pointing at a plot: markers
 

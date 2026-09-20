@@ -13,6 +13,7 @@ export const BLOCK = cityMap.street.block;
 export const ROAD_WIDTH = cityMap.street.road;
 export const SIDEWALK_WIDTH = cityMap.street.sidewalk;
 export const VERGE = cityMap.street.verge;
+export const CORNER_RADIUS = cityMap.street.corner ?? 0;
 export const CELL = BLOCK + ROAD_WIDTH;
 export const QUARTER_SPAN = BLOCK / 2; // a lot is a quarter of a block
 export const SCENERY = cityMap.scenery;
@@ -129,6 +130,97 @@ export function tangentFromDirection(dir) {
 
 export { ROWS, COLS };
 
+// ---------------------------------------------------------------------------
+// Avenues: the streets that do not follow the grid.
+//
+// A grid of right angles reads as a suburb, not a city. Prague's streets bend
+// with the river and cut across the blocks at whatever angle gets them where
+// they are going, so the map may also carry avenues: a handful of points the
+// street passes through, smoothed into a curve.
+//
+// Points are given in grid coordinates — column line, row line — so an avenue
+// is authored the same way the blocks are: [0, 4] is the south-west corner of
+// the map, [4, 0] the north-east, and fractions land in between.
+
+const AVENUE_STEP = 2.5; // metres between sampled points along a curve
+
+// A point on the road grid, in metres. Whole numbers land on road centrelines:
+// column line c counts from the west edge, row line r from the north edge.
+export function mapPoint(c, r) {
+  return {
+    u: roadU(c - Math.floor(COLS / 2)),
+    v: roadV(ROWS - Math.floor(ROWS / 2) - r),
+  };
+}
+
+// Catmull-Rom through the authored points, so the street curves smoothly
+// instead of turning corners at each one.
+function smooth(through) {
+  const points = through.map(([c, r]) => {
+    const { u, v } = mapPoint(c, r);
+    return new THREE.Vector3(u, 0, v);
+  });
+  const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.5);
+  const divisions = Math.max(2, Math.ceil(curve.getLength() / AVENUE_STEP));
+  return curve.getSpacedPoints(divisions).map((p) => ({ u: p.x, v: p.z }));
+}
+
+let avenueCache = null;
+
+// Every avenue, as a polyline of points in metres.
+export function avenues() {
+  if (!avenueCache) {
+    avenueCache = (cityMap.avenues ?? []).map((avenue) => ({
+      id: avenue.id,
+      width: avenue.width,
+      points: smooth(avenue.through),
+    }));
+  }
+  return avenueCache;
+}
+
+// Closest point on a segment, as the fraction along it.
+function alongSegment(u, v, a, b) {
+  const du = b.u - a.u;
+  const dv = b.v - a.v;
+  const length2 = du * du + dv * dv;
+  if (length2 < 1e-9) return 0;
+  return Math.min(1, Math.max(0, ((u - a.u) * du + (v - a.v) * dv) / length2));
+}
+
+// Nearest avenue to a point: how far away it is, which way it runs, and which
+// way the point would have to face to look at it.
+export function nearestAvenue(u, v) {
+  let best = null;
+  for (const avenue of avenues()) {
+    for (let s = 0; s < avenue.points.length - 1; s++) {
+      const a = avenue.points[s];
+      const b = avenue.points[s + 1];
+      const t = alongSegment(u, v, a, b);
+      const pu = a.u + (b.u - a.u) * t;
+      const pv = a.v + (b.v - a.v) * t;
+      const distance = Math.hypot(u - pu, v - pv);
+      if (best && distance >= best.distance) continue;
+      const run = Math.hypot(b.u - a.u, b.v - a.v) || 1;
+      best = {
+        id: avenue.id,
+        width: avenue.width,
+        distance,
+        along: { u: (b.u - a.u) / run, v: (b.v - a.v) / run },
+        facing: { u: (pu - u) / (distance || 1), v: (pv - v) / (distance || 1) },
+      };
+    }
+  }
+  return best;
+}
+
+// Is a point inside an avenue's road and pavement, plus any extra clearance?
+export function isOnAvenue(u, v, margin = 0) {
+  const avenue = nearestAvenue(u, v);
+  if (!avenue) return false;
+  return avenue.distance < avenue.width / 2 + SIDEWALK_WIDTH + margin;
+}
+
 // Road centrelines, as straight runs across the city on the flat map.
 export function roadLines() {
   const halfCols = Math.floor(COLS / 2);
@@ -148,6 +240,52 @@ export function roadLines() {
   return lines;
 }
 
+// Every crossing of two grid roads, in metres — where the corners get rounded.
+export function junctions() {
+  const halfCols = Math.floor(COLS / 2);
+  const halfRows = Math.floor(ROWS / 2);
+  const points = [];
+  for (let i = -halfCols; i <= COLS - halfCols; i++) {
+    for (let j = -halfRows; j <= ROWS - halfRows; j++) {
+      points.push({ u: roadU(i), v: roadV(j) });
+    }
+  }
+  return points;
+}
+
+// A spot beside a street — grid or avenue — the given distance out from the
+// centreline, facing along the kerb. Parked cars and pedestrians use it, so
+// both turn up on the avenues as well as the grid.
+export function kerbSpot(rng, offset) {
+  const lines = roadLines();
+  const curves = avenues();
+  const pick = Math.floor(rng() * (lines.length + curves.length));
+  const side = rng() < 0.5 ? -1 : 1;
+
+  if (pick < lines.length) {
+    const line = lines[pick];
+    const along = line.from + rng() * (line.to - line.from);
+    const at = line.at + side * offset;
+    return line.axis === 'u'
+      ? { u: along, v: at, facing: { u: side, v: 0 } }
+      : { u: at, v: along, facing: { u: 0, v: side } };
+  }
+
+  const avenue = curves[pick - lines.length];
+  const s = Math.min(avenue.points.length - 2, Math.floor(rng() * (avenue.points.length - 1)));
+  const a = avenue.points[s];
+  const b = avenue.points[s + 1];
+  const du = b.u - a.u;
+  const dv = b.v - a.v;
+  const run = Math.hypot(du, dv) || 1;
+  const out = offset + (avenue.width - ROAD_WIDTH) / 2; // wider street, kerb further out
+  return {
+    u: a.u + (dv / run) * side * out,
+    v: a.v - (du / run) * side * out,
+    facing: { u: (du / run) * side, v: (dv / run) * side },
+  };
+}
+
 // Snap a coordinate to the nearest road centreline. A 'u' road runs east-west,
 // so it is a line of constant v and snaps against the v offset.
 export function snapToRoad(value, axis) {
@@ -162,13 +300,21 @@ export function nearestRoad(u, v) {
   const alongV = snapToRoad(u, 'v');
   const toU = Math.abs(v - alongU);
   const toV = Math.abs(u - alongV);
-  return toU <= toV
-    ? { distance: toU, facing: { u: 0, v: Math.sign(alongU - v) || 1 } }
-    : { distance: toV, facing: { u: Math.sign(alongV - u) || 1, v: 0 } };
+  const grid = toU <= toV
+    ? { distance: toU, width: ROAD_WIDTH, facing: { u: 0, v: Math.sign(alongU - v) || 1 } }
+    : { distance: toV, width: ROAD_WIDTH, facing: { u: Math.sign(alongV - u) || 1, v: 0 } };
+
+  // An avenue is a street like any other: whichever is closer is the one a
+  // building fronts onto.
+  const avenue = nearestAvenue(u, v);
+  return avenue && avenue.distance < grid.distance
+    ? { distance: avenue.distance, width: avenue.width, facing: avenue.facing }
+    : grid;
 }
 
 export function isOnPavement(u, v) {
-  return nearestRoad(u, v).distance <= ROAD_WIDTH / 2 + SIDEWALK_WIDTH;
+  const road = nearestRoad(u, v);
+  return road.distance <= road.width / 2 + SIDEWALK_WIDTH;
 }
 
 // A buildable spot inside a block: clear of the pavement and of the lake.
@@ -180,6 +326,8 @@ export function plotIn(rng, block, footprint) {
     v: block.v + (rng() * 2 - 1) * limit,
   };
   if (isInLake(plot.u, plot.v, footprint + 2)) return null;
+  // An avenue cuts across blocks, so a plot it crosses is not buildable.
+  if (isOnAvenue(plot.u, plot.v, footprint + 1)) return null;
   return plot;
 }
 
