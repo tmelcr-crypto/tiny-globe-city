@@ -1,8 +1,8 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
 - [ ] Touch controls
-- [ ] Buildings on globe
-- [ ] Enter/exit building
+- [x] Buildings on globe (houses.js, doors)
+- [x] Enter/exit building (proximity prompt, loading screen, 2D interior)
 - [ ] One car
 - [ ] NPCs
 - [ ] Weapons
