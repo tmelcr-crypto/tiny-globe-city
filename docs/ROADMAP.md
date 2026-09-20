@@ -12,6 +12,7 @@
 - [x] Authored town (city-map.json, no procedural layout per run)
 - [x] Lot markers + explicit placements ("on lot B3A place a playground")
 - [x] Lot grid over the whole globe, pinch zoom in the globe view
+- [x] Cubed-sphere grid: square cells everywhere, streets on great circles
 - [x] Data-described props (props.json)
 - [x] Dev free-float globe view
 - [x] Asset catalogue (PDF, Prague reference, 619 assets)

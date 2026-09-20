@@ -10,16 +10,15 @@
 
   "legend": {
     ".": { "zone": "empty",      "buildings": 0 },
-    "h": { "zone": "houses",     "buildings": 4 },
-    "a": { "zone": "apartments", "buildings": 3 },
-    "t": { "zone": "towers",     "buildings": 3 },
+    "h": { "zone": "houses",     "buildings": 6 },
+    "a": { "zone": "apartments", "buildings": 4 },
+    "t": { "zone": "towers",     "buildings": 4 },
     "c": { "zone": "church",     "buildings": 1 },
     "p": { "zone": "park",       "buildings": 0, "lake": true },
-    "@": { "zone": "houses",     "buildings": 3, "spawn": true }
+    "@": { "zone": "houses",     "buildings": 4, "spawn": true }
   },
 
   "street": {
-    "block": 44,
     "road": 9,
     "sidewalk": 2.5,
     "verge": 2,
@@ -45,11 +44,11 @@
   ],
 
   "scenery": {
-    "parkTrees": 26,
-    "gardenTrees": 34,
-    "cars": 10,
+    "parkTrees": 34,
+    "gardenTrees": 48,
+    "cars": 14,
     "mountains": 10,
-    "lakeRadius": 15,
-    "mountainRing": [150, 205]
+    "lakeRadius": 18,
+    "mountainRing": [180, 240]
   }
 }

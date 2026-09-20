@@ -20,8 +20,10 @@ describe('markers', () => {
   });
 
   it('takes a code anywhere on the globe and rejects the rest', () => {
-    expect(parseMarker('Z9A')).not.toBeNull();   // out in the country, west of the town
-    expect(parseMarker('B99A')).toBeNull();      // no such row on a planet this size
+    expect(parseMarker('E-B3A')).not.toBeNull(); // over the eastern horizon
+    expect(parseMarker('B-A1D')).not.toBeNull(); // the far side of the planet
+    expect(parseMarker('Z9A')).toBeNull();       // no such column or row on a face
+    expect(parseMarker('X-B3A')).toBeNull();     // no such face
     expect(parseMarker('B3E')).toBeNull();       // a block has four plots, A to D
     expect(parseMarker('nonsense')).toBeNull();
     expect(parseMarker('b3c').code).toBe('B3C'); // case-insensitive

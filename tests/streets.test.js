@@ -105,10 +105,12 @@ describe('the town around the avenues', () => {
     expect(count('npc')).toBeGreaterThan(1);
   });
 
-  it('maps grid coordinates onto the road lines', () => {
+  it('maps grid coordinates onto the street lines', () => {
     const north = mapPoint(2, 0);
     const south = mapPoint(2, 4);
-    expect(north.u).toBeCloseTo(south.u);
+    // Both ends of one street, which runs dead straight over the globe: on a
+    // flat map of the globe that bows by under a metre over its whole length.
+    expect(Math.abs(north.u - south.u)).toBeLessThan(1);
     expect(north.v).toBeGreaterThan(south.v);
   });
 });

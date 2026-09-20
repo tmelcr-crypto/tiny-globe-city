@@ -26,6 +26,31 @@ grid follows from the shape of the map — you never place a road by hand. Every
 junction is rounded off by `street.corner` metres, so the kerb sweeps around
 the corner rather than meeting at a right angle.
 
+A block is one cell of the grid the whole planet is divided by (below), so its
+size is not authored: `street.road` sets the road width, and what is left of
+the cell is the block. On a 160 m globe cut four cells to a face that comes out
+at a 62.8 m pitch with 53.8 m blocks.
+
+## The grid the planet is divided by
+
+Lines of latitude and longitude are not squares — they pinch to nothing at the
+poles. So the planet is divided the way a cube is: six square faces, each cut
+into the same N×N grid, then blown out onto the sphere (`src/world/sphere-grid.js`).
+
+- Every cell is a four-sided near-square. Across the whole planet the sides are
+  within 1.38 of each other and the areas within 1.20 — and you cannot do
+  better than that, because a sphere cannot be tiled with exact squares.
+- There is no pole anywhere. The only unusual points are the eight cube
+  corners, where three cells meet instead of four.
+- A cell edge is a great circle, so a street along one runs dead straight over
+  the globe and comes back to where it started. On the flat map the town is
+  planned on, that reads as a very slight bow — which is why streets are
+  carried as polylines rather than ruled lines.
+
+The town takes the top face, and the face is cut as finely as the map is long:
+`N = max(rows, columns)`, so a 4×4 map fills its face exactly. The grid is then
+turned so the player's spawn lands under them.
+
 ## Legend
 
 | Char | Zone | What goes there |
@@ -53,7 +78,9 @@ Most layout changes are one character.
 - **Grow the town** — add rows or columns. The map does not have to be square;
   a 5×4 map works, and the road grid grows with it.
 - **Thin out or crowd a block** — change its `buildings` count in the legend.
-- **Reshape the streets** — `street.block`, `street.road`, `street.sidewalk`.
+- **Reshape the streets** — `street.road`, `street.sidewalk`, `street.corner`.
+  The block size follows from the grid, so it is not yours to set: cut the map
+  into more rows and columns and every block gets smaller.
 - **Reshuffle the details** — change `seed`. Same layout, different pick of
   house sizes, colours and tree kinds.
 
@@ -117,19 +144,26 @@ B3C
 `B3` is literally row 3, column B of the `rows` block in `city-map.json`, so a
 code and the map agree by construction.
 
-The grid does not stop at the town. It carries on across the whole planet —
-twenty blocks each way, sixteen hundred plots — so anywhere you can stand has
-a code. Outside the town the letters and numbers wrap round the far side like
-a clock face: the block west of column A is Z, and the block north of row 1 is
-row 20. It is a flat grid wrapped onto a sphere, so blocks stay square around
-the town and squeeze together at the point opposite the player, the way a
-map's grid does at the poles.
+The grid does not stop at the town: it covers the planet, six faces of ninety-six
+blocks and three hundred and eighty-four plots, so anywhere you can stand has a
+code. The town is the top face and needs no prefix; the other five faces each
+take a letter, which goes in front:
+
+| Prefix | Face |
+| --- | --- |
+| *(none)* | the town, overhead |
+| `N-` `E-` `S-` `W-` | the four faces around the sides, over each horizon |
+| `B-` | the far side of the planet |
+
+So `B3A` is in town and `E-B3A` is the same cell on the eastern face. Column
+letters and row numbers restart on every face, which is why the prefix is part
+of the code rather than a continuation of the town's numbering.
 
 In game, press **M** (or the **◻︎ Lot grid** button) to draw it: bright yellow
-outlines the town's blocks, olive the country beyond, cyan splits every block
+outlines the town's face, olive the rest of the planet, cyan splits every block
 into its four plots. Labelled pegs follow you from block to block rather than
-standing on all sixteen hundred plots at once, and the HUD shows the plot you
-are in, so walking around is enough to find the code for a spot.
+standing on all three hundred plots at once, and the HUD shows the plot you are
+in, so walking around is enough to find the code for a spot.
 
 ## Placing a specific thing: `src/data/placements.json`
 

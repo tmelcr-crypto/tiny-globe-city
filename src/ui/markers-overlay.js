@@ -1,16 +1,20 @@
 import * as THREE from 'three';
 import { on, emit } from '../core/events.js';
-import { markerUnderPlayer, plotsOf, allBlocks, BLOCK_RANGE, REACH } from '../world/markers.js';
-import { surfacePoint, cityBlocks, BLOCK } from '../world/city-plan.js';
+import { markerUnderPlayer, plotsOf } from '../world/markers.js';
+import { grid } from '../world/city-plan.js';
+import { FACE_IDS, TOWN_FACE } from '../world/sphere-grid.js';
+import { GLOBE_RADIUS } from '../world/globe.js';
 
 // Planning overlay: the block and lot grid, drawn right around the planet, and
 // a labelled peg on every plot near the player — so you can walk anywhere,
 // read a code off the ground, and name that exact spot. Off by default,
 // toggled with M or the on-screen button.
 //
-// The grid covers four hundred blocks, which is far too many to label at once:
-// labels are a small pool that follows the player from block to block, while
-// the lines themselves are two draw calls for the whole globe.
+// The grid is the cubed sphere the planet is divided by: six faces of square
+// cells, drawn along their own edges, which are great circles. Every cell on
+// the planet is labelled in principle, but there are hundreds, so the labels
+// are a small pool that follows the player from block to block while the lines
+// themselves are three draw calls for the whole globe.
 
 const LABEL_HEIGHT = 6;   // metres above the ground, clear of houses' eaves
 const LABEL_WIDTH = 3.5;  // metres wide — small enough that a near label doesn't fill the screen
@@ -25,53 +29,52 @@ const TOWN_LINE = new THREE.LineBasicMaterial({ color: 0xffdd33 });
 const LAND_LINE = new THREE.LineBasicMaterial({ color: 0x6b7f4a });  // the country outside the town
 const LOT_LINE = new THREE.LineBasicMaterial({ color: 0x66d9ff, transparent: true, opacity: 0.75 });
 const LINE_LIFT = 0.3;   // clear of the pavement so the lines read on any surface
-const LINE_STEP = 2;     // metres between samples, so lines follow the curve
 
-const onGlobe = (u, v) => Math.hypot(u, v) <= REACH;
+const ARC_STEPS = 10;  // segments per cell edge, so a line hugs the curve
 
-// A straight run on the flat map, sampled onto the globe as a chain of
-// segments. Anything past the point opposite the player is off the planet, so
-// the run simply stops there.
-function addLine(points, from, to) {
-  const steps = Math.max(1, Math.ceil(Math.hypot(to.u - from.u, to.v - from.v) / LINE_STEP));
-  let previous = null;
-  for (let s = 0; s <= steps; s++) {
-    const t = s / steps;
-    const u = from.u + (to.u - from.u) * t;
-    const v = from.v + (to.v - from.v) * t;
-    if (!onGlobe(u, v)) { previous = null; continue; }
-    const point = surfacePoint(u, v, LINE_LIFT);
-    if (previous) points.push(previous, point);
-    previous = point;
+const surfaceAt = (direction, lift) =>
+  direction.clone().multiplyScalar(GLOBE_RADIUS + lift);
+
+// A cell edge, sampled into segments. It is a straight line on the globe; the
+// samples are only there so the drawn line hugs the surface.
+function addEdge(points, faceId, from, to) {
+  const arc = grid.arc(faceId, from, to, ARC_STEPS);
+  for (let s = 0; s < arc.length - 1; s++) {
+    points.push(surfaceAt(arc[s], LINE_LIFT), surfaceAt(arc[s + 1], LINE_LIFT));
   }
 }
 
-function addOutline(points, centre, half) {
-  const corners = [
-    { u: centre.u - half, v: centre.v - half },
-    { u: centre.u + half, v: centre.v - half },
-    { u: centre.u + half, v: centre.v + half },
-    { u: centre.u - half, v: centre.v + half },
-  ];
-  for (let i = 0; i < corners.length; i++) {
-    addLine(points, corners[i], corners[(i + 1) % corners.length]);
-  }
-}
-
-// Block outlines — bright through the town, dull out in the country — and the
-// cross that splits each block into its four lots.
+// The block outlines — bright across the town's face, dull over the rest of
+// the planet — and the cross that splits every block into its four lots.
 function gridLines() {
   const group = new THREE.Group();
   const town = [];
   const land = [];
   const lots = [];
 
-  const inTown = new Set(cityBlocks().map((block) => `${block.i},${block.j}`));
+  const { divisions, step } = grid;
+  const first = grid.angleOfColumn(0);
+  const last = grid.angleOfColumn(divisions);
+  const top = grid.angleOfRow(0);
+  const bottom = grid.angleOfRow(divisions);
 
-  for (const block of allBlocks()) {
-    addOutline(inTown.has(`${block.i},${block.j}`) ? town : land, block, BLOCK / 2);
-    addLine(lots, { u: block.u - BLOCK / 2, v: block.v }, { u: block.u + BLOCK / 2, v: block.v });
-    addLine(lots, { u: block.u, v: block.v - BLOCK / 2 }, { u: block.u, v: block.v + BLOCK / 2 });
+  for (const faceId of FACE_IDS) {
+    const blocks = faceId === TOWN_FACE ? town : land;
+
+    for (let line = 0; line <= divisions; line++) {
+      const a = grid.angleOfColumn(line);
+      const b = grid.angleOfRow(line);
+      addEdge(blocks, faceId, { a, b: top }, { a, b: bottom });
+      addEdge(blocks, faceId, { a: first, b }, { a: last, b });
+    }
+
+    // Halfway across every cell, in both directions: the lot lines.
+    for (let cell = 0; cell < divisions; cell++) {
+      const a = grid.angleOfColumn(cell) + step / 2;
+      const b = grid.angleOfRow(cell) - step / 2;
+      addEdge(lots, faceId, { a, b: top }, { a, b: bottom });
+      addEdge(lots, faceId, { a: first, b }, { a: last, b });
+    }
   }
 
   for (const [points, material] of [[land, LAND_LINE], [town, TOWN_LINE], [lots, LOT_LINE]]) {
@@ -119,9 +122,9 @@ function createTag(group) {
     show(marker) {
       peg.visible = true;
       label.visible = true;
-      peg.position.copy(surfacePoint(marker.u, marker.v, 0.15));
-      peg.quaternion.setFromUnitVectors(UP, peg.position.clone().normalize());
-      label.position.copy(surfacePoint(marker.u, marker.v, LABEL_HEIGHT));
+      peg.position.copy(surfaceAt(marker.direction, 0.15));
+      peg.quaternion.setFromUnitVectors(UP, marker.direction);
+      label.position.copy(surfaceAt(marker.direction, LABEL_HEIGHT));
       drawLabel(canvas, marker.code);
       texture.needsUpdate = true;
     },
@@ -143,8 +146,8 @@ export function createMarkerOverlay(worldPivot) {
   let labelled = null;
   let here = null;
 
-  // The grid is four hundred blocks of line work: build it the first time it
-  // is asked for rather than on every start.
+  // The grid is the whole planet's worth of line work: build it the first time
+  // it is asked for rather than on every start.
   function build() {
     if (built) return;
     built = true;
@@ -153,21 +156,20 @@ export function createMarkerOverlay(worldPivot) {
     for (let n = 0; n < span * span * 4; n++) tags.push(createTag(group));
   }
 
-  function label(i, j) {
-    labelled = `${i},${j}`;
+  function label(cell) {
+    labelled = `${cell.faceId},${cell.column},${cell.row}`;
     let tag = 0;
-    for (let dj = LABEL_RING; dj >= -LABEL_RING; dj--) {
-      for (let di = -LABEL_RING; di <= LABEL_RING; di++) {
-        const bi = i + di;
-        const bj = j + dj;
-        const inside = bi >= BLOCK_RANGE.minI && bi <= BLOCK_RANGE.maxI
-          && bj >= BLOCK_RANGE.minJ && bj <= BLOCK_RANGE.maxJ;
-        for (const marker of inside ? plotsOf(bi, bj) : []) {
-          if (onGlobe(marker.u, marker.v)) tags[tag].show(marker);
-          else tags[tag].hide();
-          tag++;
+    for (let dr = -LABEL_RING; dr <= LABEL_RING; dr++) {
+      for (let dc = -LABEL_RING; dc <= LABEL_RING; dc++) {
+        const column = cell.column + dc;
+        const row = cell.row + dr;
+        // Neighbours that fall off the edge of a face belong to the next face
+        // along; those are left unlabelled rather than guessed at.
+        const here = column >= 0 && column < grid.divisions && row >= 0 && row < grid.divisions;
+        for (const marker of here ? plotsOf({ faceId: cell.faceId, column, row }) : []) {
+          tags[tag++].show(marker);
         }
-        if (!inside) for (let n = 0; n < 4; n++) tags[tag++].hide();
+        if (!here) for (let n = 0; n < 4; n++) tags[tag++].hide();
       }
     }
   }
@@ -187,7 +189,7 @@ export function createMarkerOverlay(worldPivot) {
     update() {
       if (!group.visible) return;
       const marker = markerUnderPlayer(worldPivot);
-      if (marker && `${marker.i},${marker.j}` !== labelled) label(marker.i, marker.j);
+      if (marker && `${marker.faceId},${marker.column},${marker.row}` !== labelled) label(marker);
 
       const code = marker?.code ?? null;
       if (code === here) return;
