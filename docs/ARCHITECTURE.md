@@ -1,6 +1,6 @@
 # Architecture
 - `core/` loop, input, camera, state, event bus
-- `world/` globe, spawner, city plan, lot markers
+- `world/` globe, spawner, city plan, lot markers (the grid covers the planet)
 - `entities/` player, car, npc, weapon
 - `interiors/` enterable buildings
 - `systems/` quests, activities, world events, dev free-float globe view

@@ -19,8 +19,10 @@ describe('markers', () => {
     }
   });
 
-  it('rejects codes outside the city', () => {
-    expect(parseMarker('Z9A')).toBeNull();
+  it('takes a code anywhere on the globe and rejects the rest', () => {
+    expect(parseMarker('Z9A')).not.toBeNull();   // out in the country, west of the town
+    expect(parseMarker('B99A')).toBeNull();      // no such row on a planet this size
+    expect(parseMarker('B3E')).toBeNull();       // a block has four plots, A to D
     expect(parseMarker('nonsense')).toBeNull();
     expect(parseMarker('b3c').code).toBe('B3C'); // case-insensitive
   });
@@ -37,7 +39,7 @@ describe('markers', () => {
 
   it('agrees with the block references the plan uses', () => {
     const marker = markerAt(markerPoint('C2D').u, markerPoint('C2D').v);
-    expect(blockRef({ i: marker.col - 2, j: -2 + (4 - 1 - marker.row) })).toBe('C2');
+    expect(blockRef(marker)).toBe('C2');
   });
 });
 

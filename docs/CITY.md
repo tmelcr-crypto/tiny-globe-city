@@ -117,10 +117,19 @@ B3C
 `B3` is literally row 3, column B of the `rows` block in `city-map.json`, so a
 code and the map agree by construction.
 
-In game, press **M** (or the **◻︎ Lot grid** button) to draw the grid: yellow
-outlines the blocks, cyan splits each one into its four plots, and a label
-stands in the middle of each. The HUD shows the plot you are standing in, so
-walking around is enough to find the code for a spot.
+The grid does not stop at the town. It carries on across the whole planet —
+twenty blocks each way, sixteen hundred plots — so anywhere you can stand has
+a code. Outside the town the letters and numbers wrap round the far side like
+a clock face: the block west of column A is Z, and the block north of row 1 is
+row 20. It is a flat grid wrapped onto a sphere, so blocks stay square around
+the town and squeeze together at the point opposite the player, the way a
+map's grid does at the poles.
+
+In game, press **M** (or the **◻︎ Lot grid** button) to draw it: bright yellow
+outlines the town's blocks, olive the country beyond, cyan splits every block
+into its four plots. Labelled pegs follow you from block to block rather than
+standing on all sixteen hundred plots at once, and the HUD shows the plot you
+are in, so walking around is enough to find the code for a spot.
 
 ## Placing a specific thing: `src/data/placements.json`
 
@@ -164,9 +173,12 @@ is a new entry here — no new code, and it is immediately placeable by name.
 
 The **🌍 Spin globe** button (or **G**) pulls the camera off the surface and
 lets you drag the planet round like a desk globe, with a flick carrying on and
-settling. Whatever ends up at the top is where you are standing, so switching
-back drops you there. Everything else — walking, driving, NPCs, shooting —
-stops while the globe view is up, so nothing moves under you.
+settling. Pinch to zoom — two fingers apart to come in close enough to read a
+street, together to pull back and see the whole planet; a mouse wheel does the
+same. Dragging turns the globe by what is on screen, so close in it turns
+less. Whatever ends up at the top is where you are standing, so switching back
+drops you there. Everything else — walking, driving, NPCs, shooting — stops
+while the globe view is up, so nothing moves under you.
 
 ## What is still not authored
 
