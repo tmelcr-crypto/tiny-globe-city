@@ -9,6 +9,27 @@ const WORLD_UP = new THREE.Vector3(0, 1, 0);
 const FALLBACK_UP = new THREE.Vector3(0, 0, 1);
 const GROUND_OFFSET = 0.03; // lifts streets/building bases off the sphere to avoid z-fighting
 const ROAD_THICKNESS = 0.05;
+const DEFAULT_SEED = 1337;
+
+// Deterministic PRNG so the same world.json always builds the same city,
+// regardless of when the game is launched or a save is reloaded.
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashSeed(seed, id) {
+  let h = seed >>> 0;
+  for (let i = 0; i < id.length; i++) {
+    h = Math.imul(h ^ id.charCodeAt(i), 2654435761);
+  }
+  return h >>> 0;
+}
 
 function dirFromLatLon(lat, lon) {
   const la = THREE.MathUtils.degToRad(lat);
@@ -40,12 +61,13 @@ function projectToSphere(center, east, north, localX, localZ, radius, height) {
 }
 
 export function buildCity(pivot, radius) {
+  const seed = world.seed ?? DEFAULT_SEED;
   for (const district of world.districts) {
-    pivot.add(buildDistrict(district, radius));
+    pivot.add(buildDistrict(district, radius, mulberry32(hashSeed(seed, district.id))));
   }
 }
 
-function buildDistrict(district, radius) {
+function buildDistrict(district, radius, rng) {
   const group = new THREE.Group();
   group.name = district.id;
 
@@ -55,13 +77,13 @@ function buildDistrict(district, radius) {
   const gridW = blocksX * blockSize + (blocksX - 1) * streetWidth;
   const gridD = blocksZ * blockSize + (blocksZ - 1) * streetWidth;
 
-  group.add(buildBlocks(district, center, east, north, radius, gridW, gridD));
+  group.add(buildBlocks(district, center, east, north, radius, gridW, gridD, rng));
   group.add(buildRoads(district, center, east, north, radius, gridW, gridD));
 
   return group;
 }
 
-function buildBlocks(district, center, east, north, radius, gridW, gridD) {
+function buildBlocks(district, center, east, north, radius, gridW, gridD, rng) {
   const { blocksX, blocksZ, blockSize, streetWidth, density, buildingHeight, buildingFootprint } = district;
   const count = blocksX * blocksZ;
   const mesh = new THREE.InstancedMesh(
@@ -76,12 +98,12 @@ function buildBlocks(district, center, east, north, radius, gridW, gridD) {
 
   for (let x = 0; x < blocksX; x++) {
     for (let z = 0; z < blocksZ; z++) {
-      const occupied = Math.random() < density;
+      const occupied = rng() < density;
       const localX = -gridW / 2 + blockSize / 2 + x * (blockSize + streetWidth);
       const localZ = -gridD / 2 + blockSize / 2 + z * (blockSize + streetWidth);
-      const h = occupied ? THREE.MathUtils.randFloat(minH, maxH) : 0;
-      const fw = occupied ? THREE.MathUtils.randFloat(minF, maxF) : 0;
-      const fd = occupied ? THREE.MathUtils.randFloat(minF, maxF) : 0;
+      const h = occupied ? minH + rng() * (maxH - minH) : 0;
+      const fw = occupied ? minF + rng() * (maxF - minF) : 0;
+      const fd = occupied ? minF + rng() * (maxF - minF) : 0;
 
       const base = projectToSphere(center, east, north, localX, localZ, radius, GROUND_OFFSET);
       const { normal, east: e, north: n } = surfaceBasis(base);
