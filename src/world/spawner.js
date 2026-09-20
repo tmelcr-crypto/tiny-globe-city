@@ -3,11 +3,12 @@ import { GLOBE_RADIUS } from './globe.js';
 import { createCar } from '../entities/car.js';
 import { createNpc } from '../entities/npc.js';
 import { createTree } from '../entities/tree.js';
-import { createHouse } from '../entities/house.js';
+import { createBuilding } from '../entities/building.js';
 import vehicles from '../data/vehicles.json';
 import npcDefs from '../data/npcs.json';
+import buildingDefs from '../data/buildings.json';
 
-const HOUSE_COUNT = 50;
+const BUILDING_COUNT = 50;
 const CAR_COUNT = 5;
 const TREE_COUNT = 60;
 const NPC_HEALTH = 30;
@@ -23,17 +24,30 @@ const PLACEMENT_ATTEMPTS = 40;
 
 const UP = new THREE.Vector3(0, 1, 0);
 
+const safehouseDef = buildingDefs.find((d) => d.id === 'safehouse');
+const spawnableBuildings = buildingDefs.filter((d) => d.weight > 0);
+
 function degToRad(d) {
   return (d * Math.PI) / 180;
 }
 
+function pickWeighted(defs) {
+  let roll = Math.random() * defs.reduce((total, d) => total + d.weight, 0);
+  for (const def of defs) {
+    roll -= def.weight;
+    if (roll <= 0) return def;
+  }
+  return defs[defs.length - 1];
+}
+
 // Area-uniform direction in a colatitude band around the north pole (the player's spawn point).
-function randomCapDirection(maxColatitude, phi = Math.random() * Math.PI * 2) {
-  const cosMax = Math.cos(maxColatitude);
-  const cosMin = Math.cos(SPAWN_CLEARANCE);
+function randomCapDirection({ max = TOWN_RADIUS, min = SPAWN_CLEARANCE, phi } = {}) {
+  const angle = phi ?? Math.random() * Math.PI * 2;
+  const cosMax = Math.cos(max);
+  const cosMin = Math.cos(Math.min(min, max));
   const y = cosMax + Math.random() * (cosMin - cosMax);
   const sinTheta = Math.sqrt(1 - y * y);
-  return new THREE.Vector3(sinTheta * Math.cos(phi), y, sinTheta * Math.sin(phi));
+  return new THREE.Vector3(sinTheta * Math.cos(angle), y, sinTheta * Math.sin(angle));
 }
 
 // Ground (great-circle) distance between two directions, in world units.
@@ -42,9 +56,9 @@ function groundDistance(a, b) {
 }
 
 // Rejection-sample a direction whose footprint doesn't overlap anything placed so far.
-function findFreeDirection(placed, radius, maxColatitude, phi) {
+function findFreeDirection(placed, radius, band) {
   for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
-    const dir = randomCapDirection(maxColatitude, phi);
+    const dir = randomCapDirection(band);
     let clear = true;
     for (const other of placed) {
       if (groundDistance(dir, other.dir) < radius + other.radius) {
@@ -69,22 +83,32 @@ export function spawnAll(worldPivot) {
   const interactables = [];
   const placed = [];
 
-  for (let i = 0; i < HOUSE_COUNT; i++) {
-    const isSafehouse = i === 0;
-    const house = createHouse({ safehouse: isSafehouse });
-    const radius = house.userData.footprint;
-    // Put the safehouse close and directly ahead of spawn so it's easy to find.
-    const dir = isSafehouse
-      ? findFreeDirection(placed, radius, degToRad(12), -Math.PI / 2) ?? randomCapDirection(degToRad(12), -Math.PI / 2)
-      : findFreeDirection(placed, radius, TOWN_RADIUS);
+  // The safehouse goes down first, close and directly ahead of spawn so it's easy to find.
+  const safehouseBand = { max: degToRad(12), min: safehouseDef.minSpawnDistance / GLOBE_RADIUS, phi: -Math.PI / 2 };
+  const safehouse = createBuilding(safehouseDef);
+  const safehouseRadius = safehouse.userData.footprint;
+  const safehouseDir = findFreeDirection(placed, safehouseRadius, safehouseBand) ?? randomCapDirection(safehouseBand);
+  placeOnSurface(safehouse, safehouseDir); // building origins sit at the doorstep
+  safehouse.userData.type = 'safehouse';
+  safehouse.userData.id = 'safehouse';
+  worldPivot.add(safehouse);
+  placed.push({ dir: safehouseDir, radius: safehouseRadius });
+  interactables.push(safehouse);
+
+  for (let i = 1; i < BUILDING_COUNT; i++) {
+    const def = pickWeighted(spawnableBuildings);
+    const building = createBuilding(def);
+    const radius = building.userData.footprint;
+    // Taller kinds keep their distance, so the skyline sits out in the city
+    // rather than walling in the spot the player starts on.
+    const dir = findFreeDirection(placed, radius, { min: def.minSpawnDistance / GLOBE_RADIUS });
     if (!dir) continue;
 
-    placeOnSurface(house, dir); // house model's origin sits at its doorstep
-    house.userData.type = isSafehouse ? 'safehouse' : 'house';
-    house.userData.id = isSafehouse ? 'safehouse' : `house_${i}`;
-    worldPivot.add(house);
+    placeOnSurface(building, dir);
+    building.userData.type = 'building';
+    building.userData.id = `${def.id}_${i}`;
+    worldPivot.add(building);
     placed.push({ dir, radius });
-    if (isSafehouse) interactables.push(house);
   }
 
   for (let i = 0; i < CAR_COUNT; i++) {

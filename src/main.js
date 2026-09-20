@@ -35,7 +35,7 @@ scene.add(player);                     // player is NOT a child of worldPivot
 
 const interactables = spawnAll(worldPivot);
 const obstacles = worldPivot.children.filter((c) =>
-  ['house', 'safehouse', 'car', 'tree'].includes(c.userData?.type)
+  ['building', 'safehouse', 'car', 'tree'].includes(c.userData?.type)
 );
 const npcs = worldPivot.children.filter((c) => c.userData?.type === 'npc');
 

@@ -12,7 +12,7 @@ describe('world population', () => {
     const interactables = spawnAll(pivot);
 
     const byType = (type) => pivot.children.filter((c) => c.userData?.type === type);
-    expect(byType('house').length).toBeGreaterThan(0);
+    expect(byType('building').length).toBeGreaterThan(0);
     expect(byType('safehouse').length).toBe(1);
     expect(byType('car').length).toBeGreaterThan(0);
     expect(byType('npc').length).toBeGreaterThan(0);
