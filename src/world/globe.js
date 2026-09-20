@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { createRandomBuilding } from '../entities/building.js';
 import { createRandomTree } from '../entities/tree.js';
+import { buildCity } from './city.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -81,14 +81,10 @@ export function createGlobe() {
   );
   pivot.add(sphere);
 
-  // Placeholder buildings, mixed types, so movement is visible.
-  for (let i = 0; i < 40; i++) {
-    const building = createRandomBuilding();
-    seatOnSurface(building, new THREE.Vector3().randomDirection());
-    pivot.add(building);
-  }
+  // Hand-authored districts with street grids (src/data/world.json).
+  buildCity(pivot, GLOBE_RADIUS);
 
-  // Placeholder trees, mixed types, scattered more densely than buildings.
+  // Ambient trees scattered outside the districts.
   for (let i = 0; i < 80; i++) {
     const tree = createRandomTree();
     seatOnSurface(tree, new THREE.Vector3().randomDirection());

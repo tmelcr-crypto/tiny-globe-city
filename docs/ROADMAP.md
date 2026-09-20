@@ -1,7 +1,7 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
 - [x] Touch controls
-- [ ] Buildings on globe
+- [x] Buildings on globe (hand-authored districts + street grids, `src/data/world.json`)
 - [ ] Enter/exit building
 - [ ] One car
 - [ ] NPCs
