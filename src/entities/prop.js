@@ -22,11 +22,13 @@ function materialFor(color) {
 }
 
 function geometryFor(part) {
-  const [x = 1, y = 1, z = 1] = part.size ?? [];
+  const size = part.size ?? [];
+  const [x = 1, y = 1, z = 1] = size;
   switch (part.shape) {
     case 'cylinder':
-      // size: [radius, height, radiusBottom?]
-      return new THREE.CylinderGeometry(x, z || x, y, part.sides ?? 10);
+      // size: [radius, height, radiusBottom?] — a missing third number means a
+      // plain cylinder, not a cone down to the default width.
+      return new THREE.CylinderGeometry(x, size.length > 2 ? z : x, y, part.sides ?? 10);
     case 'cone':
       return new THREE.ConeGeometry(x, y, part.sides ?? 8);
     case 'sphere':

@@ -13,7 +13,7 @@
 - [x] Lot markers + explicit placements ("on lot B3A place a playground")
 - [x] Data-described props (props.json)
 - [x] Dev free-float globe view
-- [ ] Asset catalogue (PDF, Prague reference)
+- [x] Asset catalogue (PDF, Prague reference, 619 assets)
 - [x] Curved street network (avenues, rounded corners)
 - [ ] Quests
 - [ ] Activities

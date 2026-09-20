@@ -24,6 +24,13 @@ every build, and the game never loads this file.
 | Map style | `world/city-plan.js` — the district and road layout |
 | Time of day / weather: day, sunset, night, rain | not implemented; one fixed light and sky colour |
 
+## The catalogue
+
+`docs/catalog/asset-catalog.pdf` lists every asset the city could hold — 619 of
+them, referenced against Prague — showing each one in this sheet's style beside
+the placeholder the game uses today. Rebuild it with `npm run catalog`; see
+`docs/catalog/README.md`.
+
 ## Notes for whoever builds the real assets
 
 - One world unit is one metre and the player is 1.5 m (`entities/player.js`), so

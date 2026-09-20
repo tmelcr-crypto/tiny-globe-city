@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Tiny Globe City — asset catalogue</title>
+<style>
+  @page { size: A4; margin: 14mm 12mm; }
+  :root { --ink: #241f1a; --muted: #6d6257; --rule: #cdc2b0; --paper: #ffffff; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 10.5px/1.45 "Iowan Old Style", Georgia, "Times New Roman", serif;
+  }
+  #catalogue { padding: 0 2mm; }
+  h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.4px; }
+  h2 { font-size: 15px; margin: 18px 0 4px; }
+  h3 { font-size: 11.5px; margin: 6px 0 1px; }
+  .cover { page-break-after: always; }
+  .cover .lead { font-size: 13px; color: var(--muted); margin: 0 0 14px; }
+  .cover p { margin: 0 0 8px; max-width: 150mm; }
+  .sheet { width: 100%; border: 1px solid var(--rule); border-radius: 3px; }
+  .caption { color: var(--muted); font-size: 9.5px; }
+  .contents { columns: 2; margin: 4px 0 10px; padding-left: 16px; color: var(--muted); }
+  .category { page-break-before: always; }
+  .category > h2 {
+    margin: 0 0 2px; font-size: 18px; border-bottom: 1.5px solid var(--ink); padding-bottom: 3px;
+  }
+  .intro { color: var(--muted); margin: 0 0 8px; max-width: 150mm; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .card {
+    border: 1px solid var(--rule); border-radius: 3px; padding: 5px 6px 6px;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .card img { width: 100%; display: block; border-radius: 2px; }
+  .meta { margin: 0; color: var(--muted); font-size: 9px; }
+  .meta code { font: 9px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; color: var(--ink); }
+  .note { margin: 3px 0 0; }
+  .status { margin: 3px 0 0; font-size: 9px; }
+  .status.built { color: #2f6f4f; }
+  .status.planned { color: var(--muted); }
+</style>
+</head>
+<body>
+  <main id="catalogue"></main>
+  <script type="module" src="./render.js"></script>
+</body>
+</html>

@@ -1,0 +1,9319 @@
+{
+ "title": "Tiny Globe City — asset catalogue",
+ "reference": {
+  "city": "Prague",
+  "style": "docs/art/mossbite-style-reference.png",
+  "sourcing": "Compiled from knowledge of Prague's streets — its districts, street furniture, transport and building types — not from a live Google Street View session. Nothing here was sampled from imagery at build time; treat each entry's note as a description to check against a real street view before modelling.",
+  "scale": "One world unit is one metre. The player is 1.5 m tall, so every size below is in metres at that scale."
+ },
+ "fields": [
+  "id",
+  "name",
+  "archetype",
+  "size",
+  "colors",
+  "prague"
+ ],
+ "built": {
+  "res_villa_classic": "building:house",
+  "civ_baroque_church": "building:church",
+  "res_tenement_4": "building:apartment",
+  "com_office_tower": "building:skyscraper",
+  "res_cottage": "building:safehouse",
+  "veg_spruce": "tree:pine",
+  "veg_oak": "tree:oak",
+  "veg_birch": "tree:birch",
+  "veg_bush_round": "tree:bush",
+  "veh_skoda_octavia": "vehicle:car_basic",
+  "ppl_office_worker": "npc:npc_villager_01",
+  "ppl_student": "npc:npc_villager_02",
+  "rec_playground_set": "prop:playground",
+  "stf_bench_slat": "prop:bench",
+  "lit_lamp_cast": "prop:lamppost",
+  "rec_fountain_park": "prop:fountain",
+  "com_trafika": "prop:kiosk",
+  "tra_tram_shelter": "prop:tram_stop",
+  "rec_monument_statue": "prop:statue",
+  "stf_planter_concrete": "prop:planter",
+  "stf_bin_metal": "prop:bin",
+  "stf_bollard_stone": "prop:bollard"
+ },
+ "categories": [
+  {
+   "id": "residential",
+   "name": "Residential buildings",
+   "intro": "Prague's housing in layers: baroque burgher houses in the centre, 19th-century tenement blocks in Vinohrady and Žižkov, functionalist villas in Dejvice, and panel estates on the outskirts.",
+   "assets": [
+    [
+     "res_burgher_house",
+     "Baroque burgher house",
+     "house",
+     [
+      11,
+      12,
+      10
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Malá Strana: three storeys, painted plaster, house sign over the door"
+    ],
+    [
+     "res_gothic_house",
+     "Gothic townhouse",
+     "house",
+     [
+      9,
+      13,
+      9
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Old Town: narrow plot, steep gable, cellar a storey below street level"
+    ],
+    [
+     "res_renaissance_house",
+     "Renaissance house with sgraffito",
+     "house",
+     [
+      12,
+      13,
+      10
+     ],
+     [
+      "#efeade",
+      "#8c4a37"
+     ],
+     "Sgraffito diamond rustication, as on the Minute House"
+    ],
+    [
+     "res_tenement_4",
+     "Four-storey tenement",
+     "block",
+     [
+      22,
+      15,
+      13
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Žižkov činžovní dům, shops at street level, flats above"
+    ],
+    [
+     "res_tenement_5",
+     "Five-storey tenement",
+     "block",
+     [
+      26,
+      18,
+      14
+     ],
+     [
+      "#d9a8a0",
+      "#2f3338"
+     ],
+     "Vinohrady block with a courtyard behind the street wing"
+    ],
+    [
+     "res_tenement_6",
+     "Six-storey corner tenement",
+     "block",
+     [
+      28,
+      21,
+      16
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Corner block with a cut corner and a turret over it"
+    ],
+    [
+     "res_artnouveau_block",
+     "Art nouveau apartment block",
+     "block",
+     [
+      24,
+      19,
+      14
+     ],
+     [
+      "#bcd3c2",
+      "#6f9f8c"
+     ],
+     "Secese facade, stucco garlands, wrought-iron balconies"
+    ],
+    [
+     "res_functionalist_block",
+     "Functionalist apartment block",
+     "block",
+     [
+      26,
+      17,
+      13
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "1930s Baba estate: white render, ribbon windows, flat roof"
+    ],
+    [
+     "res_panelak_short",
+     "Panelák, four storeys",
+     "block",
+     [
+      34,
+      13,
+      12
+     ],
+     [
+      "#e3d9c6",
+      "#9a9a95"
+     ],
+     "Prefab estate slab, later painted in pastel blocks"
+    ],
+    [
+     "res_panelak_long",
+     "Panelák, eight storeys",
+     "block",
+     [
+      46,
+      25,
+      12
+     ],
+     [
+      "#b6c9d8",
+      "#9a9a95"
+     ],
+     "Jižní Město slab, loggias stacked in a grid"
+    ],
+    [
+     "res_panelak_tower",
+     "Panelák tower",
+     "tower",
+     [
+      18,
+      38,
+      18
+     ],
+     [
+      "#e3d9c6",
+      "#9a9a95"
+     ],
+     "Point block with a lift core and a flat roof"
+    ],
+    [
+     "res_panelak_renovated",
+     "Renovated panelák",
+     "block",
+     [
+      38,
+      22,
+      12
+     ],
+     [
+      "#f0a92b",
+      "#9a9a95"
+     ],
+     "Post-2000 insulation and bright colour blocking"
+    ],
+    [
+     "res_villa_classic",
+     "Detached villa",
+     "house",
+     [
+      14,
+      10,
+      12
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Ořechovka villa with a garden wall and gate"
+    ],
+    [
+     "res_villa_modern",
+     "Modernist villa",
+     "block",
+     [
+      16,
+      8,
+      12
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Flat-roofed white villa, terrace to the garden"
+    ],
+    [
+     "res_cottage",
+     "Cottage (chalupa)",
+     "house",
+     [
+      9,
+      7,
+      8
+     ],
+     [
+      "#8a5a2b",
+      "#8c4a37"
+     ],
+     "Weekend cottage: timber gable, shutters, small porch"
+    ],
+    [
+     "res_rowhouse",
+     "Row house",
+     "house",
+     [
+      7,
+      10,
+      11
+     ],
+     [
+      "#d9a8a0",
+      "#8c4a37"
+     ],
+     "Terrace in Spořilov, one bay wide, repeated down the street"
+    ],
+    [
+     "res_courtyard_wing",
+     "Courtyard wing",
+     "block",
+     [
+      18,
+      14,
+      9
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "The rear wing (dvorní trakt) behind a street block"
+    ],
+    [
+     "res_mansard_house",
+     "House with mansard attic",
+     "house",
+     [
+      13,
+      13,
+      11
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Steep mansard added over an older roof, dormers in a row"
+    ],
+    [
+     "res_attic_conversion",
+     "Attic conversion",
+     "dormer",
+     [
+      6,
+      4,
+      4
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Loft flat cut into a tenement roof, big glazed dormer"
+    ],
+    [
+     "res_student_hall",
+     "Student hall of residence",
+     "block",
+     [
+      40,
+      20,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#9a9a95"
+     ],
+     "Strahov dormitory blocks above the city"
+    ],
+    [
+     "res_hostel",
+     "Hostel",
+     "block",
+     [
+      18,
+      14,
+      12
+     ],
+     [
+      "#bcd3c2",
+      "#2f3338"
+     ],
+     "Converted tenement with bunk rooms and a painted sign"
+    ],
+    [
+     "res_apartment_new",
+     "New-build apartment block",
+     "block",
+     [
+      30,
+      18,
+      15
+     ],
+     [
+      "#efeade",
+      "#43474e"
+     ],
+     "Karlín infill with a glazed ground floor"
+    ],
+    [
+     "res_loft_conversion",
+     "Loft conversion in a warehouse",
+     "block",
+     [
+      26,
+      16,
+      18
+     ],
+     [
+      "#a4553c",
+      "#2f3338"
+     ],
+     "Karlín brick warehouse turned into flats"
+    ],
+    [
+     "res_gate_house",
+     "Gate house",
+     "shed",
+     [
+      6,
+      5,
+      5
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Lodge beside the gate of a villa garden"
+    ],
+    [
+     "res_garden_shed",
+     "Garden shed",
+     "shed",
+     [
+      3,
+      2.4,
+      2.6
+     ],
+     [
+      "#8a5a2b",
+      "#2f3338"
+     ],
+     "Allotment shed in a zahrádkářská kolonie"
+    ],
+    [
+     "res_allotment_hut",
+     "Allotment hut",
+     "house",
+     [
+      4,
+      3.4,
+      4
+     ],
+     [
+      "#bcd3c2",
+      "#8c4a37"
+     ],
+     "Painted hut with a vine over the door"
+    ],
+    [
+     "res_house_pension",
+     "Small guest pension",
+     "house",
+     [
+      12,
+      11,
+      10
+     ],
+     [
+      "#f0a92b",
+      "#8c4a37"
+     ],
+     "Pension with a hanging sign and window boxes"
+    ],
+    [
+     "res_backyard_house",
+     "Backyard house",
+     "house",
+     [
+      8,
+      8,
+      8
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Second house squeezed into a deep plot"
+    ],
+    [
+     "res_palace_wing",
+     "Palace wing",
+     "block",
+     [
+      34,
+      16,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Noble palace range with a piano nobile and a portal"
+    ],
+    [
+     "res_terrace_villa",
+     "Terraced hillside villa",
+     "block",
+     [
+      16,
+      10,
+      12
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Barrandov villa stepped into the slope"
+    ],
+    [
+     "res_concierge_flat",
+     "Concierge flat",
+     "shed",
+     [
+      5,
+      4,
+      5
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Ground-floor domovník flat beside the passage"
+    ],
+    [
+     "res_water_tower_flat",
+     "Converted water tower",
+     "tower",
+     [
+      8,
+      22,
+      8
+     ],
+     [
+      "#a4553c",
+      "#2f3338"
+     ],
+     "Round brick tower with flats cut into it"
+    ],
+    [
+     "res_bauhaus_duplex",
+     "Bauhaus duplex",
+     "block",
+     [
+      18,
+      9,
+      11
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Two-family house, corner windows, roof terrace"
+    ],
+    [
+     "res_brick_tenement",
+     "Brick tenement",
+     "block",
+     [
+      22,
+      16,
+      13
+     ],
+     [
+      "#a4553c",
+      "#2f3338"
+     ],
+     "Unrendered brick with stone window heads"
+    ],
+    [
+     "res_social_housing",
+     "Municipal housing block",
+     "block",
+     [
+      32,
+      16,
+      13
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Interwar city housing, arcaded ground floor"
+    ]
+   ]
+  },
+  {
+   "id": "civic",
+   "name": "Civic and institutional",
+   "intro": "The buildings a district is organised around: churches, schools, offices, the things with a flag or a brass plaque by the door.",
+   "assets": [
+    [
+     "civ_baroque_church",
+     "Baroque church",
+     "spire",
+     [
+      22,
+      20,
+      16
+     ],
+     [
+      "#e3d9c6",
+      "#6f9f8c"
+     ],
+     "St Nicholas in Malá Strana: green copper dome and tower"
+    ],
+    [
+     "civ_gothic_church",
+     "Gothic church",
+     "spire",
+     [
+      20,
+      26,
+      14
+     ],
+     [
+      "#b9b2a4",
+      "#2f3338"
+     ],
+     "Týn Church: twin spires over the square"
+    ],
+    [
+     "civ_chapel",
+     "Wayside chapel",
+     "spire",
+     [
+      5,
+      7,
+      5
+     ],
+     [
+      "#efeade",
+      "#8c4a37"
+     ],
+     "Small chapel with a bell cote and a niche"
+    ],
+    [
+     "civ_rotunda",
+     "Romanesque rotunda",
+     "tower",
+     [
+      7,
+      9,
+      7
+     ],
+     [
+      "#b9b2a4",
+      "#8c4a37"
+     ],
+     "St Martin's rotunda in Vyšehrad"
+    ],
+    [
+     "civ_synagogue",
+     "Synagogue",
+     "hall",
+     [
+      18,
+      16,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#6f9f8c"
+     ],
+     "Jubilee Synagogue, striped Moorish facade"
+    ],
+    [
+     "civ_monastery",
+     "Monastery range",
+     "block",
+     [
+      38,
+      15,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Strahov: long cloister wing and a courtyard"
+    ],
+    [
+     "civ_town_hall",
+     "Town hall",
+     "block",
+     [
+      28,
+      18,
+      16
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "District town hall with a clock and a flag"
+    ],
+    [
+     "civ_clock_tower",
+     "Town hall clock tower",
+     "tower",
+     [
+      8,
+      30,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#2f3338"
+     ],
+     "Old Town Hall tower over the astronomical clock"
+    ],
+    [
+     "civ_school_primary",
+     "Primary school",
+     "block",
+     [
+      34,
+      14,
+      16
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Interwar school block with tall windows and a yard"
+    ],
+    [
+     "civ_school_gym",
+     "School gymnasium",
+     "hall",
+     [
+      24,
+      10,
+      16
+     ],
+     [
+      "#e3d9c6",
+      "#9a9a95"
+     ],
+     "Attached hall with clerestory windows"
+    ],
+    [
+     "civ_kindergarten",
+     "Kindergarten",
+     "block",
+     [
+      20,
+      7,
+      14
+     ],
+     [
+      "#bcd3c2",
+      "#9a9a95"
+     ],
+     "Single storey, big windows, painted railings"
+    ],
+    [
+     "civ_university",
+     "University faculty",
+     "block",
+     [
+      36,
+      18,
+      18
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Faculty building with a stone portal and noticeboards"
+    ],
+    [
+     "civ_library",
+     "Public library",
+     "block",
+     [
+      26,
+      14,
+      18
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Municipal library with a reading room over the street"
+    ],
+    [
+     "civ_theatre",
+     "Theatre",
+     "block",
+     [
+      30,
+      20,
+      22
+     ],
+     [
+      "#e3d9c6",
+      "#6f9f8c"
+     ],
+     "National Theatre: copper roof, gilded detail"
+    ],
+    [
+     "civ_concert_hall",
+     "Concert hall",
+     "hall",
+     [
+      28,
+      18,
+      20
+     ],
+     [
+      "#e3d9c6",
+      "#6f9f8c"
+     ],
+     "Rudolfinum on the embankment"
+    ],
+    [
+     "civ_museum",
+     "Museum",
+     "block",
+     [
+      34,
+      20,
+      20
+     ],
+     [
+      "#e3d9c6",
+      "#6f9f8c"
+     ],
+     "National Museum block with a dome and a ramp"
+    ],
+    [
+     "civ_gallery",
+     "Art gallery",
+     "block",
+     [
+      24,
+      14,
+      18
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Converted hall, white walls, banner on the facade"
+    ],
+    [
+     "civ_hospital",
+     "Hospital wing",
+     "block",
+     [
+      40,
+      20,
+      16
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Motol pavilion with an ambulance canopy"
+    ],
+    [
+     "civ_clinic",
+     "Neighbourhood clinic",
+     "block",
+     [
+      22,
+      12,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#9a9a95"
+     ],
+     "Poliklinika: several surgeries behind one door"
+    ],
+    [
+     "civ_pharmacy_building",
+     "Pharmacy",
+     "block",
+     [
+      14,
+      12,
+      11
+     ],
+     [
+      "#bcd3c2",
+      "#2f3338"
+     ],
+     "Lékárna with a green cross over the entrance"
+    ],
+    [
+     "civ_post_office",
+     "Post office",
+     "block",
+     [
+      24,
+      14,
+      16
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Česká pošta branch, yellow signage"
+    ],
+    [
+     "civ_police_station",
+     "Police station",
+     "block",
+     [
+      22,
+      13,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Městská policie with a barrier and a car bay"
+    ],
+    [
+     "civ_fire_station",
+     "Fire station",
+     "hall",
+     [
+      26,
+      11,
+      16
+     ],
+     [
+      "#c8442e",
+      "#9a9a95"
+     ],
+     "Hasiči: three engine doors and a drying tower"
+    ],
+    [
+     "civ_fire_tower",
+     "Hose drying tower",
+     "tower",
+     [
+      4,
+      16,
+      4
+     ],
+     [
+      "#a4553c",
+      "#2f3338"
+     ],
+     "Narrow tower beside the engine hall"
+    ],
+    [
+     "civ_embassy",
+     "Embassy villa",
+     "block",
+     [
+      22,
+      13,
+      16
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Villa behind a fence with a coat of arms"
+    ],
+    [
+     "civ_courthouse",
+     "Courthouse",
+     "block",
+     [
+      30,
+      17,
+      18
+     ],
+     [
+      "#b9b2a4",
+      "#2f3338"
+     ],
+     "Heavy stone base, columns, steps to the door"
+    ],
+    [
+     "civ_ministry",
+     "Ministry block",
+     "block",
+     [
+      42,
+      20,
+      18
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Long interwar office range, flags over the entry"
+    ],
+    [
+     "civ_bank",
+     "Bank",
+     "block",
+     [
+      24,
+      16,
+      16
+     ],
+     [
+      "#b9b2a4",
+      "#6f9f8c"
+     ],
+     "Stone banking hall with bronze doors"
+    ],
+    [
+     "civ_community_centre",
+     "Community centre",
+     "block",
+     [
+      22,
+      10,
+      14
+     ],
+     [
+      "#bcd3c2",
+      "#9a9a95"
+     ],
+     "Hall for classes, elections and village dances"
+    ],
+    [
+     "civ_cemetery_chapel",
+     "Cemetery chapel",
+     "spire",
+     [
+      8,
+      10,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#2f3338"
+     ],
+     "Olšany chapel at the end of an avenue of graves"
+    ],
+    [
+     "civ_crematorium",
+     "Crematorium",
+     "hall",
+     [
+      24,
+      14,
+      18
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Strašnice: cubist mass and a tall chimney"
+    ],
+    [
+     "civ_observatory",
+     "Observatory",
+     "tower",
+     [
+      10,
+      12,
+      10
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Petřín observatory with a domed roof"
+    ],
+    [
+     "civ_bell_tower",
+     "Free-standing bell tower",
+     "tower",
+     [
+      6,
+      18,
+      6
+     ],
+     [
+      "#b9b2a4",
+      "#6f9f8c"
+     ],
+     "Zvonice beside a church, wooden louvres"
+    ],
+    [
+     "civ_watchtower",
+     "Lookout tower",
+     "tower",
+     [
+      6,
+      26,
+      6
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Petřín lookout, lattice ironwork"
+    ],
+    [
+     "civ_funeral_home",
+     "Funeral home",
+     "block",
+     [
+      16,
+      9,
+      12
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Quiet frontage, one dark sign"
+    ]
+   ]
+  },
+  {
+   "id": "commerce",
+   "name": "Shops, food and hospitality",
+   "intro": "Street level: the units with a roller shutter at night. Prague runs on small shops with hand-painted fascias and a hospoda on every second corner.",
+   "assets": [
+    [
+     "com_hospoda",
+     "Pub (hospoda)",
+     "block",
+     [
+      16,
+      11,
+      12
+     ],
+     [
+      "#d8b26a",
+      "#2f3338"
+     ],
+     "Beer-hall frontage, brewery sign, tables on the pavement"
+    ],
+    [
+     "com_beer_garden_hut",
+     "Beer garden serving hut",
+     "shed",
+     [
+      5,
+      3,
+      3.5
+     ],
+     [
+      "#2f7d3a",
+      "#2f3338"
+     ],
+     "Wooden hut pouring into plastic cups at Riegrovy sady"
+    ],
+    [
+     "com_kavarna",
+     "Café (kavárna)",
+     "block",
+     [
+      14,
+      12,
+      11
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Big windows, marble tables, awning over the pavement"
+    ],
+    [
+     "com_cukrarna",
+     "Cake shop (cukrárna)",
+     "block",
+     [
+      10,
+      11,
+      10
+     ],
+     [
+      "#d9a8a0",
+      "#2f3338"
+     ],
+     "Glass counter of větrník and rakvička"
+    ],
+    [
+     "com_pekarna",
+     "Bakery (pekárna)",
+     "block",
+     [
+      11,
+      11,
+      10
+     ],
+     [
+      "#8a5a2b",
+      "#2f3338"
+     ],
+     "Morning queue for rohlíky, flour sacks in the back"
+    ],
+    [
+     "com_potraviny",
+     "Corner grocery (potraviny)",
+     "block",
+     [
+      12,
+      11,
+      11
+     ],
+     [
+      "#bcd3c2",
+      "#2f3338"
+     ],
+     "Crates of fruit on the pavement, hand-written prices"
+    ],
+    [
+     "com_supermarket",
+     "Supermarket",
+     "hall",
+     [
+      38,
+      9,
+      28
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Flat box with a car park and trolley bays"
+    ],
+    [
+     "com_butcher",
+     "Butcher (řeznictví)",
+     "block",
+     [
+      10,
+      11,
+      10
+     ],
+     [
+      "#c8442e",
+      "#2f3338"
+     ],
+     "Tiled interior, sausage rings in the window"
+    ],
+    [
+     "com_fishmonger",
+     "Fish shop",
+     "block",
+     [
+      9,
+      10,
+      9
+     ],
+     [
+      "#b6c9d8",
+      "#2f3338"
+     ],
+     "Christmas carp tubs out front in December"
+    ],
+    [
+     "com_greengrocer",
+     "Greengrocer",
+     "block",
+     [
+      9,
+      10,
+      9
+     ],
+     [
+      "#3f8b3f",
+      "#2f3338"
+     ],
+     "Awning and a slanted display of vegetables"
+    ],
+    [
+     "com_vinotéka",
+     "Wine shop (vinotéka)",
+     "block",
+     [
+      9,
+      11,
+      9
+     ],
+     [
+      "#b03a2e",
+      "#2f3338"
+     ],
+     "Moravian wine drawn from the barrel into your own bottle"
+    ],
+    [
+     "com_pivovar",
+     "Micro-brewery",
+     "hall",
+     [
+      22,
+      12,
+      18
+     ],
+     [
+      "#a4553c",
+      "#2f3338"
+     ],
+     "Copper kettles visible from the street"
+    ],
+    [
+     "com_restaurace",
+     "Restaurant",
+     "block",
+     [
+      18,
+      12,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Menu board by the door, garden at the back"
+    ],
+    [
+     "com_bistro",
+     "Bistro",
+     "block",
+     [
+      9,
+      10,
+      8
+     ],
+     [
+      "#f0a92b",
+      "#2f3338"
+     ],
+     "Two tables, a counter, an espresso machine"
+    ],
+    [
+     "com_bufet",
+     "Stand-up buffet (bufet)",
+     "block",
+     [
+      10,
+      9,
+      9
+     ],
+     [
+      "#9a9a95",
+      "#2f3338"
+     ],
+     "Formica counters, smažený sýr, no chairs"
+    ],
+    [
+     "com_fast_food",
+     "Fast food unit",
+     "block",
+     [
+      12,
+      8,
+      10
+     ],
+     [
+      "#c8442e",
+      "#9a9a95"
+     ],
+     "Backlit menu over the counter"
+    ],
+    [
+     "com_trafika",
+     "Kiosk (trafika)",
+     "kiosk",
+     [
+      2.6,
+      2.6,
+      2
+     ],
+     [
+      "#2f7d3a",
+      "#c8442e"
+     ],
+     "Newspapers, tickets and tobacco at the tram stop"
+    ],
+    [
+     "com_newsstand",
+     "Newspaper stand",
+     "kiosk",
+     [
+      2.2,
+      2.4,
+      1.6
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Racks of papers clipped along the front"
+    ],
+    [
+     "com_flower_stall",
+     "Flower stall",
+     "kiosk",
+     [
+      2.4,
+      2.5,
+      1.8
+     ],
+     [
+      "#3f8b3f",
+      "#efeade"
+     ],
+     "Buckets of gerberas on the pavement"
+    ],
+    [
+     "com_market_stall",
+     "Market stall",
+     "shelter",
+     [
+      3,
+      2.6,
+      2.2
+     ],
+     [
+      "#8a5a2b",
+      "#c8442e"
+     ],
+     "Havelská market: canvas roof on a folding frame"
+    ],
+    [
+     "com_farmers_stall",
+     "Farmers' market stall",
+     "shelter",
+     [
+      3.2,
+      2.6,
+      2.4
+     ],
+     [
+      "#8a5a2b",
+      "#efeade"
+     ],
+     "Náplavka weekend market under white canopies"
+    ],
+    [
+     "com_market_hall",
+     "Market hall",
+     "hall",
+     [
+      34,
+      13,
+      22
+     ],
+     [
+      "#a4553c",
+      "#9a9a95"
+     ],
+     "Vinohradská tržnice: iron trusses, stalls inside"
+    ],
+    [
+     "com_department_store",
+     "Department store",
+     "block",
+     [
+      34,
+      20,
+      26
+     ],
+     [
+      "#9fc6d8",
+      "#43474e"
+     ],
+     "Kotva: brown panels and a hexagonal grid"
+    ],
+    [
+     "com_arcade",
+     "Shopping arcade (pasáž)",
+     "block",
+     [
+      26,
+      16,
+      20
+     ],
+     [
+      "#e3d9c6",
+      "#9fc6d8"
+     ],
+     "Glass-roofed passage cut through a block"
+    ],
+    [
+     "com_bookshop",
+     "Bookshop (knihkupectví)",
+     "block",
+     [
+      11,
+      11,
+      11
+     ],
+     [
+      "#8a5a2b",
+      "#2f3338"
+     ],
+     "Antikvariát smell, tables of second-hand books"
+    ],
+    [
+     "com_antique",
+     "Antique shop",
+     "block",
+     [
+      9,
+      10,
+      9
+     ],
+     [
+      "#b03a2e",
+      "#2f3338"
+     ],
+     "Crowded window of clocks and porcelain"
+    ],
+    [
+     "com_pawn_shop",
+     "Pawn shop (zastavárna)",
+     "block",
+     [
+      8,
+      9,
+      8
+     ],
+     [
+      "#9a9a95",
+      "#2f3338"
+     ],
+     "Barred window and a neon sign"
+    ],
+    [
+     "com_hardware",
+     "Hardware shop (železářství)",
+     "block",
+     [
+      11,
+      10,
+      11
+     ],
+     [
+      "#3c3f45",
+      "#2f3338"
+     ],
+     "Keys cut while you wait"
+    ],
+    [
+     "com_barber",
+     "Barber",
+     "block",
+     [
+      7,
+      9,
+      8
+     ],
+     [
+      "#b6c9d8",
+      "#2f3338"
+     ],
+     "Chair by the window, striped pole outside"
+    ],
+    [
+     "com_hairdresser",
+     "Hairdresser",
+     "block",
+     [
+      8,
+      9,
+      8
+     ],
+     [
+      "#d9a8a0",
+      "#2f3338"
+     ],
+     "Kadeřnictví with a curtain over the lower window"
+    ],
+    [
+     "com_laundry",
+     "Laundry",
+     "block",
+     [
+      9,
+      9,
+      9
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Čistírna: yellow tickets and steam in the window"
+    ],
+    [
+     "com_cobbler",
+     "Cobbler",
+     "block",
+     [
+      6,
+      8,
+      7
+     ],
+     [
+      "#8a5a2b",
+      "#2f3338"
+     ],
+     "Opravna obuvi, one bench deep"
+    ],
+    [
+     "com_locksmith",
+     "Locksmith booth",
+     "kiosk",
+     [
+      2,
+      2.4,
+      1.6
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Zámečník in a passage, keys hanging in rows"
+    ],
+    [
+     "com_photo_shop",
+     "Photo shop",
+     "block",
+     [
+      8,
+      9,
+      8
+     ],
+     [
+      "#3f7fc4",
+      "#2f3338"
+     ],
+     "Passport photos and film developing"
+    ],
+    [
+     "com_electronics",
+     "Electronics shop",
+     "block",
+     [
+      12,
+      11,
+      11
+     ],
+     [
+      "#43474e",
+      "#b6c9d8"
+     ],
+     "Screens facing the street, boxes stacked behind"
+    ],
+    [
+     "com_bike_shop",
+     "Bike shop",
+     "block",
+     [
+      11,
+      10,
+      11
+     ],
+     [
+      "#3f8b3f",
+      "#2f3338"
+     ],
+     "Frames hung from the ceiling, repair stand at the back"
+    ],
+    [
+     "com_pharmacy_unit",
+     "Pharmacy unit",
+     "block",
+     [
+      10,
+      10,
+      10
+     ],
+     [
+      "#bcd3c2",
+      "#2f3338"
+     ],
+     "Green cross sign that lights up at night"
+    ],
+    [
+     "com_optician",
+     "Optician",
+     "block",
+     [
+      9,
+      10,
+      9
+     ],
+     [
+      "#efeade",
+      "#2f3338"
+     ],
+     "Wall of frames behind glass"
+    ],
+    [
+     "com_travel_agency",
+     "Travel agency",
+     "block",
+     [
+      9,
+      9,
+      9
+     ],
+     [
+      "#f0a92b",
+      "#2f3338"
+     ],
+     "Posters of the sea taped to the window"
+    ],
+    [
+     "com_exchange",
+     "Currency exchange",
+     "kiosk",
+     [
+      2.4,
+      2.6,
+      2
+     ],
+     [
+      "#f0a92b",
+      "#c8442e"
+     ],
+     "Směnárna with a rate board and a queue of tourists"
+    ],
+    [
+     "com_hotel_small",
+     "Small hotel",
+     "block",
+     [
+      20,
+      16,
+      14
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Canopy, brass letters, luggage trolley in the lobby"
+    ],
+    [
+     "com_hotel_grand",
+     "Grand hotel",
+     "block",
+     [
+      34,
+      24,
+      20
+     ],
+     [
+      "#e3d9c6",
+      "#6f9f8c"
+     ],
+     "Corner hotel with balconies and flag poles"
+    ],
+    [
+     "com_hotel_modern",
+     "Modern hotel",
+     "block",
+     [
+      30,
+      22,
+      18
+     ],
+     [
+      "#9fc6d8",
+      "#43474e"
+     ],
+     "Glass and grey panel, coach bay outside"
+    ],
+    [
+     "com_office_small",
+     "Small office building",
+     "block",
+     [
+      20,
+      14,
+      14
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Two firms and a dentist behind one door"
+    ],
+    [
+     "com_office_tower",
+     "Office tower",
+     "tower",
+     [
+      22,
+      46,
+      22
+     ],
+     [
+      "#9fc6d8",
+      "#2f3338"
+     ],
+     "Pankrác: glazed shaft with a plant room on top"
+    ],
+    [
+     "com_coworking",
+     "Coworking floor",
+     "block",
+     [
+      24,
+      13,
+      16
+     ],
+     [
+      "#a4553c",
+      "#43474e"
+     ],
+     "Karlín loft with glass meeting boxes"
+    ],
+    [
+     "com_gym",
+     "Gym",
+     "block",
+     [
+      22,
+      11,
+      16
+     ],
+     [
+      "#43474e",
+      "#f0a92b"
+     ],
+     "Windows fogged, logo across the glass"
+    ],
+    [
+     "com_cinema",
+     "Cinema",
+     "block",
+     [
+      26,
+      15,
+      22
+     ],
+     [
+      "#b03a2e",
+      "#2f3338"
+     ],
+     "Kino with a canopy and a poster frame each side"
+    ],
+    [
+     "com_nightclub",
+     "Club",
+     "block",
+     [
+      18,
+      10,
+      16
+     ],
+     [
+      "#2f3338",
+      "#c8442e"
+     ],
+     "Unmarked door, bouncer, one red light"
+    ],
+    [
+     "com_casino",
+     "Casino",
+     "block",
+     [
+      16,
+      10,
+      14
+     ],
+     [
+      "#43474e",
+      "#f0a92b"
+     ],
+     "Herna sign flashing, blacked-out windows"
+    ],
+    [
+     "com_bet_shop",
+     "Betting shop",
+     "block",
+     [
+      10,
+      9,
+      9
+     ],
+     [
+      "#2f7d3a",
+      "#f0a92b"
+     ],
+     "Sazka terminal and screens of odds"
+    ],
+    [
+     "com_garage_service",
+     "Car repair garage",
+     "hall",
+     [
+      20,
+      7,
+      14
+     ],
+     [
+      "#9a9a95",
+      "#3f7fc4"
+     ],
+     "Autoservis: two lifts and a yard of parts"
+    ],
+    [
+     "com_petrol_station",
+     "Petrol station",
+     "shelter",
+     [
+      16,
+      6,
+      10
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Canopy over four pumps and a shop"
+    ],
+    [
+     "com_car_wash",
+     "Car wash",
+     "hall",
+     [
+      12,
+      6,
+      8
+     ],
+     [
+      "#b6c9d8",
+      "#9a9a95"
+     ],
+     "Myčka with brushes and a coin box"
+    ],
+    [
+     "com_bank_branch",
+     "Bank branch",
+     "block",
+     [
+      16,
+      12,
+      12
+     ],
+     [
+      "#efeade",
+      "#3f7fc4"
+     ],
+     "ATM in the wall, glass doors, one plant"
+    ]
+   ]
+  },
+  {
+   "id": "transport",
+   "name": "Transport",
+   "intro": "Prague moves on trams, and the street furniture shows it: wires overhead, islands in the roadway, metro entrances cut into the pavement.",
+   "assets": [
+    [
+     "tra_tram_shelter",
+     "Tram stop shelter",
+     "shelter",
+     [
+      4.6,
+      2.6,
+      1.8
+     ],
+     [
+      "#43474e",
+      "#9a9a95"
+     ],
+     "DPP shelter with a route board and a bench"
+    ],
+    [
+     "tra_tram_flag",
+     "Tram stop flag",
+     "sign",
+     [
+      0.6,
+      3.2,
+      0.08
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Red-and-white stop sign on its own pole"
+    ],
+    [
+     "tra_tram_island",
+     "Tram boarding island",
+     "surface",
+     [
+      22,
+      0.2,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Raised island between the tracks and the traffic"
+    ],
+    [
+     "tra_tram_track",
+     "Tram track section",
+     "surface",
+     [
+      12,
+      0.15,
+      3
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Grooved rail set into granite setts"
+    ],
+    [
+     "tra_tram_points",
+     "Tram points",
+     "surface",
+     [
+      8,
+      0.16,
+      4
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Switch with its point machine box beside it"
+    ],
+    [
+     "tra_catenary_mast",
+     "Catenary mast",
+     "mast",
+     [
+      0.3,
+      8,
+      0.3
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Ornate cast mast carrying the overhead wire"
+    ],
+    [
+     "tra_catenary_wall_anchor",
+     "Wall anchor for overhead wire",
+     "panel",
+     [
+      0.5,
+      0.5,
+      0.25
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Rosette bolted to a facade, wire strung across the street"
+    ],
+    [
+     "tra_catenary_wire",
+     "Overhead wire span",
+     "pipe",
+     [
+      0.06,
+      14,
+      0.06
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Contact wire with its steady arm"
+    ],
+    [
+     "tra_metro_entrance",
+     "Metro entrance",
+     "shelter",
+     [
+      6,
+      3.2,
+      4
+     ],
+     [
+      "#b9b2a4",
+      "#c8442e"
+     ],
+     "Stair down, M sign, handrails polished by use"
+    ],
+    [
+     "tra_metro_pylon",
+     "Metro sign pylon",
+     "sign",
+     [
+      1.2,
+      3.4,
+      0.2
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Free-standing M pylon at the top of the stairs"
+    ],
+    [
+     "tra_metro_vent",
+     "Metro ventilation grille",
+     "surface",
+     [
+      4,
+      0.2,
+      2
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Warm air rising through a pavement grille"
+    ],
+    [
+     "tra_bus_shelter",
+     "Bus shelter",
+     "shelter",
+     [
+      4,
+      2.6,
+      1.6
+     ],
+     [
+      "#43474e",
+      "#9fc6d8"
+     ],
+     "Glass shelter with a timetable case"
+    ],
+    [
+     "tra_bus_flag",
+     "Bus stop flag",
+     "sign",
+     [
+      0.5,
+      3,
+      0.08
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Yellow bus stop sign on a grey pole"
+    ],
+    [
+     "tra_timetable_case",
+     "Timetable case",
+     "panel",
+     [
+      0.7,
+      1.0,
+      0.1
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Glazed case of departure times, edges taped"
+    ],
+    [
+     "tra_ticket_machine",
+     "Ticket machine",
+     "machine",
+     [
+      0.8,
+      1.6,
+      0.6
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Yellow DPP machine that takes coins and cards"
+    ],
+    [
+     "tra_validator",
+     "Ticket validator",
+     "post",
+     [
+      0.2,
+      1.1
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Orange stamping box on a pole by the door"
+    ],
+    [
+     "tra_taxi_rank_sign",
+     "Taxi rank sign",
+     "sign",
+     [
+      0.6,
+      2.6,
+      0.08
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Rank marked with a sign and a painted box"
+    ],
+    [
+     "tra_funicular_car",
+     "Funicular car",
+     "tram",
+     [
+      8,
+      3,
+      2.6
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Petřín funicular, stepped floor for the slope"
+    ],
+    [
+     "tra_funicular_track",
+     "Funicular track",
+     "surface",
+     [
+      14,
+      0.3,
+      3
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Twin rails climbing the hillside with a passing loop"
+    ],
+    [
+     "tra_railway_track",
+     "Railway track",
+     "surface",
+     [
+      16,
+      0.25,
+      3.4
+     ],
+     [
+      "#3c3f45",
+      "#8a5a2b"
+     ],
+     "Ballast, sleepers, two rails"
+    ],
+    [
+     "tra_level_crossing",
+     "Level crossing",
+     "surface",
+     [
+      8,
+      0.2,
+      6
+     ],
+     [
+      "#3c3f45",
+      "#c8442e"
+     ],
+     "Barriers, lights and a warning cross"
+    ],
+    [
+     "tra_railway_bridge",
+     "Railway bridge span",
+     "bridge",
+     [
+      24,
+      6,
+      8
+     ],
+     [
+      "#3c3f45",
+      "#b9b2a4"
+     ],
+     "Riveted girder bridge over a street"
+    ],
+    [
+     "tra_station_canopy",
+     "Station platform canopy",
+     "shelter",
+     [
+      20,
+      5,
+      6
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Cast columns, glazed roof, hanging clock"
+    ],
+    [
+     "tra_station_building",
+     "Station building",
+     "block",
+     [
+      30,
+      14,
+      16
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Suburban station with a booking hall"
+    ],
+    [
+     "tra_signal_box",
+     "Signal box",
+     "shed",
+     [
+      6,
+      5,
+      5
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Brick box with levers and a good view of the points"
+    ],
+    [
+     "tra_buffer_stop",
+     "Buffer stop",
+     "crate",
+     [
+      2,
+      1.4,
+      3
+     ],
+     [
+      "#c8442e",
+      "#3c3f45"
+     ],
+     "End of the siding, sleepers and a red plate"
+    ],
+    [
+     "tra_bike_rack",
+     "Bicycle rack",
+     "fence",
+     [
+      2.4,
+      0.8,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Staple racks outside a school or a metro station"
+    ],
+    [
+     "tra_bike_share_dock",
+     "Bike share dock",
+     "fence",
+     [
+      4,
+      1.1,
+      0.5
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Row of docking points on the pavement"
+    ],
+    [
+     "tra_scooter_stand",
+     "E-scooter parking bay",
+     "surface",
+     [
+      4,
+      0.06,
+      2
+     ],
+     [
+      "#9a9a95",
+      "#f0a92b"
+     ],
+     "Painted bay with scooters lined up in it"
+    ],
+    [
+     "tra_parking_meter",
+     "Parking meter",
+     "machine",
+     [
+      0.4,
+      1.4,
+      0.35
+     ],
+     [
+      "#9a9a95",
+      "#3f7fc4"
+     ],
+     "Zone sticker, paper ticket for the dashboard"
+    ],
+    [
+     "tra_parking_sign_zone",
+     "Parking zone sign",
+     "sign",
+     [
+      0.5,
+      2.4,
+      0.06
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Blue zone sign for residents only"
+    ],
+    [
+     "tra_barrier_arm",
+     "Car park barrier",
+     "mast",
+     [
+      0.25,
+      1.2,
+      0.25
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Arm, intercom and a ticket slot"
+    ],
+    [
+     "tra_bus_bay",
+     "Bus lay-by",
+     "surface",
+     [
+      18,
+      0.06,
+      4
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Marked bay that pulls the bus out of the lane"
+    ],
+    [
+     "tra_pedestrian_crossing",
+     "Zebra crossing",
+     "surface",
+     [
+      8,
+      0.04,
+      4
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "White bars across granite-edged asphalt"
+    ],
+    [
+     "tra_traffic_island",
+     "Pedestrian refuge island",
+     "surface",
+     [
+      3,
+      0.2,
+      1.6
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Kerbed island with a bollard and a sign"
+    ],
+    [
+     "tra_speed_hump",
+     "Speed hump",
+     "surface",
+     [
+      6,
+      0.12,
+      1.6
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Retardér with white triangles painted on it"
+    ],
+    [
+     "tra_road_barrier",
+     "Road works barrier",
+     "fence",
+     [
+      2,
+      1.1,
+      0.4
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Red-and-white barrier with a flashing lamp"
+    ],
+    [
+     "tra_tram_sandbox",
+     "Track sand box",
+     "crate",
+     [
+      1.2,
+      1,
+      0.8
+     ],
+     [
+      "#2f7d3a",
+      "#3c3f45"
+     ],
+     "Green box of grit beside the rails"
+    ],
+    [
+     "tra_ferry_landing",
+     "River ferry landing",
+     "surface",
+     [
+      8,
+      0.4,
+      4
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Pontoon gangway for the Vltava ferry"
+    ],
+    [
+     "tra_cargo_lift",
+     "Goods hoist",
+     "crane",
+     [
+      4,
+      8
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Hoist on a building site over the pavement"
+    ]
+   ]
+  },
+  {
+   "id": "street_furniture",
+   "name": "Street furniture",
+   "intro": "The small things that make a pavement feel used. Most of Prague's are cast iron, painted dark green or grey, and older than the buildings behind them.",
+   "assets": [
+    [
+     "stf_bench_slat",
+     "Slatted bench",
+     "bench",
+     [
+      1.9,
+      0.9,
+      0.6
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Wooden slats on cast-iron ends, along the embankment"
+    ],
+    [
+     "stf_bench_park",
+     "Park bench with arms",
+     "bench",
+     [
+      1.8,
+      0.95,
+      0.65
+     ],
+     [
+      "#8a5a2b",
+      "#2f7d3a"
+     ],
+     "Green-painted ends, Letná and Stromovka"
+    ],
+    [
+     "stf_bench_concrete",
+     "Concrete bench",
+     "bench",
+     [
+      2.0,
+      0.5,
+      0.6
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Plain block seat outside a panelák"
+    ],
+    [
+     "stf_bench_backless",
+     "Backless bench",
+     "bench",
+     [
+      1.8,
+      0.45,
+      0.5
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Perching bench on a narrow pavement"
+    ],
+    [
+     "stf_bench_long",
+     "Long bench",
+     "bench",
+     [
+      3.2,
+      0.9,
+      0.6
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Run of seating along a square"
+    ],
+    [
+     "stf_bench_curved",
+     "Curved bench",
+     "bench",
+     [
+      2.6,
+      0.85,
+      0.7
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Following the kerb of a round planting bed"
+    ],
+    [
+     "stf_bin_metal",
+     "Metal litter bin",
+     "bin",
+     [
+      0.4,
+      0.9
+     ],
+     [
+      "#3c3f45",
+      "#43474e"
+     ],
+     "Perforated drum on a post"
+    ],
+    [
+     "stf_bin_basket",
+     "Wire basket bin",
+     "bin",
+     [
+      0.38,
+      0.85
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Open basket clamped to a lamp post"
+    ],
+    [
+     "stf_bin_recycling",
+     "Recycling container",
+     "crate",
+     [
+      1.6,
+      1.4,
+      1.2
+     ],
+     [
+      "#f0a92b",
+      "#9a9a95"
+     ],
+     "Yellow for plastic, blue for paper, green for glass"
+    ],
+    [
+     "stf_bin_underground",
+     "Underground waste container",
+     "surface",
+     [
+      1.4,
+      0.9,
+      1.4
+     ],
+     [
+      "#9a9a95",
+      "#43474e"
+     ],
+     "Drop hatch over a sunken bin"
+    ],
+    [
+     "stf_bin_dog",
+     "Dog waste bin",
+     "bin",
+     [
+      0.3,
+      0.9
+     ],
+     [
+      "#2f7d3a",
+      "#43474e"
+     ],
+     "Green bin with a bag dispenser on top"
+    ],
+    [
+     "stf_ashtray_post",
+     "Ashtray post",
+     "post",
+     [
+      0.25,
+      1.1
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Standing ashtray outside a pub door"
+    ],
+    [
+     "stf_bollard_stone",
+     "Stone bollard",
+     "bollard",
+     [
+      0.3,
+      0.9
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Granite post keeping cars off the pavement"
+    ],
+    [
+     "stf_bollard_iron",
+     "Cast-iron bollard",
+     "bollard",
+     [
+      0.22,
+      0.95
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Black bollard with a painted band"
+    ],
+    [
+     "stf_bollard_retract",
+     "Retractable bollard",
+     "bollard",
+     [
+      0.2,
+      0.8
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Sinks into the road for delivery vehicles"
+    ],
+    [
+     "stf_bollard_chain",
+     "Bollards with chain",
+     "fence",
+     [
+      3,
+      0.8,
+      0.3
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Chain slung between posts around a monument"
+    ],
+    [
+     "stf_railing_park",
+     "Park railing",
+     "fence",
+     [
+      3,
+      1.0,
+      0.2
+     ],
+     [
+      "#2f7d3a",
+      "#2f7d3a"
+     ],
+     "Low hooped railing protecting a lawn"
+    ],
+    [
+     "stf_railing_crossing",
+     "Pedestrian guard rail",
+     "fence",
+     [
+      3,
+      1.1,
+      0.2
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Barrier at a crossing keeping people on the crossing"
+    ],
+    [
+     "stf_handrail",
+     "Street handrail",
+     "fence",
+     [
+      3,
+      1.0,
+      0.15
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Rail down a steep pavement in Malá Strana"
+    ],
+    [
+     "stf_tree_grate",
+     "Tree grate",
+     "surface",
+     [
+      1.6,
+      0.08,
+      1.6
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Cast grate around a street tree"
+    ],
+    [
+     "stf_tree_guard",
+     "Tree guard",
+     "fence",
+     [
+      1.2,
+      1.8,
+      1.2
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Iron cage around a newly planted tree"
+    ],
+    [
+     "stf_planter_concrete",
+     "Concrete planter",
+     "planter",
+     [
+      1.4,
+      0.6,
+      1.4
+     ],
+     [
+      "#9a9a95",
+      "#3f8b3f"
+     ],
+     "Heavy planter doubling as a vehicle barrier"
+    ],
+    [
+     "stf_planter_wood",
+     "Wooden planter",
+     "planter",
+     [
+      1.2,
+      0.7,
+      1.2
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Box planter outside a café"
+    ],
+    [
+     "stf_planter_long",
+     "Trough planter",
+     "planter",
+     [
+      2.4,
+      0.6,
+      0.8
+     ],
+     [
+      "#9a9a95",
+      "#3f8b3f"
+     ],
+     "Long trough dividing a terrace from the pavement"
+    ],
+    [
+     "stf_drinking_fountain",
+     "Drinking fountain",
+     "fountain",
+     [
+      0.8,
+      1.2
+     ],
+     [
+      "#3c3f45",
+      "#b6c9d8"
+     ],
+     "Summer drinking fountain on a square"
+    ],
+    [
+     "stf_water_pump",
+     "Old water pump",
+     "post",
+     [
+      0.4,
+      1.6
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Cast pump kept as a monument on a courtyard"
+    ],
+    [
+     "stf_advert_column",
+     "Advertising column",
+     "column",
+     [
+      1.2,
+      3.2
+     ],
+     [
+      "#b03a2e",
+      "#e3d9c6"
+     ],
+     "Round poster column pasted many layers deep"
+    ],
+    [
+     "stf_poster_board",
+     "Poster board",
+     "panel",
+     [
+      2.4,
+      2,
+      0.15
+     ],
+     [
+      "#8a5a2b",
+      "#e3d9c6"
+     ],
+     "Community board of concerts and lost cats"
+    ],
+    [
+     "stf_notice_case",
+     "Municipal notice case",
+     "panel",
+     [
+      1.2,
+      1.4,
+      0.12
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Úřední deska with planning notices behind glass"
+    ],
+    [
+     "stf_postbox",
+     "Postbox",
+     "machine",
+     [
+      0.5,
+      1.3,
+      0.4
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Orange-yellow Czech Post box on a wall bracket"
+    ],
+    [
+     "stf_parcel_locker",
+     "Parcel locker",
+     "cabinet",
+     [
+      2.4,
+      2,
+      0.8
+     ],
+     [
+      "#b03a2e",
+      "#43474e"
+     ],
+     "Bank of lockers outside a shop"
+    ],
+    [
+     "stf_phone_box",
+     "Telephone box",
+     "cabinet",
+     [
+      1,
+      2.4,
+      1
+     ],
+     [
+      "#3f7fc4",
+      "#9fc6d8"
+     ],
+     "Disused booth kept for the wiring"
+    ],
+    [
+     "stf_clock_street",
+     "Street clock",
+     "post",
+     [
+      0.6,
+      4
+     ],
+     [
+      "#3c3f45",
+      "#efeade"
+     ],
+     "Twin-faced clock on a cast column"
+    ],
+    [
+     "stf_thermometer",
+     "Street thermometer",
+     "sign",
+     [
+      0.4,
+      2.6,
+      0.1
+     ],
+     [
+      "#9a9a95",
+      "#c8442e"
+     ],
+     "Pharmacy thermometer nobody trusts"
+    ],
+    [
+     "stf_flagpole",
+     "Flag pole",
+     "mast",
+     [
+      0.2,
+      7,
+      0.2
+     ],
+     [
+      "#9a9a95",
+      "#c8442e"
+     ],
+     "Flag bracket over a public building"
+    ],
+    [
+     "stf_banner_pole",
+     "Banner pole",
+     "mast",
+     [
+      0.25,
+      6,
+      0.25
+     ],
+     [
+      "#9a9a95",
+      "#3f7fc4"
+     ],
+     "Pair of poles carrying a festival banner"
+    ],
+    [
+     "stf_map_board",
+     "Orientation map",
+     "panel",
+     [
+      1.4,
+      1.8,
+      0.12
+     ],
+     [
+      "#43474e",
+      "#e3d9c6"
+     ],
+     "City map board with a you-are-here dot"
+    ],
+    [
+     "stf_bike_pump",
+     "Public bicycle pump",
+     "post",
+     [
+      0.25,
+      1.2
+     ],
+     [
+      "#3f8b3f",
+      "#43474e"
+     ],
+     "Repair stand with a pump on a chain"
+    ],
+    [
+     "stf_bench_tree_ring",
+     "Bench around a tree",
+     "bench",
+     [
+      2.4,
+      0.5,
+      2.4
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Ring seat around a plane tree"
+    ],
+    [
+     "stf_grit_bin",
+     "Grit bin",
+     "crate",
+     [
+      1.2,
+      0.9,
+      0.8
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Winter salt box at the top of a hill"
+    ],
+    [
+     "stf_snow_pole",
+     "Snow marker pole",
+     "post",
+     [
+      0.1,
+      2
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Striped pole marking the kerb under snow"
+    ],
+    [
+     "stf_shoe_scraper",
+     "Boot scraper",
+     "panel",
+     [
+      0.4,
+      0.2,
+      0.2
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Scraper set beside an old doorway"
+    ],
+    [
+     "stf_street_stall_frame",
+     "Folding stall frame",
+     "shelter",
+     [
+      2.4,
+      2.4,
+      2
+     ],
+     [
+      "#3c3f45",
+      "#efeade"
+     ],
+     "Frame left standing after market day"
+    ],
+    [
+     "stf_café_barrier",
+     "Café terrace barrier",
+     "fence",
+     [
+      2.4,
+      1.1,
+      0.3
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Planted screen marking the edge of a terrace"
+    ],
+    [
+     "stf_parasol",
+     "Terrace parasol",
+     "post",
+     [
+      2.4,
+      2.6
+     ],
+     [
+      "#8a5a2b",
+      "#e3d9c6"
+     ],
+     "Square parasol with a brewery logo"
+    ],
+    [
+     "stf_café_table",
+     "Café table and chairs",
+     "bench",
+     [
+      1.2,
+      0.8,
+      1.2
+     ],
+     [
+      "#3c3f45",
+      "#8a5a2b"
+     ],
+     "Bistro set on a pavement terrace"
+    ],
+    [
+     "stf_heater",
+     "Terrace heater",
+     "post",
+     [
+      0.5,
+      2.2
+     ],
+     [
+      "#9a9a95",
+      "#c8442e"
+     ],
+     "Gas heater over a winter terrace"
+    ]
+   ]
+  },
+  {
+   "id": "lighting_signs",
+   "name": "Lighting and signage",
+   "intro": "Prague's street names are enamel plates, its house numbers come in two colours, and its lamps are still half gas.",
+   "assets": [
+    [
+     "lit_lamp_cast",
+     "Cast-iron street lamp",
+     "lamp",
+     [
+      0.5,
+      4.6
+     ],
+     [
+      "#3c3f45",
+      "#ffe9a8"
+     ],
+     "Old town lamp with a fluted column"
+    ],
+    [
+     "lit_lamp_gas",
+     "Gas lamp",
+     "lamp",
+     [
+      0.45,
+      3.6
+     ],
+     [
+      "#3c3f45",
+      "#ffd98a"
+     ],
+     "Lit by hand in Malá Strana at dusk"
+    ],
+    [
+     "lit_lamp_modern",
+     "Modern street light",
+     "mast",
+     [
+      0.3,
+      9,
+      0.3
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Steel column with an LED head on an arm"
+    ],
+    [
+     "lit_lamp_double",
+     "Twin-head street light",
+     "mast",
+     [
+      0.35,
+      10,
+      0.35
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Two arms over a wide road"
+    ],
+    [
+     "lit_lamp_wall",
+     "Wall-mounted lamp",
+     "panel",
+     [
+      0.6,
+      0.5,
+      0.6
+     ],
+     [
+      "#3c3f45",
+      "#ffe9a8"
+     ],
+     "Lantern bracketed to a facade over a narrow lane"
+    ],
+    [
+     "lit_lamp_catenary",
+     "Catenary-hung lamp",
+     "panel",
+     [
+      0.6,
+      0.4,
+      0.6
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Lamp hanging from the tram wire over a junction"
+    ],
+    [
+     "lit_lamp_park",
+     "Park lamp",
+     "lamp",
+     [
+      0.45,
+      3.4
+     ],
+     [
+      "#2f7d3a",
+      "#ffe9a8"
+     ],
+     "Low globe lamp along a gravel path"
+    ],
+    [
+     "lit_floodlight",
+     "Floodlight mast",
+     "mast",
+     [
+      0.4,
+      12,
+      0.4
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Lighting a sports pitch or a depot yard"
+    ],
+    [
+     "lit_facade_uplight",
+     "Facade uplighter",
+     "panel",
+     [
+      0.3,
+      0.25,
+      0.3
+     ],
+     [
+      "#43474e",
+      "#ffe9a8"
+     ],
+     "Ground-level light washing a church wall"
+    ],
+    [
+     "lit_street_name",
+     "Street name plate",
+     "panel",
+     [
+      1.0,
+      0.35,
+      0.06
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Red enamel plate with white lettering"
+    ],
+    [
+     "lit_street_name_corner",
+     "Corner street plate",
+     "panel",
+     [
+      1.0,
+      0.35,
+      0.06
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Pair of plates around a chamfered corner"
+    ],
+    [
+     "lit_house_number_red",
+     "House number, red",
+     "panel",
+     [
+      0.3,
+      0.3,
+      0.05
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Orientation number within the street"
+    ],
+    [
+     "lit_house_number_blue",
+     "House number, blue",
+     "panel",
+     [
+      0.3,
+      0.3,
+      0.05
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Descriptive number within the district"
+    ],
+    [
+     "lit_house_sign",
+     "House sign",
+     "panel",
+     [
+      0.6,
+      0.7,
+      0.12
+     ],
+     [
+      "#e3d9c6",
+      "#d8b26a"
+     ],
+     "At the Golden Well: the sign that named the house"
+    ],
+    [
+     "lit_shop_fascia",
+     "Shop fascia sign",
+     "panel",
+     [
+      3.2,
+      0.7,
+      0.12
+     ],
+     [
+      "#8a5a2b",
+      "#e3d9c6"
+     ],
+     "Painted board over a shop window"
+    ],
+    [
+     "lit_blade_sign",
+     "Hanging blade sign",
+     "panel",
+     [
+      0.8,
+      0.6,
+      0.1
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Sign sticking out over the pavement"
+    ],
+    [
+     "lit_guild_sign",
+     "Wrought-iron guild sign",
+     "panel",
+     [
+      0.9,
+      0.8,
+      0.1
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Gilded pretzel or boot on a scrolled bracket"
+    ],
+    [
+     "lit_neon_sign",
+     "Neon sign",
+     "panel",
+     [
+      2.4,
+      1,
+      0.2
+     ],
+     [
+      "#43474e",
+      "#c8442e"
+     ],
+     "Old neon kept on a roof parapet"
+    ],
+    [
+     "lit_billboard",
+     "Billboard",
+     "panel",
+     [
+      6,
+      3,
+      0.3
+     ],
+     [
+      "#9a9a95",
+      "#e3d9c6"
+     ],
+     "Roadside board on a steel frame"
+    ],
+    [
+     "lit_citylight",
+     "Citylight panel",
+     "panel",
+     [
+      1.3,
+      1.9,
+      0.25
+     ],
+     [
+      "#43474e",
+      "#efeade"
+     ],
+     "Backlit advertising panel beside a shelter"
+    ],
+    [
+     "lit_banner_facade",
+     "Facade banner",
+     "panel",
+     [
+      2,
+      4,
+      0.1
+     ],
+     [
+      "#c8442e",
+      "#e3d9c6"
+     ],
+     "Exhibition banner hung down a wall"
+    ],
+    [
+     "lit_traffic_light",
+     "Traffic light",
+     "mast",
+     [
+      0.25,
+      3.4,
+      0.25
+     ],
+     [
+      "#43474e",
+      "#c8442e"
+     ],
+     "Three-aspect head on a grey post"
+    ],
+    [
+     "lit_traffic_light_ped",
+     "Pedestrian signal",
+     "mast",
+     [
+      0.22,
+      2.6,
+      0.22
+     ],
+     [
+      "#43474e",
+      "#2f7d3a"
+     ],
+     "Push button and a ticking box for the blind"
+    ],
+    [
+     "lit_traffic_light_tram",
+     "Tram signal",
+     "mast",
+     [
+      0.22,
+      3.2,
+      0.22
+     ],
+     [
+      "#43474e",
+      "#efeade"
+     ],
+     "Bar-and-dot aspects only trams read"
+    ],
+    [
+     "lit_sign_stop",
+     "Stop sign",
+     "sign",
+     [
+      0.7,
+      2.4,
+      0.06
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Octagon at the end of a side street"
+    ],
+    [
+     "lit_sign_giveway",
+     "Give way sign",
+     "sign",
+     [
+      0.7,
+      2.4,
+      0.06
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Triangle on its point"
+    ],
+    [
+     "lit_sign_noentry",
+     "No entry sign",
+     "sign",
+     [
+      0.7,
+      2.4,
+      0.06
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "One-way street seen from the wrong end"
+    ],
+    [
+     "lit_sign_parking",
+     "Parking sign",
+     "sign",
+     [
+      0.5,
+      2.4,
+      0.06
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "White P on blue, with a zone plate under it"
+    ],
+    [
+     "lit_sign_direction",
+     "Direction sign",
+     "sign",
+     [
+      1.8,
+      3,
+      0.08
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Fingerpost to Brno, Plzeň and the centre"
+    ],
+    [
+     "lit_sign_pedestrian_zone",
+     "Pedestrian zone sign",
+     "sign",
+     [
+      0.6,
+      2.4,
+      0.06
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Start of a zone with a delivery-hours plate"
+    ],
+    [
+     "lit_sign_tourist",
+     "Brown tourist sign",
+     "sign",
+     [
+      1.4,
+      2.4,
+      0.08
+     ],
+     [
+      "#8a5a2b",
+      "#efeade"
+     ],
+     "Brown sign to the castle or the bridge"
+    ],
+    [
+     "lit_sign_street_works",
+     "Road works sign",
+     "sign",
+     [
+      0.7,
+      2,
+      0.06
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Temporary sign on a weighted foot"
+    ],
+    [
+     "lit_sign_tram_priority",
+     "Tram priority plate",
+     "sign",
+     [
+      0.5,
+      2.2,
+      0.05
+     ],
+     [
+      "#efeade",
+      "#43474e"
+     ],
+     "Small plate where trams cut the lane"
+    ],
+    [
+     "lit_sign_cycle_route",
+     "Cycle route sign",
+     "sign",
+     [
+      0.6,
+      2.2,
+      0.05
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Numbered route along the river"
+    ],
+    [
+     "lit_info_pillar",
+     "Tourist information pillar",
+     "column",
+     [
+      0.9,
+      2.6
+     ],
+     [
+      "#43474e",
+      "#e3d9c6"
+     ],
+     "Pillar with a map and opening hours"
+    ],
+    [
+     "lit_plaque_memorial",
+     "Memorial plaque",
+     "panel",
+     [
+      0.8,
+      0.6,
+      0.06
+     ],
+     [
+      "#b9b2a4",
+      "#43474e"
+     ],
+     "Name and two dates on a wall, flowers under it"
+    ],
+    [
+     "lit_plaque_flood",
+     "Flood level marker",
+     "panel",
+     [
+      0.4,
+      0.5,
+      0.05
+     ],
+     [
+      "#b9b2a4",
+      "#3f7fc4"
+     ],
+     "Line cut into stone marking 2002 and 1890"
+    ],
+    [
+     "lit_mosaic_number",
+     "Mosaic house number",
+     "panel",
+     [
+      0.5,
+      0.5,
+      0.04
+     ],
+     [
+      "#e3d9c6",
+      "#3f7fc4"
+     ],
+     "Number set in the pavement mosaic at the door"
+    ]
+   ]
+  },
+  {
+   "id": "vegetation",
+   "name": "Trees, planting and green space",
+   "intro": "Street trees are mostly lime and plane; the parks are Letná, Stromovka and Riegrovy sady, and every courtyard has something growing in it.",
+   "assets": [
+    [
+     "veg_linden_small",
+     "Small-leaved lime, young",
+     "tree_broad",
+     [
+      3,
+      4
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "The national tree; lines half the avenues"
+    ],
+    [
+     "veg_linden_large",
+     "Small-leaved lime, mature",
+     "tree_broad",
+     [
+      7,
+      12
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Big lime over a square, scented in June"
+    ],
+    [
+     "veg_plane",
+     "London plane",
+     "tree_broad",
+     [
+      8,
+      14
+     ],
+     [
+      "#c9c3b4",
+      "#6aa84f"
+     ],
+     "Flaking bark, planted along the embankment"
+    ],
+    [
+     "veg_horse_chestnut",
+     "Horse chestnut",
+     "tree_broad",
+     [
+      7,
+      12
+     ],
+     [
+      "#8a5a2b",
+      "#2f7d3a"
+     ],
+     "Candles of flower in May, conkers in the gutter"
+    ],
+    [
+     "veg_maple",
+     "Norway maple",
+     "tree_broad",
+     [
+      6,
+      10
+     ],
+     [
+      "#8a5a2b",
+      "#6aa84f"
+     ],
+     "Turns yellow first in the parks"
+    ],
+    [
+     "veg_birch",
+     "Silver birch",
+     "tree_broad",
+     [
+      3.5,
+      9
+     ],
+     [
+      "#d8d2c4",
+      "#6aa84f"
+     ],
+     "White trunk in a housing estate lawn"
+    ],
+    [
+     "veg_poplar",
+     "Lombardy poplar",
+     "tree_conifer",
+     [
+      2.5,
+      15
+     ],
+     [
+      "#8a5a2b",
+      "#6aa84f"
+     ],
+     "Column of poplars along a field edge"
+    ],
+    [
+     "veg_willow",
+     "Weeping willow",
+     "tree_broad",
+     [
+      7,
+      8
+     ],
+     [
+      "#8a5a2b",
+      "#6aa84f"
+     ],
+     "Leaning over the water at Kampa"
+    ],
+    [
+     "veg_oak",
+     "Oak",
+     "tree_broad",
+     [
+      8,
+      13
+     ],
+     [
+      "#8a5a2b",
+      "#2f7d3a"
+     ],
+     "Old oak kept when the park was laid out"
+    ],
+    [
+     "veg_ash",
+     "Ash",
+     "tree_broad",
+     [
+      6,
+      12
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Common in the river valleys"
+    ],
+    [
+     "veg_spruce",
+     "Norway spruce",
+     "tree_conifer",
+     [
+      3,
+      10
+     ],
+     [
+      "#8a5a2b",
+      "#2c6b36"
+     ],
+     "Dark spruce in a garden, too big for it"
+    ],
+    [
+     "veg_pine",
+     "Scots pine",
+     "tree_conifer",
+     [
+      4,
+      11
+     ],
+     [
+      "#a4553c",
+      "#3f6b3a"
+     ],
+     "On the sandstone slopes above the river"
+    ],
+    [
+     "veg_fir_ornamental",
+     "Ornamental fir",
+     "tree_conifer",
+     [
+      2,
+      4
+     ],
+     [
+      "#8a5a2b",
+      "#2f7d3a"
+     ],
+     "Clipped conifer beside a front door"
+    ],
+    [
+     "veg_cherry",
+     "Flowering cherry",
+     "tree_broad",
+     [
+      4,
+      6
+     ],
+     [
+      "#8a5a2b",
+      "#d9a8a0"
+     ],
+     "Pink blossom along Petřín paths"
+    ],
+    [
+     "veg_apple",
+     "Apple tree",
+     "tree_broad",
+     [
+      4,
+      5
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "In an allotment, propped branches"
+    ],
+    [
+     "veg_plum",
+     "Plum tree",
+     "tree_broad",
+     [
+      3.5,
+      5
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Garden plum for slivovice"
+    ],
+    [
+     "veg_walnut",
+     "Walnut",
+     "tree_broad",
+     [
+      7,
+      10
+     ],
+     [
+      "#8a5a2b",
+      "#2f7d3a"
+     ],
+     "Shading a courtyard, stains the paving"
+    ],
+    [
+     "veg_acacia",
+     "Black locust",
+     "tree_broad",
+     [
+      5,
+      11
+     ],
+     [
+      "#8a5a2b",
+      "#6aa84f"
+     ],
+     "Self-seeded on railway banks"
+    ],
+    [
+     "veg_street_tree_pollard",
+     "Pollarded street tree",
+     "tree_broad",
+     [
+      3,
+      6
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Cut back hard to keep it off the wires"
+    ],
+    [
+     "veg_tree_stump",
+     "Tree stump",
+     "bollard",
+     [
+      0.7,
+      0.5
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Sawn stump with the rings showing"
+    ],
+    [
+     "veg_dead_tree",
+     "Dead tree",
+     "tree_conifer",
+     [
+      3,
+      7
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Bare trunk left standing for the birds"
+    ],
+    [
+     "veg_hedge_low",
+     "Low clipped hedge",
+     "hedge",
+     [
+      4,
+      0.7,
+      0.6
+     ],
+     [
+      "#2f7d3a",
+      "#2f7d3a"
+     ],
+     "Box edging around a formal bed"
+    ],
+    [
+     "veg_hedge_tall",
+     "Tall hedge",
+     "hedge",
+     [
+      4,
+      2.2,
+      0.9
+     ],
+     [
+      "#2f7d3a",
+      "#2f7d3a"
+     ],
+     "Hornbeam hedge screening a garden"
+    ],
+    [
+     "veg_hedge_wild",
+     "Overgrown hedge",
+     "hedge",
+     [
+      4,
+      1.8,
+      1.4
+     ],
+     [
+      "#2f7d3a",
+      "#6aa84f"
+     ],
+     "Untrimmed, growing through a fence"
+    ],
+    [
+     "veg_bush_round",
+     "Round shrub",
+     "bush",
+     [
+      1.6,
+      1.4
+     ],
+     [
+      "#2f7d3a",
+      "#2f7d3a"
+     ],
+     "Anonymous green ball outside a block"
+    ],
+    [
+     "veg_bush_flowering",
+     "Flowering shrub",
+     "bush",
+     [
+      1.8,
+      1.6
+     ],
+     [
+      "#3f8b3f",
+      "#d9a8a0"
+     ],
+     "Lilac by a courtyard wall"
+    ],
+    [
+     "veg_bush_berry",
+     "Berry bush",
+     "bush",
+     [
+      1.4,
+      1.2
+     ],
+     [
+      "#2f7d3a",
+      "#c8442e"
+     ],
+     "Rowan or cotoneaster full of red berries"
+    ],
+    [
+     "veg_lilac",
+     "Lilac",
+     "bush",
+     [
+      2.2,
+      2.6
+     ],
+     [
+      "#3f8b3f",
+      "#9d8ac4"
+     ],
+     "Scent over a garden gate in May"
+    ],
+    [
+     "veg_rose_bed",
+     "Rose bed",
+     "flowers",
+     [
+      2,
+      0.7
+     ],
+     [
+      "#3f8b3f",
+      "#c8442e"
+     ],
+     "Formal roses in a park circle"
+    ],
+    [
+     "veg_flower_bed",
+     "Flower bed",
+     "flowers",
+     [
+      2.4,
+      0.6
+     ],
+     [
+      "#3f8b3f",
+      "#f0a92b"
+     ],
+     "Municipal bedding changed twice a year"
+    ],
+    [
+     "veg_window_box",
+     "Window box",
+     "planter",
+     [
+      1.2,
+      0.3,
+      0.3
+     ],
+     [
+      "#8a5a2b",
+      "#c8442e"
+     ],
+     "Geraniums on a first-floor sill"
+    ],
+    [
+     "veg_balcony_plants",
+     "Balcony planting",
+     "planter",
+     [
+      1.4,
+      0.5,
+      0.4
+     ],
+     [
+      "#9a9a95",
+      "#3f8b3f"
+     ],
+     "Tomatoes and herbs on a panelák loggia"
+    ],
+    [
+     "veg_ivy_wall",
+     "Ivy-covered wall",
+     "wall",
+     [
+      4,
+      3,
+      0.4
+     ],
+     [
+      "#2f7d3a",
+      "#2f7d3a"
+     ],
+     "Ivy swallowing a garden wall"
+    ],
+    [
+     "veg_vine_pergola",
+     "Vine pergola",
+     "shelter",
+     [
+      4,
+      2.6,
+      3
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Grapevine over a courtyard table"
+    ],
+    [
+     "veg_lawn",
+     "Mown lawn",
+     "surface",
+     [
+      8,
+      0.05,
+      8
+     ],
+     [
+      "#3f8b3f",
+      "#3f8b3f"
+     ],
+     "Estate lawn with a worn diagonal path"
+    ],
+    [
+     "veg_meadow",
+     "Wildflower meadow",
+     "surface",
+     [
+      8,
+      0.15,
+      8
+     ],
+     [
+      "#6aa84f",
+      "#f0a92b"
+     ],
+     "Left long by the city gardeners"
+    ],
+    [
+     "veg_gravel_bed",
+     "Gravel planting bed",
+     "surface",
+     [
+      3,
+      0.1,
+      2
+     ],
+     [
+      "#9a9a95",
+      "#3f8b3f"
+     ],
+     "Drought planting on a traffic island"
+    ],
+    [
+     "veg_vegetable_plot",
+     "Vegetable plot",
+     "surface",
+     [
+      4,
+      0.15,
+      3
+     ],
+     [
+      "#5a4632",
+      "#3f8b3f"
+     ],
+     "Rows of beans in an allotment"
+    ],
+    [
+     "veg_compost_heap",
+     "Compost heap",
+     "pile",
+     [
+      1.6,
+      1
+     ],
+     [
+      "#5a4632",
+      "#6aa84f"
+     ],
+     "Behind the allotment shed"
+    ],
+    [
+     "veg_tree_sapling",
+     "Newly planted sapling",
+     "tree_broad",
+     [
+      1.2,
+      3
+     ],
+     [
+      "#8a5a2b",
+      "#3f8b3f"
+     ],
+     "Staked, tied and watered from a bag"
+    ],
+    [
+     "veg_planted_slope",
+     "Planted embankment",
+     "surface",
+     [
+      8,
+      0.6,
+      4
+     ],
+     [
+      "#3f8b3f",
+      "#2f7d3a"
+     ],
+     "Groundcover holding a railway cutting"
+    ],
+    [
+     "veg_park_path",
+     "Gravel park path",
+     "surface",
+     [
+      8,
+      0.06,
+      2.5
+     ],
+     [
+      "#c8b183",
+      "#c8b183"
+     ],
+     "Raked gravel between the lawns"
+    ]
+   ]
+  },
+  {
+   "id": "vehicles",
+   "name": "Vehicles",
+   "intro": "What actually stands on a Prague street: a T3 tram, a delivery van half on the pavement, and a Škoda from every decade since 1970.",
+   "assets": [
+    [
+     "veh_tram_t3",
+     "Tatra T3 tram",
+     "tram",
+     [
+      15,
+      3.2,
+      2.5
+     ],
+     [
+      "#c8442e",
+      "#e3d9c6"
+     ],
+     "The classic red-and-cream two-car set"
+    ],
+    [
+     "veh_tram_modern",
+     "Škoda 15T tram",
+     "tram",
+     [
+      31,
+      3.3,
+      2.6
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Low-floor articulated tram, five sections"
+    ],
+    [
+     "veh_tram_works",
+     "Works tram",
+     "tram",
+     [
+      14,
+      3.2,
+      2.5
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Yellow tram for grinding rails at night"
+    ],
+    [
+     "veh_bus_city",
+     "City bus",
+     "van",
+     [
+      12,
+      3.2,
+      2.55
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "SOR or Citelis on a suburban route"
+    ],
+    [
+     "veh_bus_articulated",
+     "Articulated bus",
+     "van",
+     [
+      18,
+      3.2,
+      2.55
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Bendy bus on the airport run"
+    ],
+    [
+     "veh_trolleybus",
+     "Trolleybus",
+     "van",
+     [
+      12,
+      3.4,
+      2.55
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Poles up, back on Prague streets since 2017"
+    ],
+    [
+     "veh_minibus",
+     "Minibus",
+     "van",
+     [
+      6,
+      2.6,
+      2
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Hotel shuttle with a dented bumper"
+    ],
+    [
+     "veh_skoda_120",
+     "Škoda 120",
+     "car",
+     [
+      4.2,
+      1.4,
+      1.6
+     ],
+     [
+      "#bcd3c2",
+      "#9fc6d8"
+     ],
+     "Rear-engined saloon, still on the street"
+    ],
+    [
+     "veh_skoda_favorit",
+     "Škoda Favorit",
+     "car",
+     [
+      3.8,
+      1.4,
+      1.6
+     ],
+     [
+      "#c8442e",
+      "#9fc6d8"
+     ],
+     "Late-eighties hatchback"
+    ],
+    [
+     "veh_skoda_octavia",
+     "Škoda Octavia",
+     "car",
+     [
+      4.6,
+      1.45,
+      1.8
+     ],
+     [
+      "#b6c9d8",
+      "#9fc6d8"
+     ],
+     "The default Czech car, often a taxi"
+    ],
+    [
+     "veh_skoda_estate",
+     "Estate car",
+     "car",
+     [
+      4.7,
+      1.5,
+      1.8
+     ],
+     [
+      "#9a9a95",
+      "#9fc6d8"
+     ],
+     "Roof bars and a dog guard"
+    ],
+    [
+     "veh_trabant",
+     "Trabant",
+     "car",
+     [
+      3.4,
+      1.4,
+      1.5
+     ],
+     [
+      "#bcd3c2",
+      "#9fc6d8"
+     ],
+     "Kept running by someone's uncle"
+    ],
+    [
+     "veh_hatchback",
+     "Small hatchback",
+     "car",
+     [
+      3.7,
+      1.4,
+      1.7
+     ],
+     [
+      "#f0a92b",
+      "#9fc6d8"
+     ],
+     "Parked half on the kerb"
+    ],
+    [
+     "veh_saloon",
+     "Saloon car",
+     "car",
+     [
+      4.6,
+      1.4,
+      1.8
+     ],
+     [
+      "#43474e",
+      "#9fc6d8"
+     ],
+     "Black saloon outside a ministry"
+    ],
+    [
+     "veh_suv",
+     "SUV",
+     "car",
+     [
+      4.7,
+      1.8,
+      1.9
+     ],
+     [
+      "#efeade",
+      "#9fc6d8"
+     ],
+     "Too big for the lane it is parked in"
+    ],
+    [
+     "veh_taxi",
+     "Taxi",
+     "car",
+     [
+      4.6,
+      1.45,
+      1.8
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Roof sign and a printed tariff in the window"
+    ],
+    [
+     "veh_police_car",
+     "Police car",
+     "car",
+     [
+      4.6,
+      1.45,
+      1.8
+     ],
+     [
+      "#efeade",
+      "#3f7fc4"
+     ],
+     "Městská policie livery, light bar"
+    ],
+    [
+     "veh_ambulance",
+     "Ambulance",
+     "van",
+     [
+      6,
+      2.6,
+      2.1
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Záchranná služba, red stripe and a blue light"
+    ],
+    [
+     "veh_fire_engine",
+     "Fire engine",
+     "van",
+     [
+      8,
+      3.2,
+      2.5
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Ladder on the roof, shutters down the side"
+    ],
+    [
+     "veh_delivery_van",
+     "Delivery van",
+     "van",
+     [
+      5.4,
+      2.4,
+      2
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Hazards on, blocking the tram"
+    ],
+    [
+     "veh_courier_van",
+     "Courier van",
+     "van",
+     [
+      5.4,
+      2.5,
+      2
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Parcel service with the side door open"
+    ],
+    [
+     "veh_box_truck",
+     "Box truck",
+     "van",
+     [
+      8,
+      3.2,
+      2.5
+     ],
+     [
+      "#3f7fc4",
+      "#9a9a95"
+     ],
+     "Beer delivery to a pub cellar"
+    ],
+    [
+     "veh_beer_truck",
+     "Brewery dray",
+     "van",
+     [
+      7.5,
+      3,
+      2.4
+     ],
+     [
+      "#2f7d3a",
+      "#f0a92b"
+     ],
+     "Kegs rolled down a ramp into the pavement hatch"
+    ],
+    [
+     "veh_refuse_truck",
+     "Refuse truck",
+     "van",
+     [
+      8,
+      3.2,
+      2.5
+     ],
+     [
+      "#b03a2e",
+      "#9a9a95"
+     ],
+     "Early morning, lifting containers"
+    ],
+    [
+     "veh_street_sweeper",
+     "Street sweeper",
+     "van",
+     [
+      4.4,
+      2.4,
+      1.8
+     ],
+     [
+      "#f0a92b",
+      "#9a9a95"
+     ],
+     "Brushes down, spraying water"
+    ],
+    [
+     "veh_gritter",
+     "Gritter",
+     "van",
+     [
+      7,
+      3,
+      2.4
+     ],
+     [
+      "#f0a92b",
+      "#9a9a95"
+     ],
+     "Spreading salt after the first snow"
+    ],
+    [
+     "veh_tipper",
+     "Tipper truck",
+     "van",
+     [
+      7,
+      3,
+      2.4
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Leaving a building site with rubble"
+    ],
+    [
+     "veh_concrete_mixer",
+     "Concrete mixer",
+     "van",
+     [
+      8,
+      3.4,
+      2.5
+     ],
+     [
+      "#9a9a95",
+      "#f0a92b"
+     ],
+     "Drum turning outside a site hoarding"
+    ],
+    [
+     "veh_crane_truck",
+     "Crane truck",
+     "van",
+     [
+      8,
+      3.2,
+      2.5
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Outriggers down across the pavement"
+    ],
+    [
+     "veh_tow_truck",
+     "Tow truck",
+     "van",
+     [
+      6.5,
+      2.8,
+      2.3
+     ],
+     [
+      "#b03a2e",
+      "#f0a92b"
+     ],
+     "Lifting a car out of a residents' bay"
+    ],
+    [
+     "veh_maintenance_van",
+     "Utility van",
+     "van",
+     [
+      5.4,
+      2.4,
+      2
+     ],
+     [
+      "#2f7d3a",
+      "#f0a92b"
+     ],
+     "Cones out, a cable drum in the back"
+    ],
+    [
+     "veh_post_van",
+     "Post van",
+     "van",
+     [
+      5,
+      2.4,
+      2
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Česká pošta delivery round"
+    ],
+    [
+     "veh_moped",
+     "Moped",
+     "bike",
+     [
+      1.8,
+      1.1
+     ],
+     [
+      "#3f7fc4",
+      "#43474e"
+     ],
+     "Babetta parked against a wall"
+    ],
+    [
+     "veh_motorbike",
+     "Motorbike",
+     "bike",
+     [
+      2.1,
+      1.2
+     ],
+     [
+      "#43474e",
+      "#c8442e"
+     ],
+     "Jawa with a chrome tank"
+    ],
+    [
+     "veh_bicycle",
+     "Bicycle",
+     "bike",
+     [
+      1.7,
+      1.1
+     ],
+     [
+      "#3f8b3f",
+      "#43474e"
+     ],
+     "Locked to a railing, one wheel missing"
+    ],
+    [
+     "veh_cargo_bike",
+     "Cargo bike",
+     "bike",
+     [
+      2.4,
+      1.2
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Box at the front, delivering coffee"
+    ],
+    [
+     "veh_escooter",
+     "E-scooter",
+     "bike",
+     [
+      1.2,
+      1.2
+     ],
+     [
+      "#9a9a95",
+      "#f0a92b"
+     ],
+     "Left across the pavement"
+    ],
+    [
+     "veh_pram",
+     "Pram",
+     "bike",
+     [
+      0.9,
+      1
+     ],
+     [
+      "#43474e",
+      "#9a9a95"
+     ],
+     "Parked outside the café door"
+    ],
+    [
+     "veh_horse_carriage",
+     "Horse carriage",
+     "car",
+     [
+      4,
+      2.2,
+      1.8
+     ],
+     [
+      "#43474e",
+      "#c8442e"
+     ],
+     "Tourist carriage off the Old Town Square"
+    ],
+    [
+     "veh_river_boat",
+     "River cruise boat",
+     "boat",
+     [
+      18,
+      3,
+      4.5
+     ],
+     [
+      "#efeade",
+      "#3f7fc4"
+     ],
+     "Glass-roofed boat under the bridges"
+    ],
+    [
+     "veh_pedalo",
+     "Pedalo",
+     "boat",
+     [
+      3,
+      1.2,
+      1.6
+     ],
+     [
+      "#efeade",
+      "#f0a92b"
+     ],
+     "Swan-shaped, hired by the hour at Slovanka"
+    ],
+    [
+     "veh_barge",
+     "Cargo barge",
+     "boat",
+     [
+      24,
+      2.6,
+      5
+     ],
+     [
+      "#b03a2e",
+      "#3c3f45"
+     ],
+     "Low in the water heading downstream"
+    ],
+    [
+     "veh_houseboat",
+     "Houseboat",
+     "boat",
+     [
+      12,
+      3.4,
+      4
+     ],
+     [
+      "#8a5a2b",
+      "#2f7d3a"
+     ],
+     "Moored at Smíchov with plant pots on deck"
+    ]
+   ]
+  },
+  {
+   "id": "people",
+   "name": "People and animals",
+   "intro": "Who is actually on the pavement: pensioners with shopping, tourists looking up, a dog on a long lead.",
+   "assets": [
+    [
+     "ppl_pensioner",
+     "Pensioner with shopping",
+     "person",
+     [
+      0.6,
+      1.65
+     ],
+     [
+      "#bcd3c2",
+      "#9a9a95"
+     ],
+     "Cloth bag, slow pace, knows the tram times"
+    ],
+    [
+     "ppl_office_worker",
+     "Office worker",
+     "person",
+     [
+      0.6,
+      1.78
+     ],
+     [
+      "#43474e",
+      "#2f3338"
+     ],
+     "Lanyard still on at lunch"
+    ],
+    [
+     "ppl_student",
+     "Student",
+     "person",
+     [
+      0.6,
+      1.72
+     ],
+     [
+      "#b03a2e",
+      "#43474e"
+     ],
+     "Rucksack, headphones, tram ticket in a pocket"
+    ],
+    [
+     "ppl_child",
+     "Child",
+     "person",
+     [
+      0.5,
+      1.2
+     ],
+     [
+      "#f0a92b",
+      "#3f7fc4"
+     ],
+     "Reflective badge on the coat"
+    ],
+    [
+     "ppl_toddler",
+     "Toddler",
+     "person",
+     [
+      0.45,
+      0.9
+     ],
+     [
+      "#d9a8a0",
+      "#efeade"
+     ],
+     "Holding a hand, mostly sideways"
+    ],
+    [
+     "ppl_teenager",
+     "Teenager",
+     "person",
+     [
+      0.6,
+      1.7
+     ],
+     [
+      "#2f3338",
+      "#c8442e"
+     ],
+     "On the wall by the metro entrance"
+    ],
+    [
+     "ppl_tourist",
+     "Tourist",
+     "person",
+     [
+      0.62,
+      1.7
+     ],
+     [
+      "#b6c9d8",
+      "#f0a92b"
+     ],
+     "Camera, map, standing where the tram goes"
+    ],
+    [
+     "ppl_tourist_group",
+     "Tour group leader",
+     "person",
+     [
+      0.6,
+      1.68
+     ],
+     [
+      "#3f7fc4",
+      "#f0a92b"
+     ],
+     "Umbrella held up, twenty people behind"
+    ],
+    [
+     "ppl_busker",
+     "Street musician",
+     "person",
+     [
+      0.6,
+      1.75
+     ],
+     [
+      "#8a5a2b",
+      "#b03a2e"
+     ],
+     "Accordion or a glass harp by the bridge"
+    ],
+    [
+     "ppl_waiter",
+     "Waiter",
+     "person",
+     [
+      0.6,
+      1.76
+     ],
+     [
+      "#efeade",
+      "#43474e"
+     ],
+     "Tray of half-litres across a terrace"
+    ],
+    [
+     "ppl_shopkeeper",
+     "Shopkeeper",
+     "person",
+     [
+      0.6,
+      1.7
+     ],
+     [
+      "#bcd3c2",
+      "#9a9a95"
+     ],
+     "Out front with a broom in the morning"
+    ],
+    [
+     "ppl_market_vendor",
+     "Market vendor",
+     "person",
+     [
+      0.62,
+      1.68
+     ],
+     [
+      "#2f7d3a",
+      "#8a5a2b"
+     ],
+     "Weighing potatoes in a steel scale"
+    ],
+    [
+     "ppl_tram_driver",
+     "Tram driver",
+     "person",
+     [
+      0.6,
+      1.74
+     ],
+     [
+      "#3f7fc4",
+      "#43474e"
+     ],
+     "Changing ends at the terminus"
+    ],
+    [
+     "ppl_ticket_inspector",
+     "Ticket inspector",
+     "person",
+     [
+      0.6,
+      1.76
+     ],
+     [
+      "#43474e",
+      "#f0a92b"
+     ],
+     "Badge out at the carriage door"
+    ],
+    [
+     "ppl_police_officer",
+     "Police officer",
+     "person",
+     [
+      0.62,
+      1.78
+     ],
+     [
+      "#2f3338",
+      "#f0a92b"
+     ],
+     "Standing by the crossing, radio on the shoulder"
+    ],
+    [
+     "ppl_firefighter",
+     "Firefighter",
+     "person",
+     [
+      0.64,
+      1.78
+     ],
+     [
+      "#b03a2e",
+      "#f0a92b"
+     ],
+     "Reflective stripes, helmet under an arm"
+    ],
+    [
+     "ppl_paramedic",
+     "Paramedic",
+     "person",
+     [
+      0.62,
+      1.75
+     ],
+     [
+      "#f0a92b",
+      "#c8442e"
+     ],
+     "Kit bag over a shoulder"
+    ],
+    [
+     "ppl_postman",
+     "Postman",
+     "person",
+     [
+      0.6,
+      1.72
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Yellow bag, bundle of letters in hand"
+    ],
+    [
+     "ppl_courier",
+     "Delivery courier",
+     "person",
+     [
+      0.6,
+      1.74
+     ],
+     [
+      "#b03a2e",
+      "#43474e"
+     ],
+     "Insulated box on the back, bike against the kerb"
+    ],
+    [
+     "ppl_builder",
+     "Construction worker",
+     "person",
+     [
+      0.64,
+      1.76
+     ],
+     [
+      "#f0a92b",
+      "#3f7fc4"
+     ],
+     "Hi-vis, hard hat, cigarette"
+    ],
+    [
+     "ppl_street_cleaner",
+     "Street cleaner",
+     "person",
+     [
+      0.62,
+      1.72
+     ],
+     [
+      "#f0a92b",
+      "#2f7d3a"
+     ],
+     "Orange vest and a long-handled brush"
+    ],
+    [
+     "ppl_gardener",
+     "Park gardener",
+     "person",
+     [
+      0.62,
+      1.74
+     ],
+     [
+      "#2f7d3a",
+      "#8a5a2b"
+     ],
+     "Planting out the municipal bedding"
+    ],
+    [
+     "ppl_dog_walker",
+     "Dog walker",
+     "person",
+     [
+      0.6,
+      1.7
+     ],
+     [
+      "#bcd3c2",
+      "#8a5a2b"
+     ],
+     "Lead in one hand, bag in the other"
+    ],
+    [
+     "ppl_jogger",
+     "Runner",
+     "person",
+     [
+      0.58,
+      1.74
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Along the embankment at seven"
+    ],
+    [
+     "ppl_cyclist",
+     "Cyclist",
+     "person",
+     [
+      0.6,
+      1.74
+     ],
+     [
+      "#3f8b3f",
+      "#43474e"
+     ],
+     "Helmet, panniers, waiting at the lights"
+    ],
+    [
+     "ppl_skater",
+     "Skateboarder",
+     "person",
+     [
+      0.6,
+      1.7
+     ],
+     [
+      "#2f3338",
+      "#f0a92b"
+     ],
+     "On the smooth granite of a square"
+    ],
+    [
+     "ppl_photographer",
+     "Photographer",
+     "person",
+     [
+      0.6,
+      1.74
+     ],
+     [
+      "#43474e",
+      "#9a9a95"
+     ],
+     "Tripod out at blue hour"
+    ],
+    [
+     "ppl_artist",
+     "Street artist",
+     "person",
+     [
+      0.6,
+      1.72
+     ],
+     [
+      "#b03a2e",
+      "#e3d9c6"
+     ],
+     "Drawing portraits on the bridge"
+    ],
+    [
+     "ppl_beggar",
+     "Person begging",
+     "person",
+     [
+      0.6,
+      1.2
+     ],
+     [
+      "#9a9a95",
+      "#8a5a2b"
+     ],
+     "Kneeling with a cap, as on Charles Bridge"
+    ],
+    [
+     "ppl_priest",
+     "Priest",
+     "person",
+     [
+      0.6,
+      1.74
+     ],
+     [
+      "#2f3338",
+      "#efeade"
+     ],
+     "Crossing the square to the sacristy"
+    ],
+    [
+     "ppl_bride",
+     "Wedding party",
+     "person",
+     [
+      0.62,
+      1.7
+     ],
+     [
+      "#efeade",
+      "#d9a8a0"
+     ],
+     "Photographs on the town hall steps"
+    ],
+    [
+     "ppl_security",
+     "Security guard",
+     "person",
+     [
+      0.64,
+      1.78
+     ],
+     [
+      "#43474e",
+      "#efeade"
+     ],
+     "Outside a bank door, hands behind back"
+    ],
+    [
+     "ppl_dog_large",
+     "Large dog",
+     "animal",
+     [
+      1.1,
+      0.8
+     ],
+     [
+      "#8a5a2b",
+      "#43474e"
+     ],
+     "German shepherd, off the lead in the park"
+    ],
+    [
+     "ppl_dog_small",
+     "Small dog",
+     "animal",
+     [
+      0.6,
+      0.4
+     ],
+     [
+      "#e3d9c6",
+      "#8a5a2b"
+     ],
+     "In a bag, on a tram, quietly"
+    ],
+    [
+     "ppl_cat",
+     "Cat",
+     "animal",
+     [
+      0.5,
+      0.35
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "On a courtyard wall, unimpressed"
+    ],
+    [
+     "ppl_pigeon",
+     "Pigeon",
+     "animal",
+     [
+      0.3,
+      0.2
+     ],
+     [
+      "#9a9a95",
+      "#6f9f8c"
+     ],
+     "Everywhere, especially the square"
+    ],
+    [
+     "ppl_swan",
+     "Swan",
+     "animal",
+     [
+      1.2,
+      1.1
+     ],
+     [
+      "#efeade",
+      "#f0a92b"
+     ],
+     "On the Vltava bank at Kampa, fed by tourists"
+    ],
+    [
+     "ppl_duck",
+     "Duck",
+     "animal",
+     [
+      0.5,
+      0.35
+     ],
+     [
+      "#6aa84f",
+      "#f0a92b"
+     ],
+     "Riverside, following a bread bag"
+    ],
+    [
+     "ppl_seagull",
+     "Gull",
+     "animal",
+     [
+      0.5,
+      0.3
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Wintering on the river, loud"
+    ],
+    [
+     "ppl_squirrel",
+     "Squirrel",
+     "animal",
+     [
+      0.3,
+      0.25
+     ],
+     [
+      "#b03a2e",
+      "#8a5a2b"
+     ],
+     "Red squirrel in Stromovka, unafraid"
+    ],
+    [
+     "ppl_horse",
+     "Carriage horse",
+     "animal",
+     [
+      2.4,
+      1.7
+     ],
+     [
+      "#8a5a2b",
+      "#43474e"
+     ],
+     "Waiting in harness, nosebag on"
+    ]
+   ]
+  },
+  {
+   "id": "surfaces",
+   "name": "Ground surfaces and markings",
+   "intro": "Prague's pavements are its signature: granite setts laid by hand in patterns that change street by street.",
+   "assets": [
+    [
+     "srf_setts_granite",
+     "Granite setts (kostky)",
+     "surface",
+     [
+      4,
+      0.12,
+      4
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Hand-laid cubes in fan courses across a road"
+    ],
+    [
+     "srf_setts_large",
+     "Large stone setts",
+     "surface",
+     [
+      4,
+      0.15,
+      4
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Heavier blocks under a tram route"
+    ],
+    [
+     "srf_mosaic_check",
+     "Mosaic pavement, chequer",
+     "surface",
+     [
+      3,
+      0.08,
+      3
+     ],
+     [
+      "#efeade",
+      "#43474e"
+     ],
+     "Black and white squares in Old Town"
+    ],
+    [
+     "srf_mosaic_wave",
+     "Mosaic pavement, wave",
+     "surface",
+     [
+      3,
+      0.08,
+      3
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Curved bands running down a pavement"
+    ],
+    [
+     "srf_mosaic_diamond",
+     "Mosaic pavement, diamond",
+     "surface",
+     [
+      3,
+      0.08,
+      3
+     ],
+     [
+      "#e3d9c6",
+      "#43474e"
+     ],
+     "Diamond grid outside a bank"
+    ],
+    [
+     "srf_mosaic_border",
+     "Mosaic border strip",
+     "surface",
+     [
+      4,
+      0.08,
+      0.8
+     ],
+     [
+      "#43474e",
+      "#efeade"
+     ],
+     "Dark edging along a lighter field"
+    ],
+    [
+     "srf_slab_concrete",
+     "Concrete paving slabs",
+     "surface",
+     [
+      3,
+      0.1,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Estate paving, corners chipped"
+    ],
+    [
+     "srf_slab_granite",
+     "Granite slabs",
+     "surface",
+     [
+      3,
+      0.12,
+      3
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Large slabs on a civic forecourt"
+    ],
+    [
+     "srf_asphalt",
+     "Asphalt road",
+     "surface",
+     [
+      6,
+      0.1,
+      6
+     ],
+     [
+      "#2f3338",
+      "#2f3338"
+     ],
+     "Patched, with a scar down the middle"
+    ],
+    [
+     "srf_asphalt_patch",
+     "Asphalt patch",
+     "surface",
+     [
+      2,
+      0.11,
+      1.6
+     ],
+     [
+      "#43474e",
+      "#2f3338"
+     ],
+     "Square repair over a utility trench"
+    ],
+    [
+     "srf_gravel",
+     "Gravel",
+     "surface",
+     [
+      4,
+      0.08,
+      4
+     ],
+     [
+      "#c8b183",
+      "#c8b183"
+     ],
+     "Park path or a builders' yard"
+    ],
+    [
+     "srf_dirt",
+     "Bare earth",
+     "surface",
+     [
+      4,
+      0.08,
+      4
+     ],
+     [
+      "#6b543a",
+      "#6b543a"
+     ],
+     "Desire line worn across a lawn"
+    ],
+    [
+     "srf_cobble_crossing",
+     "Cobbled crossing strip",
+     "surface",
+     [
+      6,
+      0.12,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "White setts laid as a crossing"
+    ],
+    [
+     "srf_kerb_granite",
+     "Granite kerbstone",
+     "surface",
+     [
+      3,
+      0.25,
+      0.3
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Tall kerb with a rounded top edge"
+    ],
+    [
+     "srf_kerb_dropped",
+     "Dropped kerb",
+     "surface",
+     [
+      2,
+      0.12,
+      0.3
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Ramped for prams and wheelchairs"
+    ],
+    [
+     "srf_gutter_channel",
+     "Gutter channel",
+     "surface",
+     [
+      4,
+      0.08,
+      0.4
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Two courses of setts making a water channel"
+    ],
+    [
+     "srf_tactile_paving",
+     "Tactile paving",
+     "surface",
+     [
+      2,
+      0.1,
+      1
+     ],
+     [
+      "#f0a92b",
+      "#9a9a95"
+     ],
+     "Studded strip at the top of metro stairs"
+    ],
+    [
+     "srf_tram_paving",
+     "Tram track paving",
+     "surface",
+     [
+      6,
+      0.14,
+      3.2
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Setts laid tight to the rail groove"
+    ],
+    [
+     "srf_grass_track",
+     "Grassed tram track",
+     "surface",
+     [
+      6,
+      0.12,
+      3.2
+     ],
+     [
+      "#3f8b3f",
+      "#3c3f45"
+     ],
+     "Green track bed on a newer line"
+    ],
+    [
+     "srf_bike_lane",
+     "Cycle lane paint",
+     "surface",
+     [
+      6,
+      0.05,
+      1.5
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Red surfacing with a bicycle stencil"
+    ],
+    [
+     "srf_bus_lane",
+     "Bus lane marking",
+     "surface",
+     [
+      6,
+      0.05,
+      3
+     ],
+     [
+      "#2f3338",
+      "#efeade"
+     ],
+     "BUS painted on the asphalt"
+    ],
+    [
+     "srf_parking_bay",
+     "Parking bay marking",
+     "surface",
+     [
+      5,
+      0.05,
+      2.2
+     ],
+     [
+      "#2f3338",
+      "#3f7fc4"
+     ],
+     "Blue zone bay, one line worn away"
+    ],
+    [
+     "srf_stop_line",
+     "Stop line",
+     "surface",
+     [
+      4,
+      0.05,
+      0.4
+     ],
+     [
+      "#2f3338",
+      "#efeade"
+     ],
+     "Thick white bar at the lights"
+    ],
+    [
+     "srf_centre_line",
+     "Road centre line",
+     "surface",
+     [
+      6,
+      0.05,
+      0.15
+     ],
+     [
+      "#2f3338",
+      "#efeade"
+     ],
+     "Broken white line down a side street"
+    ],
+    [
+     "srf_arrow_marking",
+     "Lane arrow",
+     "surface",
+     [
+      1.2,
+      0.05,
+      3
+     ],
+     [
+      "#2f3338",
+      "#efeade"
+     ],
+     "Straight-or-right arrow before a junction"
+    ],
+    [
+     "srf_manhole",
+     "Manhole cover",
+     "surface",
+     [
+      0.7,
+      0.06,
+      0.7
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Cast cover with the city arms on it"
+    ],
+    [
+     "srf_drain_grate",
+     "Gully grate",
+     "surface",
+     [
+      0.5,
+      0.06,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Kerbside gully full of leaves"
+    ],
+    [
+     "srf_service_hatch",
+     "Pavement service hatch",
+     "surface",
+     [
+      0.9,
+      0.06,
+      0.6
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Hinged hatch over a cellar chute"
+    ],
+    [
+     "srf_cellar_chute",
+     "Coal chute cover",
+     "surface",
+     [
+      0.6,
+      0.06,
+      0.6
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Round plate into the cellar of a tenement"
+    ],
+    [
+     "srf_glass_pavement",
+     "Pavement light",
+     "surface",
+     [
+      0.8,
+      0.06,
+      0.8
+     ],
+     [
+      "#9fc6d8",
+      "#3c3f45"
+     ],
+     "Glass blocks letting light into a cellar"
+    ],
+    [
+     "srf_tree_pit",
+     "Tree pit",
+     "surface",
+     [
+      1.6,
+      0.1,
+      1.6
+     ],
+     [
+      "#5a4632",
+      "#9a9a95"
+     ],
+     "Bare soil ring around a street tree"
+    ],
+    [
+     "srf_puddle",
+     "Puddle",
+     "water",
+     [
+      1.6,
+      0.05,
+      1.2
+     ],
+     [
+      "#2f6f9f",
+      "#b6c9d8"
+     ],
+     "In the dip where the paving settled"
+    ],
+    [
+     "srf_snow_patch",
+     "Snow patch",
+     "surface",
+     [
+      2,
+      0.1,
+      1.6
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Ploughed heap going grey at the kerb"
+    ],
+    [
+     "srf_leaf_litter",
+     "Leaf litter",
+     "surface",
+     [
+      2,
+      0.08,
+      2
+     ],
+     [
+      "#d8b26a",
+      "#b03a2e"
+     ],
+     "Swept into a pile under a lime"
+    ],
+    [
+     "srf_sand_pit_surface",
+     "Sand",
+     "surface",
+     [
+      3,
+      0.12,
+      3
+     ],
+     [
+      "#c8b183",
+      "#c8b183"
+     ],
+     "Playground sand, raked in the morning"
+    ],
+    [
+     "srf_rubber_play",
+     "Rubber safety surface",
+     "surface",
+     [
+      3,
+      0.1,
+      3
+     ],
+     [
+      "#b03a2e",
+      "#2f7d3a"
+     ],
+     "Poured rubber under climbing frames"
+    ],
+    [
+     "srf_sports_court",
+     "Sports court surface",
+     "surface",
+     [
+      6,
+      0.06,
+      4
+     ],
+     [
+      "#2f7d3a",
+      "#efeade"
+     ],
+     "Painted lines on a school hard court"
+    ],
+    [
+     "srf_grass_verge",
+     "Grass verge",
+     "surface",
+     [
+      6,
+      0.08,
+      2
+     ],
+     [
+      "#3f8b3f",
+      "#3f8b3f"
+     ],
+     "Strip between kerb and hedge, parked on"
+    ]
+   ]
+  },
+  {
+   "id": "infrastructure",
+   "name": "Infrastructure and utilities",
+   "intro": "The boxes, poles and hatches that make a street work, usually grey and usually in the way.",
+   "assets": [
+    [
+     "inf_utility_cabinet",
+     "Utility cabinet",
+     "cabinet",
+     [
+      1.2,
+      1.5,
+      0.5
+     ],
+     [
+      "#9a9a95",
+      "#43474e"
+     ],
+     "Telecom box covered in stickers"
+    ],
+    [
+     "inf_power_cabinet",
+     "Power distribution box",
+     "cabinet",
+     [
+      1.4,
+      1.7,
+      0.6
+     ],
+     [
+      "#9a9a95",
+      "#f0a92b"
+     ],
+     "Warning triangle and a padlock"
+    ],
+    [
+     "inf_gas_regulator",
+     "Gas regulator box",
+     "cabinet",
+     [
+      0.8,
+      1.1,
+      0.4
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Yellow box on a garden wall"
+    ],
+    [
+     "inf_substation",
+     "Transformer kiosk",
+     "shed",
+     [
+      4,
+      3,
+      3
+     ],
+     [
+      "#e3d9c6",
+      "#3c3f45"
+     ],
+     "Brick substation with louvred doors"
+    ],
+    [
+     "inf_meter_box",
+     "Meter cupboard",
+     "panel",
+     [
+      0.6,
+      0.9,
+      0.25
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Recessed in a facade with a small door"
+    ],
+    [
+     "inf_utility_pole",
+     "Utility pole",
+     "mast",
+     [
+      0.3,
+      8,
+      0.3
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Wooden pole with a crossarm of wires"
+    ],
+    [
+     "inf_street_cabinet_green",
+     "Green cabinet",
+     "cabinet",
+     [
+      1,
+      1.3,
+      0.45
+     ],
+     [
+      "#2f7d3a",
+      "#43474e"
+     ],
+     "Fibre cabinet in a hedge line"
+    ],
+    [
+     "inf_cctv_pole",
+     "CCTV pole",
+     "mast",
+     [
+      0.25,
+      6,
+      0.25
+     ],
+     [
+      "#9a9a95",
+      "#43474e"
+     ],
+     "Camera head and a junction box"
+    ],
+    [
+     "inf_antenna_mast",
+     "Antenna mast",
+     "mast",
+     [
+      0.4,
+      10,
+      0.4
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Rooftop mast with panel antennas"
+    ],
+    [
+     "inf_satellite_dish",
+     "Satellite dish",
+     "panel",
+     [
+      0.9,
+      0.9,
+      0.3
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Bolted to a balcony rail"
+    ],
+    [
+     "inf_aircon_unit",
+     "Air-conditioning unit",
+     "cabinet",
+     [
+      0.9,
+      0.7,
+      0.35
+     ],
+     [
+      "#efeade",
+      "#9a9a95"
+     ],
+     "Dripping onto the pavement in August"
+    ],
+    [
+     "inf_extractor_vent",
+     "Kitchen extractor vent",
+     "pipe",
+     [
+      0.4,
+      2,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Duct climbing a courtyard wall from a restaurant"
+    ],
+    [
+     "inf_hydrant_pillar",
+     "Fire hydrant",
+     "post",
+     [
+      0.3,
+      0.9
+     ],
+     [
+      "#c8442e",
+      "#c8442e"
+     ],
+     "Squat pillar hydrant at the kerb"
+    ],
+    [
+     "inf_hydrant_plate",
+     "Hydrant marker plate",
+     "panel",
+     [
+      0.3,
+      0.4,
+      0.04
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Small enamel plate on a wall"
+    ],
+    [
+     "inf_standpipe",
+     "Standpipe",
+     "pipe",
+     [
+      0.15,
+      1.6,
+      0.15
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Temporary water supply on a site"
+    ],
+    [
+     "inf_drain_pipe",
+     "Downpipe",
+     "pipe",
+     [
+      0.14,
+      6,
+      0.14
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Cast pipe with a shoe at the pavement"
+    ],
+    [
+     "inf_gutter_hopper",
+     "Rainwater hopper",
+     "panel",
+     [
+      0.35,
+      0.4,
+      0.3
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Decorated hopper head with a date on it"
+    ],
+    [
+     "inf_roof_gutter",
+     "Roof gutter",
+     "pipe",
+     [
+      0.16,
+      4,
+      0.16
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Half-round gutter on cast brackets"
+    ],
+    [
+     "inf_cable_drum",
+     "Cable drum",
+     "crate",
+     [
+      1.4,
+      1.4,
+      1.4
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Left beside an open trench"
+    ],
+    [
+     "inf_trench_cover",
+     "Trench plate",
+     "surface",
+     [
+      2.4,
+      0.1,
+      1.6
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Steel plate over a dug road, rattles"
+    ],
+    [
+     "inf_road_cone",
+     "Traffic cone",
+     "cone_marker",
+     [
+      0.4,
+      0.7
+     ],
+     [
+      "#c8442e",
+      "#efeade"
+     ],
+     "Three of them around one hole"
+    ],
+    [
+     "inf_works_fence",
+     "Site fence panel",
+     "fence",
+     [
+      3.5,
+      2,
+      0.2
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Mesh panel on concrete feet"
+    ],
+    [
+     "inf_hoarding",
+     "Site hoarding",
+     "wall",
+     [
+      6,
+      2.4,
+      0.2
+     ],
+     [
+      "#8a5a2b",
+      "#3f7fc4"
+     ],
+     "Plywood hoarding with a viewing hole"
+    ],
+    [
+     "inf_portaloo",
+     "Portable toilet",
+     "cabinet",
+     [
+      1.1,
+      2.3,
+      1.1
+     ],
+     [
+      "#2f7d3a",
+      "#efeade"
+     ],
+     "On the corner of a site, door swinging"
+    ],
+    [
+     "inf_site_office",
+     "Site office container",
+     "crate",
+     [
+      6,
+      2.6,
+      2.4
+     ],
+     [
+      "#e3d9c6",
+      "#3f7fc4"
+     ],
+     "Stacked two high with steps up to it"
+    ],
+    [
+     "inf_skip",
+     "Skip",
+     "crate",
+     [
+      3.4,
+      1.4,
+      1.8
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Permit sticker, filled above the rim"
+    ],
+    [
+     "inf_sand_pile",
+     "Sand pile",
+     "pile",
+     [
+      2,
+      1.2
+     ],
+     [
+      "#c8b183",
+      "#c8b183"
+     ],
+     "Heap beside a mixer"
+    ],
+    [
+     "inf_rubble_pile",
+     "Rubble pile",
+     "pile",
+     [
+      2.2,
+      1
+     ],
+     [
+      "#9a9a95",
+      "#b9b2a4"
+     ],
+     "Broken render swept into a corner"
+    ],
+    [
+     "inf_pallet_stack",
+     "Pallet stack",
+     "crate",
+     [
+      1.2,
+      1,
+      0.8
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Bricks still banded on the top pallet"
+    ],
+    [
+     "inf_scaffolding",
+     "Scaffolding bay",
+     "scaffold",
+     [
+      6,
+      10,
+      1.5
+     ],
+     [
+      "#3c3f45",
+      "#8a5a2b"
+     ],
+     "Netting, boards and a debris chute"
+    ],
+    [
+     "inf_tower_crane",
+     "Tower crane",
+     "crane",
+     [
+      14,
+      26
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Turning slowly over the rooftops"
+    ],
+    [
+     "inf_mobile_crane",
+     "Mobile crane",
+     "crane",
+     [
+      10,
+      12
+     ],
+     [
+      "#c8442e",
+      "#3c3f45"
+     ],
+     "Outriggers on the pavement for the day"
+    ],
+    [
+     "inf_digger",
+     "Mini digger",
+     "van",
+     [
+      3,
+      2.4,
+      1.6
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "In the trench it dug, tracks muddy"
+    ],
+    [
+     "inf_generator",
+     "Generator",
+     "crate",
+     [
+      2,
+      1.6,
+      1.2
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Humming beside an event stage"
+    ],
+    [
+     "inf_water_tank",
+     "Water tank",
+     "crate",
+     [
+      1.4,
+      1.4,
+      1.4
+     ],
+     [
+      "#efeade",
+      "#3c3f45"
+     ],
+     "IBC tank for watering new trees"
+    ],
+    [
+     "inf_salt_store",
+     "Salt store",
+     "shed",
+     [
+      4,
+      3,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Open-fronted bay of grit for winter"
+    ],
+    [
+     "inf_chimney_industrial",
+     "Industrial chimney",
+     "tower",
+     [
+      3,
+      28,
+      3
+     ],
+     [
+      "#a4553c",
+      "#3c3f45"
+     ],
+     "Brick stack with iron bands, kept as a landmark"
+    ],
+    [
+     "inf_cooling_vent",
+     "Roof plant housing",
+     "cabinet",
+     [
+      4,
+      2.2,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Louvred box on a flat roof"
+    ],
+    [
+     "inf_solar_panel",
+     "Solar panel array",
+     "panel",
+     [
+      3,
+      0.2,
+      1.6
+     ],
+     [
+      "#43474e",
+      "#b6c9d8"
+     ],
+     "Tilted frame on a school roof"
+    ],
+    [
+     "inf_lightning_rod",
+     "Lightning conductor",
+     "mast",
+     [
+      0.08,
+      3,
+      0.08
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Thin rod above a gable with its tape down the wall"
+    ]
+   ]
+  },
+  {
+   "id": "riverfront",
+   "name": "River, bridges and embankment",
+   "intro": "The Vltava cuts Prague in two; the embankments, walls and bridges are as much street as the streets are.",
+   "assets": [
+    [
+     "riv_embankment_wall",
+     "Embankment wall",
+     "wall",
+     [
+      8,
+      4,
+      1.2
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Coursed stone with a granite coping"
+    ],
+    [
+     "riv_embankment_rail",
+     "Embankment railing",
+     "fence",
+     [
+      4,
+      1.1,
+      0.2
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Cast railing above the river with lamps between"
+    ],
+    [
+     "riv_river_steps",
+     "Steps to the water",
+     "surface",
+     [
+      4,
+      1.6,
+      3
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Wide steps down to the náplavka, green at the bottom"
+    ],
+    [
+     "riv_mooring_ring",
+     "Mooring ring",
+     "panel",
+     [
+      0.3,
+      0.3,
+      0.15
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Iron ring set into the quay wall"
+    ],
+    [
+     "riv_bollard_quay",
+     "Quay bollard",
+     "bollard",
+     [
+      0.45,
+      0.7
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Fat iron bollard with a rope over it"
+    ],
+    [
+     "riv_pontoon",
+     "Floating pontoon",
+     "surface",
+     [
+      8,
+      0.5,
+      3
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Gangway to a moored boat"
+    ],
+    [
+     "riv_boat_ramp",
+     "Slipway",
+     "surface",
+     [
+      6,
+      0.4,
+      4
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Cobbled ramp into the water"
+    ],
+    [
+     "riv_bridge_pier",
+     "Bridge pier",
+     "column",
+     [
+      4,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Cutwater upstream, ice-worn"
+    ],
+    [
+     "riv_bridge_arch",
+     "Bridge arch span",
+     "bridge",
+     [
+      16,
+      6,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Sandstone arch of the Charles Bridge kind"
+    ],
+    [
+     "riv_bridge_deck",
+     "Bridge deck",
+     "surface",
+     [
+      12,
+      0.6,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Setts, tram rails and a crowd"
+    ],
+    [
+     "riv_bridge_statue",
+     "Bridge statue",
+     "statue",
+     [
+      1.6,
+      4
+     ],
+     [
+      "#43474e",
+      "#43474e"
+     ],
+     "Blackened baroque saint on a plinth"
+    ],
+    [
+     "riv_bridge_railing",
+     "Bridge parapet",
+     "wall",
+     [
+      6,
+      1.1,
+      0.6
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Low stone parapet worn smooth"
+    ],
+    [
+     "riv_bridge_tower",
+     "Bridge tower",
+     "tower",
+     [
+      8,
+      22,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#2f3338"
+     ],
+     "Gothic gate tower at the bridge end"
+    ],
+    [
+     "riv_footbridge",
+     "Footbridge",
+     "bridge",
+     [
+      14,
+      3,
+      3
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Steel footbridge over the railway"
+    ],
+    [
+     "riv_weir",
+     "Weir",
+     "surface",
+     [
+      14,
+      1.2,
+      4
+     ],
+     [
+      "#b9b2a4",
+      "#2f6f9f"
+     ],
+     "Stepped weir with water breaking white"
+    ],
+    [
+     "riv_lock_gate",
+     "Lock gate",
+     "gate",
+     [
+      6,
+      4,
+      0.6
+     ],
+     [
+      "#3c3f45",
+      "#8a5a2b"
+     ],
+     "Gate of the Smíchov lock"
+    ],
+    [
+     "riv_island_tip",
+     "Island tip",
+     "surface",
+     [
+      8,
+      0.3,
+      5
+     ],
+     [
+      "#3f8b3f",
+      "#c8b183"
+     ],
+     "Wooded point of a river island"
+    ],
+    [
+     "riv_swan_feeding",
+     "Feeding platform",
+     "surface",
+     [
+      2,
+      0.3,
+      1.5
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Low deck where people feed the swans"
+    ],
+    [
+     "riv_boat_ticket",
+     "Boat ticket booth",
+     "kiosk",
+     [
+      2.2,
+      2.4,
+      1.8
+     ],
+     [
+      "#3f7fc4",
+      "#efeade"
+     ],
+     "Cruise tickets sold from a hut on the quay"
+    ],
+    [
+     "riv_cafe_barge",
+     "Café barge",
+     "boat",
+     [
+      14,
+      3.4,
+      5
+     ],
+     [
+      "#8a5a2b",
+      "#f0a92b"
+     ],
+     "Bar on a moored boat, lights strung along it"
+    ],
+    [
+     "riv_flood_barrier",
+     "Flood barrier",
+     "wall",
+     [
+      6,
+      2.4,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Demountable barrier bolted into the quay"
+    ],
+    [
+     "riv_flood_gate",
+     "Flood gate",
+     "gate",
+     [
+      4,
+      3,
+      0.5
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Steel gate closing a street to the river"
+    ],
+    [
+     "riv_fisherman_stand",
+     "Angler's platform",
+     "surface",
+     [
+      1.6,
+      0.4,
+      1.6
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Plank stand on the far bank"
+    ],
+    [
+     "riv_water_gauge",
+     "Water level gauge",
+     "post",
+     [
+      0.3,
+      4
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Metre marks painted up a pier"
+    ],
+    [
+     "riv_riverside_bench",
+     "Riverside bench",
+     "bench",
+     [
+      1.9,
+      0.9,
+      0.6
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Facing the water, back to the traffic"
+    ],
+    [
+     "riv_weeping_willow",
+     "Riverside willow",
+     "tree_broad",
+     [
+      7,
+      9
+     ],
+     [
+      "#8a5a2b",
+      "#6aa84f"
+     ],
+     "Trailing into the current at Kampa"
+    ]
+   ]
+  },
+  {
+   "id": "boundaries",
+   "name": "Walls, fences and gates",
+   "intro": "How a Prague plot is closed off: a rendered wall with a tile coping, iron railings on a stone base, a gate with a name plate.",
+   "assets": [
+    [
+     "bnd_wall_plaster",
+     "Rendered garden wall",
+     "wall",
+     [
+      6,
+      2.2,
+      0.4
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Plaster over brick with a clay tile coping"
+    ],
+    [
+     "bnd_wall_stone",
+     "Stone wall",
+     "wall",
+     [
+      6,
+      2.4,
+      0.6
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Rubble stone, moss in the joints"
+    ],
+    [
+     "bnd_wall_brick",
+     "Brick wall",
+     "wall",
+     [
+      6,
+      2.4,
+      0.4
+     ],
+     [
+      "#a4553c",
+      "#a4553c"
+     ],
+     "Bond visible where the render fell off"
+    ],
+    [
+     "bnd_wall_concrete",
+     "Concrete panel wall",
+     "wall",
+     [
+      6,
+      2.2,
+      0.3
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Prefab panels around a depot"
+    ],
+    [
+     "bnd_wall_graffiti",
+     "Graffitied wall",
+     "wall",
+     [
+      6,
+      2.6,
+      0.4
+     ],
+     [
+      "#e3d9c6",
+      "#c8442e"
+     ],
+     "Tagged the night after it was painted"
+    ],
+    [
+     "bnd_wall_retaining",
+     "Retaining wall",
+     "wall",
+     [
+      8,
+      3.5,
+      1
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Holding a terrace above a street in Nusle"
+    ],
+    [
+     "bnd_wall_vineyard",
+     "Vineyard terrace wall",
+     "wall",
+     [
+      8,
+      2,
+      0.8
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Dry stone under the castle vineyards"
+    ],
+    [
+     "bnd_fence_iron",
+     "Iron railing fence",
+     "fence",
+     [
+      4,
+      1.6,
+      0.15
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Spear-topped railings on a low stone plinth"
+    ],
+    [
+     "bnd_fence_iron_ornate",
+     "Ornate iron fence",
+     "fence",
+     [
+      4,
+      2,
+      0.2
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Gilded tips outside a palace garden"
+    ],
+    [
+     "bnd_fence_wire",
+     "Wire mesh fence",
+     "fence",
+     [
+      4,
+      1.8,
+      0.1
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Green plastic-coated mesh, sagging"
+    ],
+    [
+     "bnd_fence_picket",
+     "Picket fence",
+     "fence",
+     [
+      4,
+      1.1,
+      0.1
+     ],
+     [
+      "#efeade",
+      "#efeade"
+     ],
+     "Around a cottage garden"
+    ],
+    [
+     "bnd_fence_wood",
+     "Board fence",
+     "fence",
+     [
+      4,
+      1.8,
+      0.15
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Vertical boards, one missing"
+    ],
+    [
+     "bnd_fence_hoarding",
+     "Advertising fence",
+     "wall",
+     [
+      6,
+      2.4,
+      0.2
+     ],
+     [
+      "#9a9a95",
+      "#c8442e"
+     ],
+     "Posters fly-pasted along a site edge"
+    ],
+    [
+     "bnd_fence_concrete_post",
+     "Concrete post and panel",
+     "fence",
+     [
+      4,
+      1.8,
+      0.15
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Standard estate boundary"
+    ],
+    [
+     "bnd_gate_garden",
+     "Garden gate",
+     "gate",
+     [
+      1.2,
+      1.8,
+      0.1
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Latch, name plate and a bell push"
+    ],
+    [
+     "bnd_gate_drive",
+     "Driveway gate",
+     "gate",
+     [
+      3.2,
+      2,
+      0.15
+     ],
+     [
+      "#3c3f45",
+      "#43474e"
+     ],
+     "Sliding gate with an intercom post"
+    ],
+    [
+     "bnd_gate_courtyard",
+     "Courtyard gate",
+     "gate",
+     [
+      3,
+      3.6,
+      0.3
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Studded timber gate under an arch"
+    ],
+    [
+     "bnd_gate_park",
+     "Park gate",
+     "gate",
+     [
+      2.6,
+      2.4,
+      0.2
+     ],
+     [
+      "#2f7d3a",
+      "#3c3f45"
+     ],
+     "Left open all day, closed at dusk"
+    ],
+    [
+     "bnd_archway",
+     "Passage archway",
+     "gate",
+     [
+      3.5,
+      4.5,
+      1.2
+     ],
+     [
+      "#e3d9c6",
+      "#b9b2a4"
+     ],
+     "Arched passage through a block to the courtyard"
+    ],
+    [
+     "bnd_arcade_bay",
+     "Arcade bay",
+     "gate",
+     [
+      3.5,
+      4.5,
+      2.5
+     ],
+     [
+      "#b9b2a4",
+      "#e3d9c6"
+     ],
+     "Vaulted arcade along a square"
+    ],
+    [
+     "bnd_portal_stone",
+     "Stone door portal",
+     "panel",
+     [
+      2.2,
+      3.2,
+      0.4
+     ],
+     [
+      "#b9b2a4",
+      "#8a5a2b"
+     ],
+     "Carved surround with a keystone head"
+    ],
+    [
+     "bnd_steps_entrance",
+     "Entrance steps",
+     "surface",
+     [
+      3,
+      0.6,
+      1.6
+     ],
+     [
+      "#b9b2a4",
+      "#9a9a95"
+     ],
+     "Three worn steps up from the pavement"
+    ],
+    [
+     "bnd_ramp_access",
+     "Access ramp",
+     "surface",
+     [
+      4,
+      0.5,
+      1.5
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Concrete ramp with a steel handrail"
+    ],
+    [
+     "bnd_cellar_door",
+     "Cellar doors",
+     "surface",
+     [
+      1.6,
+      0.4,
+      1.2
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Double flap doors in the pavement"
+    ],
+    [
+     "bnd_bin_store",
+     "Bin store",
+     "shed",
+     [
+      3,
+      2,
+      1.6
+     ],
+     [
+      "#9a9a95",
+      "#2f7d3a"
+     ],
+     "Timber screen hiding the containers"
+    ],
+    [
+     "bnd_noticeboard_gate",
+     "Gate notice board",
+     "panel",
+     [
+      0.6,
+      0.8,
+      0.08
+     ],
+     [
+      "#8a5a2b",
+      "#efeade"
+     ],
+     "House rules pinned inside the entry"
+    ]
+   ]
+  },
+  {
+   "id": "facade",
+   "name": "Roofs and facade details",
+   "intro": "Prague roofscape: red tiles, dormers in rows, chimneys everywhere, and something baroque stuck on the front.",
+   "assets": [
+    [
+     "fac_roof_tile",
+     "Clay tile roof section",
+     "panel",
+     [
+      4,
+      0.3,
+      3
+     ],
+     [
+      "#8c4a37",
+      "#8c4a37"
+     ],
+     "Beaver-tail tiles in overlapping courses"
+    ],
+    [
+     "fac_roof_slate",
+     "Slate roof section",
+     "panel",
+     [
+      4,
+      0.25,
+      3
+     ],
+     [
+      "#2f3338",
+      "#2f3338"
+     ],
+     "Dark slate on a church range"
+    ],
+    [
+     "fac_roof_metal",
+     "Standing seam metal roof",
+     "panel",
+     [
+      4,
+      0.2,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#9a9a95"
+     ],
+     "Seamed zinc over an attic conversion"
+    ],
+    [
+     "fac_roof_copper",
+     "Copper roof",
+     "panel",
+     [
+      4,
+      0.25,
+      3
+     ],
+     [
+      "#6f9f8c",
+      "#6f9f8c"
+     ],
+     "Green with age on a dome or a tower"
+    ],
+    [
+     "fac_roof_flat",
+     "Flat roof deck",
+     "surface",
+     [
+      6,
+      0.2,
+      5
+     ],
+     [
+      "#9a9a95",
+      "#43474e"
+     ],
+     "Bitumen and gravel with a parapet"
+    ],
+    [
+     "fac_dormer_gable",
+     "Gabled dormer",
+     "dormer",
+     [
+      1.6,
+      1.8,
+      1.4
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Row of dormers down a long roof"
+    ],
+    [
+     "fac_dormer_eyebrow",
+     "Eyebrow dormer",
+     "dormer",
+     [
+      2,
+      1.2,
+      1.4
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Curved dormer in an old tile roof"
+    ],
+    [
+     "fac_dormer_shed",
+     "Shed dormer",
+     "dormer",
+     [
+      3,
+      1.6,
+      1.6
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Wide flat-topped dormer on a conversion"
+    ],
+    [
+     "fac_skylight",
+     "Roof light",
+     "panel",
+     [
+      1.2,
+      0.15,
+      1
+     ],
+     [
+      "#9fc6d8",
+      "#9a9a95"
+     ],
+     "Velux cut into a tenement roof"
+    ],
+    [
+     "fac_chimney_brick",
+     "Brick chimney",
+     "chimney",
+     [
+      0.8,
+      2,
+      0.8
+     ],
+     [
+      "#a4553c",
+      "#9a9a95"
+     ],
+     "Tall stack with a clay pot on it"
+    ],
+    [
+     "fac_chimney_render",
+     "Rendered chimney",
+     "chimney",
+     [
+      0.7,
+      1.6,
+      0.7
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Plastered to match the wall below"
+    ],
+    [
+     "fac_chimney_bank",
+     "Bank of chimney flues",
+     "chimney",
+     [
+      1.8,
+      2.2,
+      0.8
+     ],
+     [
+      "#a4553c",
+      "#9a9a95"
+     ],
+     "Six flues in a row from one stack"
+    ],
+    [
+     "fac_chimney_metal",
+     "Metal flue",
+     "pipe",
+     [
+      0.25,
+      2.5,
+      0.25
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Stainless flue clamped to a gable"
+    ],
+    [
+     "fac_gable_end",
+     "Gable end",
+     "panel",
+     [
+      6,
+      4,
+      0.4
+     ],
+     [
+      "#e3d9c6",
+      "#8c4a37"
+     ],
+     "Blank gable with a small oval window"
+    ],
+    [
+     "fac_cornice",
+     "Cornice",
+     "panel",
+     [
+      6,
+      0.6,
+      0.5
+     ],
+     [
+      "#e3d9c6",
+      "#e3d9c6"
+     ],
+     "Moulded band under the eaves"
+    ],
+    [
+     "fac_string_course",
+     "String course",
+     "panel",
+     [
+      6,
+      0.25,
+      0.25
+     ],
+     [
+      "#e3d9c6",
+      "#e3d9c6"
+     ],
+     "Horizontal band between floors"
+    ],
+    [
+     "fac_pilaster",
+     "Pilaster",
+     "column",
+     [
+      0.5,
+      6
+     ],
+     [
+      "#e3d9c6",
+      "#e3d9c6"
+     ],
+     "Flat column dividing the bays of a facade"
+    ],
+    [
+     "fac_rustication",
+     "Rusticated base",
+     "panel",
+     [
+      4,
+      2.5,
+      0.3
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Heavy grooved stonework at street level"
+    ],
+    [
+     "fac_sgraffito",
+     "Sgraffito panel",
+     "panel",
+     [
+      2.5,
+      3,
+      0.1
+     ],
+     [
+      "#e3d9c6",
+      "#43474e"
+     ],
+     "Scratched renaissance figures on plaster"
+    ],
+    [
+     "fac_fresco",
+     "Painted facade panel",
+     "panel",
+     [
+      2.5,
+      3,
+      0.1
+     ],
+     [
+      "#e3d9c6",
+      "#d8b26a"
+     ],
+     "Faded saint above a doorway"
+    ],
+    [
+     "fac_stucco_relief",
+     "Stucco relief",
+     "panel",
+     [
+      1.6,
+      1,
+      0.15
+     ],
+     [
+      "#e3d9c6",
+      "#e3d9c6"
+     ],
+     "Garland and mask over a window"
+    ],
+    [
+     "fac_statue_niche",
+     "Statue niche",
+     "panel",
+     [
+      1,
+      2,
+      0.5
+     ],
+     [
+      "#e3d9c6",
+      "#b9b2a4"
+     ],
+     "Saint in a shell-headed niche"
+    ],
+    [
+     "fac_balcony_iron",
+     "Iron balcony",
+     "balcony",
+     [
+      2.4,
+      3,
+      1
+     ],
+     [
+      "#e3d9c6",
+      "#3c3f45"
+     ],
+     "Secese ironwork on the second floor"
+    ],
+    [
+     "fac_balcony_stone",
+     "Stone balcony",
+     "balcony",
+     [
+      3,
+      4,
+      1.2
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Balustraded balcony over a portal"
+    ],
+    [
+     "fac_loggia",
+     "Loggia",
+     "balcony",
+     [
+      3,
+      3,
+      1.6
+     ],
+     [
+      "#e3d9c6",
+      "#9a9a95"
+     ],
+     "Recessed balcony on a panelák"
+    ],
+    [
+     "fac_oriel",
+     "Oriel window",
+     "panel",
+     [
+      2,
+      2.5,
+      1
+     ],
+     [
+      "#e3d9c6",
+      "#2f3338"
+     ],
+     "Bay window jutting over the pavement"
+    ],
+    [
+     "fac_shutters",
+     "Window shutters",
+     "panel",
+     [
+      1.4,
+      1.6,
+      0.1
+     ],
+     [
+      "#2f7d3a",
+      "#2f7d3a"
+     ],
+     "Louvred shutters folded back"
+    ],
+    [
+     "fac_window_sash",
+     "Sash window",
+     "panel",
+     [
+      1.2,
+      1.8,
+      0.12
+     ],
+     [
+      "#efeade",
+      "#9fc6d8"
+     ],
+     "Double window with a deep reveal"
+    ],
+    [
+     "fac_window_shop",
+     "Shop window",
+     "panel",
+     [
+      3,
+      2.4,
+      0.15
+     ],
+     [
+      "#9fc6d8",
+      "#8a5a2b"
+     ],
+     "Timber-framed display window"
+    ],
+    [
+     "fac_window_cellar",
+     "Cellar window",
+     "panel",
+     [
+      0.8,
+      0.5,
+      0.1
+     ],
+     [
+      "#3c3f45",
+      "#43474e"
+     ],
+     "Barred slot at pavement level"
+    ],
+    [
+     "fac_door_timber",
+     "Timber street door",
+     "panel",
+     [
+      1.4,
+      2.8,
+      0.15
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Panelled door with a brass knob in the middle"
+    ],
+    [
+     "fac_door_glazed",
+     "Glazed entrance door",
+     "panel",
+     [
+      1.6,
+      2.8,
+      0.15
+     ],
+     [
+      "#9fc6d8",
+      "#3c3f45"
+     ],
+     "Intercom panel beside it"
+    ],
+    [
+     "fac_awning_shop",
+     "Shop awning",
+     "awning",
+     [
+      3,
+      3,
+      1.2
+     ],
+     [
+      "#c8442e",
+      "#e3d9c6"
+     ],
+     "Wound out over the display"
+    ],
+    [
+     "fac_awning_cafe",
+     "Café awning",
+     "awning",
+     [
+      4,
+      3,
+      2
+     ],
+     [
+      "#2f7d3a",
+      "#e3d9c6"
+     ],
+     "Scalloped edge with the café's name"
+    ],
+    [
+     "fac_sun_blind",
+     "Fabric sun blind",
+     "awning",
+     [
+      2,
+      3,
+      0.8
+     ],
+     [
+      "#e3d9c6",
+      "#e3d9c6"
+     ],
+     "Faded stripe on a south-facing flat"
+    ],
+    [
+     "fac_drainpipe_head",
+     "Decorated hopper",
+     "panel",
+     [
+      0.4,
+      0.5,
+      0.3
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Dated lead hopper on an old house"
+    ],
+    [
+     "fac_bell_panel",
+     "Doorbell panel",
+     "panel",
+     [
+      0.35,
+      0.5,
+      0.06
+     ],
+     [
+      "#9a9a95",
+      "#efeade"
+     ],
+     "Twenty names, half of them crossed out"
+    ],
+    [
+     "fac_letterbox_bank",
+     "Letterbox bank",
+     "panel",
+     [
+      1.2,
+      0.8,
+      0.15
+     ],
+     [
+      "#9a9a95",
+      "#43474e"
+     ],
+     "Bank of boxes inside the entry"
+    ],
+    [
+     "fac_graffiti_tag",
+     "Graffiti tag",
+     "panel",
+     [
+      1.6,
+      1,
+      0.05
+     ],
+     [
+      "#e3d9c6",
+      "#c8442e"
+     ],
+     "On the shutter of a closed shop"
+    ],
+    [
+     "fac_pigeon_spikes",
+     "Pigeon spikes",
+     "panel",
+     [
+      1.2,
+      0.15,
+      0.2
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Along a cornice, mostly working"
+    ]
+   ]
+  },
+  {
+   "id": "recreation",
+   "name": "Parks, play and sport",
+   "intro": "Prague's parks are working spaces: playgrounds between the blocks, beer gardens on the hills, ping-pong tables that are always taken.",
+   "assets": [
+    [
+     "rec_playground_set",
+     "Playground set",
+     "scaffold",
+     [
+      9,
+      3,
+      9
+     ],
+     [
+      "#c8442e",
+      "#f0a92b"
+     ],
+     "A whole courtyard playground: sandpit, swings, slide and frame"
+    ],
+    [
+     "rec_playground_frame",
+     "Climbing frame",
+     "scaffold",
+     [
+      4,
+      3,
+      3
+     ],
+     [
+      "#c8442e",
+      "#f0a92b"
+     ],
+     "Painted steel frame on rubber matting"
+    ],
+    [
+     "rec_swing_double",
+     "Double swing",
+     "shelter",
+     [
+      3,
+      2.6,
+      1.2
+     ],
+     [
+      "#c8442e",
+      "#43474e"
+     ],
+     "Two seats on chains, one always twisted"
+    ],
+    [
+     "rec_swing_toddler",
+     "Toddler swing",
+     "shelter",
+     [
+      1.6,
+      2.2,
+      1
+     ],
+     [
+      "#f0a92b",
+      "#43474e"
+     ],
+     "Bucket seat with a safety bar"
+    ],
+    [
+     "rec_slide",
+     "Slide",
+     "shelter",
+     [
+      3,
+      2.6,
+      1.4
+     ],
+     [
+      "#f0a92b",
+      "#3f7fc4"
+     ],
+     "Metal chute off a timber platform"
+    ],
+    [
+     "rec_sandpit",
+     "Sandpit",
+     "surface",
+     [
+      4,
+      0.3,
+      4
+     ],
+     [
+      "#c8b183",
+      "#8a5a2b"
+     ],
+     "Timber edge to sit on, cover rolled back"
+    ],
+    [
+     "rec_seesaw",
+     "Seesaw",
+     "bench",
+     [
+      3,
+      0.9,
+      0.4
+     ],
+     [
+      "#c8442e",
+      "#f0a92b"
+     ],
+     "Sprung seesaw with rubber stops"
+    ],
+    [
+     "rec_roundabout",
+     "Playground roundabout",
+     "surface",
+     [
+      2.4,
+      0.5,
+      2.4
+     ],
+     [
+      "#3f7fc4",
+      "#3c3f45"
+     ],
+     "Spun far too fast by older children"
+    ],
+    [
+     "rec_spring_rider",
+     "Spring rider",
+     "post",
+     [
+      0.6,
+      1
+     ],
+     [
+      "#f0a92b",
+      "#c8442e"
+     ],
+     "Horse or duck on a steel spring"
+    ],
+    [
+     "rec_climbing_net",
+     "Climbing net",
+     "scaffold",
+     [
+      3,
+      3.5,
+      3
+     ],
+     [
+      "#8a5a2b",
+      "#c8442e"
+     ],
+     "Rope pyramid on a timber mast"
+    ],
+    [
+     "rec_climbing_wall",
+     "Climbing wall",
+     "panel",
+     [
+      3,
+      4,
+      0.4
+     ],
+     [
+      "#9a9a95",
+      "#f0a92b"
+     ],
+     "Coloured holds on a park wall"
+    ],
+    [
+     "rec_play_house",
+     "Play house",
+     "house",
+     [
+      2,
+      2,
+      2
+     ],
+     [
+      "#3f8b3f",
+      "#c8442e"
+     ],
+     "Small hut with cut-out windows"
+    ],
+    [
+     "rec_play_train",
+     "Play train",
+     "tram",
+     [
+      3,
+      1.6,
+      1.2
+     ],
+     [
+      "#c8442e",
+      "#f0a92b"
+     ],
+     "Wooden engine set in the sand"
+    ],
+    [
+     "rec_outdoor_gym",
+     "Outdoor gym station",
+     "scaffold",
+     [
+      2.5,
+      2.2,
+      1.5
+     ],
+     [
+      "#f0a92b",
+      "#3c3f45"
+     ],
+     "Free weights machine by a path"
+    ],
+    [
+     "rec_pullup_bars",
+     "Pull-up bars",
+     "scaffold",
+     [
+      3,
+      2.4,
+      0.6
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Workout bars behind a panelák"
+    ],
+    [
+     "rec_table_tennis",
+     "Concrete table tennis table",
+     "bench",
+     [
+      2.7,
+      0.8,
+      1.5
+     ],
+     [
+      "#9a9a95",
+      "#2f7d3a"
+     ],
+     "Permanent table with a metal net"
+    ],
+    [
+     "rec_chess_table",
+     "Chess table",
+     "bench",
+     [
+      1,
+      0.8,
+      1
+     ],
+     [
+      "#b9b2a4",
+      "#8a5a2b"
+     ],
+     "Board inlaid in stone, two stools"
+    ],
+    [
+     "rec_petanque",
+     "Pétanque court",
+     "surface",
+     [
+      8,
+      0.15,
+      3
+     ],
+     [
+      "#c8b183",
+      "#8a5a2b"
+     ],
+     "Gravel strip with a timber edge"
+    ],
+    [
+     "rec_basketball_hoop",
+     "Basketball hoop",
+     "mast",
+     [
+      0.4,
+      3.5,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#c8442e"
+     ],
+     "Backboard over cracked asphalt"
+    ],
+    [
+     "rec_football_goal",
+     "Football goal",
+     "gate",
+     [
+      5,
+      2.2,
+      0.3
+     ],
+     [
+      "#efeade",
+      "#3c3f45"
+     ],
+     "Small goal with a torn net"
+    ],
+    [
+     "rec_sports_cage",
+     "Ball court cage",
+     "fence",
+     [
+      8,
+      4,
+      0.2
+     ],
+     [
+      "#2f7d3a",
+      "#3c3f45"
+     ],
+     "Fenced multi-sport cage between blocks"
+    ],
+    [
+     "rec_skate_ramp",
+     "Skate ramp",
+     "surface",
+     [
+      5,
+      1.4,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#8a5a2b"
+     ],
+     "Quarter pipe covered in stickers"
+    ],
+    [
+     "rec_dog_agility",
+     "Dog agility frame",
+     "scaffold",
+     [
+      3,
+      1.4,
+      1
+     ],
+     [
+      "#3f7fc4",
+      "#f0a92b"
+     ],
+     "Hurdles in a fenced dog park"
+    ],
+    [
+     "rec_dog_park_sign",
+     "Dog park sign",
+     "sign",
+     [
+      0.6,
+      2,
+      0.06
+     ],
+     [
+      "#2f7d3a",
+      "#efeade"
+     ],
+     "Rules nobody reads, in three languages"
+    ],
+    [
+     "rec_bandstand",
+     "Bandstand",
+     "shelter",
+     [
+      6,
+      4.5,
+      6
+     ],
+     [
+      "#2f7d3a",
+      "#e3d9c6"
+     ],
+     "Octagonal pavilion with a copper roof"
+    ],
+    [
+     "rec_beer_garden_table",
+     "Beer garden bench table",
+     "bench",
+     [
+      2.2,
+      0.8,
+      1.6
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Trestle table under the chestnuts"
+    ],
+    [
+     "rec_kiosk_refreshment",
+     "Refreshment kiosk",
+     "kiosk",
+     [
+      3,
+      2.6,
+      2.2
+     ],
+     [
+      "#2f7d3a",
+      "#f0a92b"
+     ],
+     "Občerstvení: sausages, beer, ice cream"
+    ],
+    [
+     "rec_ice_cream_stand",
+     "Ice cream stand",
+     "kiosk",
+     [
+      2,
+      2.4,
+      1.6
+     ],
+     [
+      "#d9a8a0",
+      "#efeade"
+     ],
+     "Zmrzlina window with a queue in July"
+    ],
+    [
+     "rec_picnic_table",
+     "Picnic table",
+     "bench",
+     [
+      2,
+      0.8,
+      1.6
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Fixed table at the edge of a meadow"
+    ],
+    [
+     "rec_bbq_stand",
+     "Barbecue stand",
+     "post",
+     [
+      0.8,
+      1
+     ],
+     [
+      "#3c3f45",
+      "#43474e"
+     ],
+     "Municipal grill in a designated corner"
+    ],
+    [
+     "rec_park_pavilion",
+     "Park pavilion",
+     "shelter",
+     [
+      5,
+      3.5,
+      5
+     ],
+     [
+      "#8a5a2b",
+      "#8c4a37"
+     ],
+     "Shelter from a summer downpour"
+    ],
+    [
+     "rec_fountain_park",
+     "Park fountain",
+     "fountain",
+     [
+      4,
+      2.5
+     ],
+     [
+      "#b9b2a4",
+      "#2f6f9f"
+     ],
+     "Circular basin with a single jet"
+    ],
+    [
+     "rec_fountain_baroque",
+     "Baroque fountain",
+     "fountain",
+     [
+      6,
+      3.5
+     ],
+     [
+      "#b9b2a4",
+      "#2f6f9f"
+     ],
+     "Figures around a stepped basin"
+    ],
+    [
+     "rec_fountain_drinking_park",
+     "Park drinking fountain",
+     "fountain",
+     [
+      0.7,
+      1.1
+     ],
+     [
+      "#3c3f45",
+      "#b6c9d8"
+     ],
+     "Push-button fountain on a path junction"
+    ],
+    [
+     "rec_pond",
+     "Ornamental pond",
+     "water",
+     [
+      8,
+      0.3,
+      6
+     ],
+     [
+      "#2f6f9f",
+      "#b6c9d8"
+     ],
+     "Ducks, algae, a ring of railings"
+    ],
+    [
+     "rec_pond_island",
+     "Pond island",
+     "surface",
+     [
+      2,
+      0.5,
+      2
+     ],
+     [
+      "#3f8b3f",
+      "#c8b183"
+     ],
+     "Small planted island with a duck house"
+    ],
+    [
+     "rec_monument_obelisk",
+     "Obelisk",
+     "column",
+     [
+      1.4,
+      8
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Granite obelisk on a square"
+    ],
+    [
+     "rec_monument_statue",
+     "Monument statue",
+     "statue",
+     [
+      2,
+      5
+     ],
+     [
+      "#43474e",
+      "#6f9f8c"
+     ],
+     "Bronze figure on a stone plinth"
+    ],
+    [
+     "rec_monument_plinth",
+     "Empty plinth",
+     "column",
+     [
+      2,
+      2.5
+     ],
+     [
+      "#b9b2a4",
+      "#b9b2a4"
+     ],
+     "Whatever stood on it was removed"
+    ],
+    [
+     "rec_memorial_wall",
+     "Memorial wall",
+     "wall",
+     [
+      4,
+      2.5,
+      0.5
+     ],
+     [
+      "#b9b2a4",
+      "#43474e"
+     ],
+     "Names cut into polished stone, candles below"
+    ],
+    [
+     "rec_bench_viewpoint",
+     "Viewpoint bench",
+     "bench",
+     [
+      2,
+      0.9,
+      0.6
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Facing the city from Petřín"
+    ],
+    [
+     "rec_telescope",
+     "Coin telescope",
+     "post",
+     [
+      0.4,
+      1.5
+     ],
+     [
+      "#3c3f45",
+      "#3f7fc4"
+     ],
+     "Two crowns for a minute of the castle"
+    ],
+    [
+     "rec_park_gate_arch",
+     "Park entrance arch",
+     "gate",
+     [
+      4,
+      4,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#2f7d3a"
+     ],
+     "Name of the park in ironwork over the path"
+    ]
+   ]
+  },
+  {
+   "id": "industry",
+   "name": "Workshops and the city edge",
+   "intro": "Where the city stops being pretty: depots, sidings, sheds and the yards behind them.",
+   "assets": [
+    [
+     "ind_warehouse",
+     "Warehouse",
+     "hall",
+     [
+      30,
+      10,
+      20
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Steel shed with roller doors and a loading apron"
+    ],
+    [
+     "ind_warehouse_brick",
+     "Brick warehouse",
+     "block",
+     [
+      26,
+      14,
+      18
+     ],
+     [
+      "#a4553c",
+      "#2f3338"
+     ],
+     "Karlín warehouse with cast columns inside"
+    ],
+    [
+     "ind_workshop",
+     "Workshop",
+     "shed",
+     [
+      12,
+      6,
+      9
+     ],
+     [
+      "#e3d9c6",
+      "#3c3f45"
+     ],
+     "Dílna: lathe noise and an open door"
+    ],
+    [
+     "ind_garage_row",
+     "Garage row",
+     "shed",
+     [
+      16,
+      3,
+      6
+     ],
+     [
+      "#e3d9c6",
+      "#3c3f45"
+     ],
+     "Row of lock-ups, each a different colour"
+    ],
+    [
+     "ind_garage_single",
+     "Single garage",
+     "shed",
+     [
+      3.2,
+      2.6,
+      6
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Up-and-over door, oil stain on the concrete"
+    ],
+    [
+     "ind_depot_tram",
+     "Tram depot hall",
+     "hall",
+     [
+      40,
+      11,
+      26
+     ],
+     [
+      "#a4553c",
+      "#3c3f45"
+     ],
+     "Tracks fanning in through a brick gable"
+    ],
+    [
+     "ind_depot_bus",
+     "Bus depot",
+     "hall",
+     [
+      36,
+      9,
+      24
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Buses nose-in overnight"
+    ],
+    [
+     "ind_fuel_depot",
+     "Fuel tank",
+     "crate",
+     [
+      6,
+      4,
+      6
+     ],
+     [
+      "#efeade",
+      "#c8442e"
+     ],
+     "Bunded tank in a depot yard"
+    ],
+    [
+     "ind_silo",
+     "Silo",
+     "tower",
+     [
+      6,
+      16,
+      6
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Concrete silo with an external ladder"
+    ],
+    [
+     "ind_gasholder",
+     "Gasholder frame",
+     "scaffold",
+     [
+      18,
+      20,
+      18
+     ],
+     [
+      "#3c3f45",
+      "#3c3f45"
+     ],
+     "Lattice guide frame kept as a landmark"
+    ],
+    [
+     "ind_container_stack",
+     "Shipping containers",
+     "crate",
+     [
+      6,
+      2.6,
+      2.4
+     ],
+     [
+      "#b03a2e",
+      "#3c3f45"
+     ],
+     "Stacked two high behind a fence"
+    ],
+    [
+     "ind_loading_dock",
+     "Loading dock",
+     "surface",
+     [
+      8,
+      1.2,
+      3
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Raised dock with rubber buffers"
+    ],
+    [
+     "ind_conveyor",
+     "Conveyor",
+     "pipe",
+     [
+      0.6,
+      8,
+      0.6
+     ],
+     [
+      "#3c3f45",
+      "#f0a92b"
+     ],
+     "Sloping belt from a yard into a hopper"
+    ],
+    [
+     "ind_hopper",
+     "Aggregate hopper",
+     "pile",
+     [
+      4,
+      4
+     ],
+     [
+      "#3c3f45",
+      "#c8b183"
+     ],
+     "Steel funnel over a lorry bay"
+    ],
+    [
+     "ind_scrap_pile",
+     "Scrap metal pile",
+     "pile",
+     [
+      3,
+      1.6
+     ],
+     [
+      "#3c3f45",
+      "#b03a2e"
+     ],
+     "Sorted by a magnet crane"
+    ],
+    [
+     "ind_timber_stack",
+     "Timber stack",
+     "crate",
+     [
+      4,
+      1.6,
+      1.4
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Banded planks under a lean-to"
+    ],
+    [
+     "ind_brick_pallet",
+     "Brick pallet",
+     "crate",
+     [
+      1.2,
+      1,
+      1
+     ],
+     [
+      "#a4553c",
+      "#8a5a2b"
+     ],
+     "Shrink-wrapped, waiting on the kerb"
+    ],
+    [
+     "ind_workshop_bench",
+     "Outdoor work bench",
+     "bench",
+     [
+      2,
+      0.9,
+      0.8
+     ],
+     [
+      "#8a5a2b",
+      "#3c3f45"
+     ],
+     "Vice on the end, sawdust underneath"
+    ],
+    [
+     "ind_weighbridge",
+     "Weighbridge",
+     "surface",
+     [
+      8,
+      0.2,
+      3
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Plated platform with a small office beside it"
+    ],
+    [
+     "ind_gatehouse",
+     "Depot gatehouse",
+     "shed",
+     [
+      3,
+      3,
+      3
+     ],
+     [
+      "#e3d9c6",
+      "#3c3f45"
+     ],
+     "One window, one barrier, one dog"
+    ],
+    [
+     "ind_yard_light",
+     "Yard floodlight",
+     "mast",
+     [
+      0.4,
+      9,
+      0.4
+     ],
+     [
+      "#3c3f45",
+      "#efeade"
+     ],
+     "On all night over a gravel yard"
+    ],
+    [
+     "ind_railway_siding",
+     "Railway siding",
+     "surface",
+     [
+      16,
+      0.25,
+      3.4
+     ],
+     [
+      "#3c3f45",
+      "#8a5a2b"
+     ],
+     "Rusting rails with grass between the sleepers"
+    ],
+    [
+     "ind_wagon",
+     "Freight wagon",
+     "tram",
+     [
+      12,
+      3,
+      2.8
+     ],
+     [
+      "#b03a2e",
+      "#3c3f45"
+     ],
+     "Standing in a siding, doors open"
+    ],
+    [
+     "ind_pipe_bridge",
+     "Pipe bridge",
+     "bridge",
+     [
+      12,
+      3,
+      2
+     ],
+     [
+      "#3c3f45",
+      "#9a9a95"
+     ],
+     "Insulated heating main crossing a street"
+    ],
+    [
+     "ind_heating_main",
+     "District heating pipe",
+     "pipe",
+     [
+      0.8,
+      10,
+      0.8
+     ],
+     [
+      "#9a9a95",
+      "#3c3f45"
+     ],
+     "Lagged pipes on low supports across waste ground"
+    ],
+    [
+     "ind_allotment_gate",
+     "Allotment colony gate",
+     "gate",
+     [
+      2.6,
+      2,
+      0.2
+     ],
+     [
+      "#3c3f45",
+      "#2f7d3a"
+     ],
+     "Padlocked, with a hand-painted number"
+    ],
+    [
+     "ind_greenhouse",
+     "Greenhouse",
+     "hall",
+     [
+      6,
+      3,
+      4
+     ],
+     [
+      "#9fc6d8",
+      "#3c3f45"
+     ],
+     "Tomatoes and a rain barrel"
+    ],
+    [
+     "ind_chicken_coop",
+     "Chicken coop",
+     "shed",
+     [
+      2.5,
+      1.8,
+      2
+     ],
+     [
+      "#8a5a2b",
+      "#8c4a37"
+     ],
+     "At the far end of an allotment"
+    ],
+    [
+     "ind_water_butt",
+     "Water butt",
+     "bin",
+     [
+      0.8,
+      1.2
+     ],
+     [
+      "#2f7d3a",
+      "#43474e"
+     ],
+     "Under a shed downpipe"
+    ],
+    [
+     "ind_wood_pile",
+     "Firewood stack",
+     "crate",
+     [
+      2.4,
+      1.4,
+      0.8
+     ],
+     [
+      "#8a5a2b",
+      "#8a5a2b"
+     ],
+     "Split logs stacked against a wall"
+    ]
+   ]
+  }
+ ]
+}

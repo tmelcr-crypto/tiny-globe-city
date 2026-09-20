@@ -11,6 +11,7 @@ Movement = rotating `worldPivot` under the player (see `src/core/camera.js`, `sr
 - `npm run dev` – dev server
 - `npm run build` – production build to `dist/`
 - `npm test` – vitest
+- `npm run catalog` – rebuild `docs/catalog/asset-catalog.pdf`
 
 ## Conventions
 - One entity/system per file, ES modules, no globals.
