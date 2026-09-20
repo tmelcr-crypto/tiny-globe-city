@@ -33,8 +33,8 @@ player.add(createWeapon(weapons[0]));
 scene.add(player);                     // player is NOT a child of worldPivot
 
 const interactables = spawnAll(worldPivot);
-const obstacles = worldPivot.children.filter(
-  (c) => c.userData?.type === 'house' || c.userData?.type === 'safehouse' || c.userData?.type === 'car'
+const obstacles = worldPivot.children.filter((c) =>
+  ['house', 'safehouse', 'car', 'tree'].includes(c.userData?.type)
 );
 const npcs = worldPivot.children.filter((c) => c.userData?.type === 'npc');
 
@@ -52,8 +52,12 @@ if (saved) Object.assign(state, saved);
 on('safehouse:interact', () => saveDialog.show());
 
 let speedMultiplier = 1;
+let drivingCar = null;
+let carSteer = 0;
 on('vehicle:toggle', ({ entered, multiplier, car }) => {
   speedMultiplier = entered ? multiplier : 1;
+  drivingCar = entered ? car : null;
+  carSteer = 0;
   if (entered) {
     // Swap the player for the car: fixed in place like the player, world rotates beneath it.
     collision.exclude(car);
@@ -63,10 +67,12 @@ on('vehicle:toggle', ({ entered, multiplier, car }) => {
     car.quaternion.identity();
     player.visible = false;
   } else {
-    // Drop the car back onto the globe at whatever ground point the player is now over.
+    // Drop the car back onto the globe beside the player, not on top of them
+    // (parking it exactly at the player's spot hid the player behind/inside it).
     scene.remove(car);
     worldPivot.add(car);
-    const local = worldPivot.worldToLocal(player.position.clone());
+    const dropWorldPos = player.position.clone().add(new THREE.Vector3(1.6, 0, 0));
+    const local = worldPivot.worldToLocal(dropWorldPos);
     car.position.copy(local);
     car.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), local.clone().normalize());
     collision.include(car);
@@ -80,16 +86,38 @@ addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 });
 
-const BASE_SPEED = 0.6; // radians per second
+const WALK_SPEED = 0.5;  // world units ("meters") per second, on foot
+const ACCEL = 1.5;       // units/sec^2 speeding up
+const DECEL = 3.5;       // units/sec^2 slowing down (brakes faster than it accelerates)
+const STEER_MAX = 0.5;   // radians the car visibly turns into a curve
+const STEER_RATE = 4;    // radians/sec toward the target steer angle
 const X_AXIS = new THREE.Vector3(1, 0, 0);
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
+
+function approach(current, target, maxDelta) {
+  if (Math.abs(target - current) <= maxDelta) return target;
+  return current + Math.sign(target - current) * maxDelta;
+}
+
+let currentSpeed = 0;
 createLoop((dt) => {
-  const speed = BASE_SPEED * speedMultiplier;
+  const moving = input.up || input.down || input.left || input.right;
+  const targetSpeed = moving ? WALK_SPEED * speedMultiplier : 0;
+  currentSpeed = approach(currentSpeed, targetSpeed, (targetSpeed > currentSpeed ? ACCEL : DECEL) * dt);
+  const angularSpeed = currentSpeed / GLOBE_RADIUS;
+
   // Movement = rotate the globe under the fixed player, blocked by collision.
-  if (input.up)    collision.tryRotate(X_AXIS,  speed * dt, player.position);
-  if (input.down)  collision.tryRotate(X_AXIS, -speed * dt, player.position);
-  if (input.left)  collision.tryRotate(Y_AXIS, -speed * dt, player.position);
-  if (input.right) collision.tryRotate(Y_AXIS,  speed * dt, player.position);
+  if (input.up)    collision.tryRotate(X_AXIS,  angularSpeed * dt, player.position);
+  if (input.down)  collision.tryRotate(X_AXIS, -angularSpeed * dt, player.position);
+  if (input.left)  collision.tryRotate(Y_AXIS, -angularSpeed * dt, player.position);
+  if (input.right) collision.tryRotate(Y_AXIS,  angularSpeed * dt, player.position);
+
+  if (drivingCar) {
+    const targetSteer = input.left ? STEER_MAX : input.right ? -STEER_MAX : 0;
+    carSteer = approach(carSteer, targetSteer, STEER_RATE * dt);
+    drivingCar.rotation.y = carSteer;
+  }
+
   interaction.update();
   combat.update(dt);
   hud.update();

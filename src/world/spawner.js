@@ -2,11 +2,13 @@ import * as THREE from 'three';
 import { GLOBE_RADIUS } from './globe.js';
 import { createCar } from '../entities/car.js';
 import { createNpc } from '../entities/npc.js';
+import { createTree } from '../entities/tree.js';
 import vehicles from '../data/vehicles.json';
 import npcDefs from '../data/npcs.json';
 
 const HOUSE_COUNT = 50;
 const CAR_COUNT = 5;
+const TREE_COUNT = 60;
 const NPC_HEALTH = 30;
 const TOWN_RADIUS = degToRad(32); // colatitude cap around the spawn point, so the town is actually reachable
 
@@ -63,6 +65,13 @@ export function spawnAll(worldPivot) {
     npc.userData = { type: 'npc', id: def.id, def, health: NPC_HEALTH };
     worldPivot.add(npc);
     interactables.push(npc);
+  }
+
+  for (let i = 0; i < TREE_COUNT; i++) {
+    const tree = createTree();
+    placeOnSurface(tree, randomCapDirection(TOWN_RADIUS));
+    tree.userData = { type: 'tree', id: `tree_${i}` };
+    worldPivot.add(tree);
   }
 
   return interactables;

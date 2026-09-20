@@ -29,6 +29,8 @@ export function createTouchControls(inputState) {
 
   addEventListener('pointerdown', (e) => {
     if (activeId !== null) return;
+    // Ignore taps on UI chrome (HUD, dialogs, buttons) — only the game canvas drives movement.
+    if (e.target.tagName !== 'CANVAS') return;
     activeId = e.pointerId;
     originX = e.clientX;
     originY = e.clientY;
