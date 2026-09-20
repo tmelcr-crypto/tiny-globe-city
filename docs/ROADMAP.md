@@ -1,5 +1,6 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
+- [x] Collision (stop on head-on hit, slide along obstacles on glancing hit)
 - [ ] Touch controls
 - [ ] Buildings on globe
 - [ ] Enter/exit building

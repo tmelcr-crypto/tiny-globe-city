@@ -19,6 +19,7 @@ export function createGlobe() {
     const dir = new THREE.Vector3().randomDirection();
     b.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
     b.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+    b.userData.collider = { radius: 1.1 }; // footprint radius for player collision
     pivot.add(b);
   }
   return pivot;

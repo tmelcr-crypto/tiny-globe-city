@@ -6,5 +6,6 @@ export function createPlayer(globeRadius) {
     new THREE.MeshStandardMaterial({ color: 0xff5533 })
   );
   mesh.position.set(0, globeRadius + 0.8, 0);
+  mesh.userData.collider = { radius: 0.5 };
   return mesh;
 }

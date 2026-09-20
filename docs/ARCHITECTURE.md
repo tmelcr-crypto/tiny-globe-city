@@ -3,7 +3,7 @@
 - `world/` globe, spawner
 - `entities/` player, car, npc, weapon
 - `interiors/` enterable buildings
-- `systems/` quests, activities, world events
+- `systems/` collision, quests, activities, world events
 - `data/` JSON content
 - `ui/` HUD, touch controls
 
