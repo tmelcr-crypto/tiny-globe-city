@@ -14,6 +14,12 @@ const TOWN_RADIUS = degToRad(32); // colatitude cap around the spawn point, so t
 // Keep the spawn point itself clear: an object landing on top of the player
 // leaves them wedged against it with the way forward blocked from frame one.
 const SPAWN_CLEARANCE = 4 / GLOBE_RADIUS; // radians of arc
+// Ground radius each kind of object occupies, used both to keep spawns from
+// overlapping each other and to size collision against the player.
+const FOOTPRINT = { house: 1.2, safehouse: 1.2, car: 1.7, tree: 0.6, npc: 0.4 };
+const PLACEMENT_ATTEMPTS = 40;
+
+const UP = new THREE.Vector3(0, 1, 0);
 
 function degToRad(d) {
   return (d * Math.PI) / 180;
@@ -28,54 +34,101 @@ function randomCapDirection(maxColatitude, phi = Math.random() * Math.PI * 2) {
   return new THREE.Vector3(sinTheta * Math.cos(phi), y, sinTheta * Math.sin(phi));
 }
 
-function placeOnSurface(mesh, dir) {
-  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
-  mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+// Ground (great-circle) distance between two directions, in world units.
+function groundDistance(a, b) {
+  return a.angleTo(b) * GLOBE_RADIUS;
 }
 
-// Spawns houses, cars and NPCs as children of worldPivot. Returns the objects
-// the player can interact with (the safehouse, cars, and quest-giving NPCs).
+// Rejection-sample a direction whose footprint doesn't overlap anything placed so far.
+function findFreeDirection(placed, radius, maxColatitude, phi) {
+  for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
+    const dir = randomCapDirection(maxColatitude, phi);
+    let clear = true;
+    for (const other of placed) {
+      if (groundDistance(dir, other.dir) < radius + other.radius) {
+        clear = false;
+        break;
+      }
+    }
+    if (clear) return dir;
+  }
+  return null;
+}
+
+function placeOnSurface(mesh, dir, lift = 0) {
+  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS + lift);
+  mesh.quaternion.setFromUnitVectors(UP, dir);
+}
+
+// Spawns houses, cars, NPCs and trees as children of worldPivot, none of them
+// overlapping. Returns the objects the player can interact with (the safehouse,
+// cars, and quest-giving NPCs).
 export function spawnAll(worldPivot) {
   const interactables = [];
+  const placed = [];
 
   for (let i = 0; i < HOUSE_COUNT; i++) {
     const isSafehouse = i === 0;
-    const house = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, 2 + Math.random() * 3, 1.5),
-      new THREE.MeshStandardMaterial({ color: isSafehouse ? 0x3388ff : 0xcccccc })
-    );
+    const type = isSafehouse ? 'safehouse' : 'house';
+    const radius = FOOTPRINT[type];
     // Put the safehouse close and directly ahead of spawn so it's easy to find.
     const dir = isSafehouse
-      ? randomCapDirection(degToRad(12), -Math.PI / 2)
-      : randomCapDirection(TOWN_RADIUS);
-    placeOnSurface(house, dir);
-    house.userData = { type: isSafehouse ? 'safehouse' : 'house', id: isSafehouse ? 'safehouse' : `house_${i}` };
+      ? findFreeDirection(placed, radius, degToRad(12), -Math.PI / 2) ?? randomCapDirection(degToRad(12), -Math.PI / 2)
+      : findFreeDirection(placed, radius, TOWN_RADIUS);
+    if (!dir) continue;
+
+    // Kept below the camera's height above the surface so a building next to
+    // the player doesn't black out the view. Previously buildings were sunk
+    // halfway into the globe, which is what made them look this tall.
+    const height = 1.2 + Math.random() * 1.8;
+    const house = new THREE.Mesh(
+      new THREE.BoxGeometry(1.5, height, 1.5),
+      new THREE.MeshStandardMaterial({ color: isSafehouse ? 0x3388ff : 0xcccccc })
+    );
+    placeOnSurface(house, dir, height / 2); // box is centred on its origin, so lift it to sit on the ground
+    house.userData = { type, id: isSafehouse ? 'safehouse' : `house_${i}`, footprint: radius };
     worldPivot.add(house);
+    placed.push({ dir, radius });
     if (isSafehouse) interactables.push(house);
   }
 
   for (let i = 0; i < CAR_COUNT; i++) {
+    const radius = FOOTPRINT.car;
+    const dir = findFreeDirection(placed, radius, TOWN_RADIUS);
+    if (!dir) continue;
+
     const def = vehicles[i % vehicles.length];
     const car = createCar(def);
-    placeOnSurface(car, randomCapDirection(TOWN_RADIUS));
-    car.userData = { type: 'car', id: `${def.id}_${i}`, def };
+    placeOnSurface(car, dir);
+    car.userData = { type: 'car', id: `${def.id}_${i}`, def, footprint: radius };
     worldPivot.add(car);
+    placed.push({ dir, radius });
     interactables.push(car);
   }
 
   for (const def of npcDefs) {
+    const radius = FOOTPRINT.npc;
+    const dir = findFreeDirection(placed, radius, TOWN_RADIUS);
+    if (!dir) continue;
+
     const npc = createNpc(def);
-    placeOnSurface(npc, randomCapDirection(TOWN_RADIUS));
-    npc.userData = { type: 'npc', id: def.id, def, health: NPC_HEALTH };
+    placeOnSurface(npc, dir);
+    npc.userData = { type: 'npc', id: def.id, def, health: NPC_HEALTH, footprint: radius };
     worldPivot.add(npc);
+    placed.push({ dir, radius });
     interactables.push(npc);
   }
 
   for (let i = 0; i < TREE_COUNT; i++) {
+    const radius = FOOTPRINT.tree;
+    const dir = findFreeDirection(placed, radius, TOWN_RADIUS);
+    if (!dir) continue;
+
     const tree = createTree();
-    placeOnSurface(tree, randomCapDirection(TOWN_RADIUS));
-    tree.userData = { type: 'tree', id: `tree_${i}` };
+    placeOnSurface(tree, dir);
+    tree.userData = { type: 'tree', id: `tree_${i}`, footprint: radius };
     worldPivot.add(tree);
+    placed.push({ dir, radius });
   }
 
   return interactables;

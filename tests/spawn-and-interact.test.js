@@ -21,6 +21,20 @@ describe('world population', () => {
     for (const car of byType('car')) expect(interactables).toContain(car);
   });
 
+  it('never spawns two objects overlapping each other', () => {
+    const pivot = createGlobe();
+    spawnAll(pivot);
+    const solid = pivot.children.filter((c) => c.userData?.footprint);
+
+    for (let i = 0; i < solid.length; i++) {
+      for (let j = i + 1; j < solid.length; j++) {
+        const gap = solid[i].position.angleTo(solid[j].position) * GLOBE_RADIUS;
+        const needed = solid[i].userData.footprint + solid[j].userData.footprint;
+        expect(gap).toBeGreaterThanOrEqual(needed - 1e-6);
+      }
+    }
+  });
+
   it('places the safehouse within reach of the fixed spawn point', () => {
     const pivot = createGlobe();
     spawnAll(pivot);

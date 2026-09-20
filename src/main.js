@@ -12,6 +12,7 @@ import { createSaveDialog, loadSave } from './ui/save-dialog.js';
 import { createInteractionSystem } from './systems/interaction.js';
 import { createCollisionSystem } from './systems/collision.js';
 import { createCombatSystem } from './systems/combat.js';
+import { createNpcWander } from './systems/npc-wander.js';
 import { on } from './core/events.js';
 import { state } from './core/state.js';
 import weapons from './data/weapons.json';
@@ -44,6 +45,7 @@ const hud = createHud();
 const interaction = createInteractionSystem(interactables, player.position);
 const collision = createCollisionSystem(worldPivot, obstacles);
 const combat = createCombatSystem(npcs, player.position);
+const wander = createNpcWander(npcs, obstacles);
 const saveDialog = createSaveDialog();
 
 const saved = loadSave();
@@ -92,8 +94,12 @@ const DECEL = 7.0;       // units/sec^2 slowing down (brakes faster than it acce
 // Turning spins the world around the fixed player rather than covering ground,
 // so it's a rate in rad/sec — scaling it by 1/GLOBE_RADIUS made turns glacial.
 const TURN_SPEED = 1.2;
-const STEER_MAX = 0.5;   // radians the car visibly turns into a curve
-const STEER_RATE = 4;    // radians/sec toward the target steer angle
+const STEER_MAX = 0.5;   // radians the car visibly leans into a curve
+// How quickly the turn rate eases in and out. On foot it's near-instant; a car
+// leans into and out of a corner rather than snapping to full lock.
+const TURN_DAMP_ON_FOOT = 14;
+const TURN_DAMP_DRIVING = 3.5;
+const STEER_DAMP = 6;    // how closely the car's visible yaw follows its turn rate
 const X_AXIS = new THREE.Vector3(1, 0, 0);
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
@@ -102,26 +108,34 @@ function approach(current, target, maxDelta) {
   return current + Math.sign(target - current) * maxDelta;
 }
 
+// Frame-rate independent exponential smoothing toward a target.
+function damp(current, target, lambda, dt) {
+  return target + (current - target) * Math.exp(-lambda * dt);
+}
+
 let currentSpeed = 0;
+let turnRate = 0;
 createLoop((dt) => {
   const walking = input.up || input.down;
   const targetSpeed = walking ? WALK_SPEED * speedMultiplier : 0;
   currentSpeed = approach(currentSpeed, targetSpeed, (targetSpeed > currentSpeed ? ACCEL : DECEL) * dt);
   const angularSpeed = currentSpeed / GLOBE_RADIUS;
-  const turn = TURN_SPEED * dt;
+
+  const turnInput = (input.left ? -1 : 0) + (input.right ? 1 : 0);
+  turnRate = damp(turnRate, turnInput * TURN_SPEED, drivingCar ? TURN_DAMP_DRIVING : TURN_DAMP_ON_FOOT, dt);
+  if (Math.abs(turnRate) < 1e-4) turnRate = 0;
 
   // Movement = rotate the globe under the fixed player, blocked by collision.
-  if (input.up)    collision.tryRotate(X_AXIS,  angularSpeed * dt, player.position);
-  if (input.down)  collision.tryRotate(X_AXIS, -angularSpeed * dt, player.position);
-  if (input.left)  collision.tryRotate(Y_AXIS, -turn, player.position);
-  if (input.right) collision.tryRotate(Y_AXIS,  turn, player.position);
+  if (input.up)   collision.tryRotate(X_AXIS,  angularSpeed * dt, player.position);
+  if (input.down) collision.tryRotate(X_AXIS, -angularSpeed * dt, player.position);
+  if (turnRate)   collision.tryRotate(Y_AXIS,  turnRate * dt, player.position);
 
   if (drivingCar) {
-    const targetSteer = input.left ? STEER_MAX : input.right ? -STEER_MAX : 0;
-    carSteer = approach(carSteer, targetSteer, STEER_RATE * dt);
+    carSteer = damp(carSteer, -(turnRate / TURN_SPEED) * STEER_MAX, STEER_DAMP, dt);
     drivingCar.rotation.y = carSteer;
   }
 
+  wander.update(dt);
   interaction.update();
   combat.update(dt);
   hud.update();
