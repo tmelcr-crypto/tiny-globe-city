@@ -73,6 +73,8 @@ function seatOnSurface(object, dir) {
 }
 
 // Returns worldPivot: a Group that holds the globe and all world objects.
+// Buildings (houses.js), NPCs/vehicles (spawner.js) etc. are added as
+// children of this pivot by main.js.
 export function createGlobe() {
   const pivot = new THREE.Group();
   const sphere = new THREE.Mesh(

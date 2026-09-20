@@ -1,11 +1,11 @@
 # Architecture
 - `core/` loop, input, camera, state, event bus
-- `world/` globe, city (static streets/buildings from data), spawner (dynamic NPCs/cars/pickups), geo (lat/lon -> direction helper)
+- `world/` globe, city (static streets/buildings from data), spawner (dynamic NPCs/cars/pickups), houses (standalone enterable buildings), geo (lat/lon -> direction helper)
 - `entities/` player, car (modular parts + driving physics), npc, weapon, savepoint
-- `interiors/` enterable buildings
-- `systems/` collision, vehicles (enter/exit + proximity), pickups, savepoints (proximity), save (manual save/load), quests, activities, world events
-- `data/` JSON content (quests, weapons, vehicles, buildings, trees, world districts, savepoints)
-- `ui/` HUD, touch controls, vehicle enter/exit prompt, player creation, save prompt
+- `interiors/` enterable buildings (2D platformer interior, canvas-rendered)
+- `systems/` collision, vehicles (enter/exit + proximity), pickups, savepoints (proximity), save (manual save/load), house-entry (proximity), quests, activities, world events
+- `data/` JSON content (quests, weapons, vehicles, buildings, trees, world districts, savepoints, houses, interiors)
+- `ui/` HUD, touch controls, vehicle enter/exit prompt, player creation, save prompt, house enter prompt, loading screen
 
 Rule: player is fixed at the top of the globe; `worldPivot` rotates.
 
@@ -35,3 +35,15 @@ beacon mesh (a child of `worldPivot`) at a lat/lon from `data/savepoints.json`.
 the fixed player and emits `savepoint:change`; interacting (on-screen button or
 the `E` key) emits `save:requested`, handled by `systems/save.js`, which
 persists `{ player, money, health }` to `localStorage`.
+
+## Enterable buildings
+`world/houses.js` scatters standalone houses (each with a door mesh) across
+the globe, distinct from the district buildings in `world/city.js` (which
+are static InstancedMesh street-grid geometry with no interiors).
+`systems/house-entry.js` checks each frame whether a door has rotated under
+the fixed player and emits `house:near`/`house:far`; `ui/enter-prompt.js`
+shows an Enter button, which emits `house:enter-request`. `main.js` shows
+`ui/loading-screen.js` for a beat, then hands off to
+`interiors/interior.js`, a 2D canvas platformer (defined per-house in
+`data/interiors.json`) that takes over input and rendering until the player
+reaches the exit and requests `interior:exit-request`.

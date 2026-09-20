@@ -1,11 +1,11 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
 - [x] Touch controls
-- [x] Buildings on globe (hand-authored districts + street grids, `src/data/world.json`)
+- [x] Buildings on globe (hand-authored districts + street grids, `src/data/world.json`; standalone houses with doors, `world/houses.js`)
 - [x] Collision (stop on head-on hit, slide along obstacles on glancing hit)
 - [x] Player creation UI (name entry)
 - [x] Manual save at savehouses (one test safepoint)
-- [ ] Enter/exit building
+- [x] Enter/exit building (proximity prompt, loading screen, 2D interior)
 - [x] One car (modular parts + accel/decel driving physics + enter/exit prompt)
 - [x] NPCs
 - [x] Weapons (pistol pickup)
