@@ -3,7 +3,7 @@
 - [ ] Touch controls
 - [ ] Buildings on globe
 - [ ] Enter/exit building
-- [ ] One car
+- [x] One car
 - [ ] NPCs
 - [ ] Weapons
 - [ ] Quests
