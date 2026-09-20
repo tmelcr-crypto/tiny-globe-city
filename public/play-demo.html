@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Tiny Globe City — Playable Demo</title>
+<style>
+  :root{
+    --ink:#0b1020;
+    --panel:rgba(10,14,28,0.72);
+    --panel-border:rgba(255,255,255,0.10);
+    --grass:#4a8f4a;
+    --gold:#ffcf5c;
+    --gold-dim:#8a7231;
+    --ice:#cfe3ff;
+    --ice-dim:rgba(207,227,255,0.55);
+    --danger:#ff5d5d;
+  }
+  /* Tiny Globe City commits to one visual world -- a night arcade screen --
+     regardless of the viewer's OS theme, so colors are declared explicitly
+     rather than swapped per color-scheme. */
+  html,body{ height:100%; margin:0; background:var(--ink); overflow:hidden; overscroll-behavior:none; }
+  *{ box-sizing:border-box; }
+  body{
+    font-family:'Chakra Petch', system-ui, sans-serif;
+    color:var(--ice);
+    touch-action:none;
+    -webkit-user-select:none; user-select:none;
+  }
+  #stage{ position:fixed; inset:0; }
+  canvas{ display:block; width:100%; height:100%; }
+
+  .hud{ position:fixed; z-index:5; pointer-events:none; }
+  #topbar{
+    top:calc(env(safe-area-inset-top,0px) + 12px);
+    left:16px; right:16px;
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+  .chip{
+    pointer-events:auto;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    backdrop-filter:blur(6px);
+    border-radius:10px;
+    padding:8px 12px;
+    font-size:13px;
+    letter-spacing:.02em;
+    display:flex; align-items:center; gap:8px;
+  }
+  .chip b{ color:var(--gold); font-weight:600; }
+  .bar-track{ width:84px; height:8px; border-radius:5px; background:rgba(255,255,255,0.12); overflow:hidden; }
+  .bar-fill{ height:100%; background:linear-gradient(90deg,#ff5d5d,#ffb15d); width:100%; transition:width .25s ease; }
+
+  #coordread{
+    top:calc(env(safe-area-inset-top,0px) + 12px);
+    left:50%; transform:translateX(-50%);
+    font-size:11px; color:var(--ice-dim); letter-spacing:.08em; text-transform:uppercase;
+  }
+
+  #toast{
+    top:64px; left:50%; transform:translateX(-50%);
+    font-size:13px; color:var(--gold); opacity:0; transition:opacity .4s ease, transform .4s ease;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:8px; padding:6px 14px;
+  }
+  #toast.show{ opacity:1; }
+
+  #compass{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
+    right:20px;
+    width:64px; height:64px; border-radius:50%;
+    background:var(--panel); border:1px solid var(--panel-border);
+    display:flex; align-items:center; justify-content:center;
+  }
+  #compass svg{ width:100%; height:100%; }
+  #compass .needle{ transform-origin:32px 32px; transition:transform .12s linear; }
+
+  #stick{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+    left:18px;
+    width:118px; height:118px;
+    pointer-events:auto;
+  }
+  #stick .ring{ position:absolute; inset:0; border-radius:50%; background:var(--panel); border:1px solid var(--panel-border); }
+  #stick .knob{
+    position:absolute; width:52px; height:52px; border-radius:50%;
+    left:50%; top:50%; transform:translate(-50%,-50%);
+    background:linear-gradient(180deg,#3a4a7a,#20284a);
+    border:1px solid rgba(255,255,255,0.18);
+    box-shadow:0 4px 14px rgba(0,0,0,0.4);
+  }
+
+  #keyhint{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+    left:50%; transform:translateX(-50%);
+    font-size:11px; color:var(--ice-dim); letter-spacing:.05em;
+    display:none;
+  }
+  body.has-keyboard #keyhint{ display:block; }
+  body.has-keyboard #stick{ display:none; }
+
+  #titlecard{
+    position:fixed; inset:0; z-index:10;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:22px; text-align:center; padding:24px;
+    background:
+      radial-gradient(120% 90% at 50% 12%, rgba(74,143,74,0.16), transparent 60%),
+      linear-gradient(180deg, #05070f 0%, #0b1020 55%, #0a0f22 100%);
+  }
+  #titlecard .stars{ position:absolute; inset:0; z-index:-1; }
+  #logo{
+    font-family:'Press Start 2P', monospace;
+    font-size:clamp(20px, 6vw, 34px);
+    line-height:1.6;
+    color:var(--ice);
+    text-shadow:0 0 18px rgba(207,227,255,0.35), 0 0 2px rgba(255,255,255,0.6);
+    letter-spacing:2px;
+  }
+  #logo span{ color:var(--grass); }
+  .tag{
+    font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--gold-dim); border:1px solid var(--panel-border); border-radius:999px;
+    padding:5px 14px; background:rgba(255,255,255,0.03);
+  }
+  #startbtn{
+    font-family:inherit; font-size:15px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink); background:var(--gold); border:none; border-radius:10px;
+    padding:14px 34px; cursor:pointer; font-weight:700;
+    box-shadow:0 8px 24px rgba(255,207,92,0.25);
+  }
+  #startbtn:active{ transform:translateY(1px); }
+  .howto{ max-width:340px; font-size:13px; line-height:1.7; color:var(--ice-dim); }
+  .howto b{ color:var(--ice); }
+
+  #deathcard{
+    position:fixed; inset:0; z-index:10;
+    display:none; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+    background:rgba(5,7,15,0.86); backdrop-filter:blur(4px); text-align:center; padding:24px;
+  }
+  #deathcard.show{ display:flex; }
+  #deathcard h2{ font-family:'Press Start 2P', monospace; font-size:18px; color:var(--danger); margin:0; }
+  #deathcard p{ color:var(--ice-dim); font-size:13px; margin:0; }
+  #retrybtn{
+    font-family:inherit; font-size:14px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--ink); background:var(--gold); border:none; border-radius:10px;
+    padding:12px 28px; cursor:pointer; font-weight:700;
+  }
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+
+<div id="titlecard">
+  <canvas class="stars" id="starsCanvas"></canvas>
+  <div class="tag">pre-alpha &middot; playable build</div>
+  <div id="logo">TINY<br><span>GLOBE</span> CITY</div>
+  <p class="howto">
+    You stand fixed at the top of a tiny world. <b>The globe turns beneath you</b>, never the other way around.
+    Roll the city to sweep coins under your feet before your legs give out.
+  </p>
+  <button id="startbtn">Drop In</button>
+  <p class="howto"><b>Desktop:</b> WASD / Arrow keys &nbsp;&middot;&nbsp; <b>Touch:</b> left stick or drag anywhere</p>
+</div>
+
+<div id="deathcard">
+  <h2>OUT OF STEPS</h2>
+  <p id="deathscore">You banked $0 before the globe outran you.</p>
+  <button id="retrybtn">Spin Again</button>
+</div>
+
+<div class="hud" id="topbar">
+  <div class="chip">
+    <span>HP</span>
+    <div class="bar-track"><div class="bar-fill" id="hpfill"></div></div>
+  </div>
+  <div class="chip"><b id="money">$0</b></div>
+</div>
+<div class="hud" id="coordread">lat --&deg; &middot; lon --&deg;</div>
+<div class="hud" id="toast">+$10</div>
+
+<div class="hud" id="compass">
+  <svg viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+    <g class="needle" id="needle">
+      <polygon points="32,10 27,32 32,28 37,32" fill="var(--gold)"/>
+      <polygon points="32,54 27,32 32,36 37,32" fill="rgba(255,255,255,0.35)"/>
+    </g>
+  </svg>
+</div>
+
+<div class="hud" id="stick">
+  <div class="ring"></div>
+  <div class="knob" id="knob"></div>
+</div>
+<div class="hud" id="keyhint">WASD / ARROWS TO ROLL THE GLOBE</div>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Chakra+Petch:wght@400;500;600;700&display=swap">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+
+/* ---------- starfield behind the title card ---------- */
+(function stars(){
+  const c = document.getElementById('starsCanvas');
+  const ctx = c.getContext('2d');
+  function size(){ c.width = innerWidth; c.height = innerHeight; }
+  size(); addEventListener('resize', size);
+  const pts = Array.from({length:140}, () => ({
+    x: Math.random(), y: Math.random(), r: Math.random()*1.4+0.2, p: Math.random()*Math.PI*2
+  }));
+  function draw(t){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const s of pts){
+      const tw = 0.5 + 0.5*Math.sin(t*0.001 + s.p);
+      ctx.globalAlpha = 0.25 + tw*0.6;
+      ctx.fillStyle = '#cfe3ff';
+      ctx.beginPath();
+      ctx.arc(s.x*c.width, s.y*c.height, s.r, 0, 7);
+      ctx.fill();
+    }
+    if(!stopped) requestAnimationFrame(draw);
+  }
+  let stopped = false;
+  requestAnimationFrame(draw);
+  window.__stopStars = () => stopped = true;
+})();
+
+/* ---------- world constants (mirrors src/world/globe.js) ---------- */
+const GLOBE_RADIUS = 50;
+const COIN_COUNT = 22;
+const BUILDING_COUNT = 46;
+const COLLECT_DIST = 2.6;
+
+/* ---------- renderer / scene ---------- */
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha:false });
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+renderer.setSize(innerWidth, innerHeight);
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b1020);
+scene.fog = new THREE.FogExp2(0x0b1020, 0.0016);
+
+scene.add(new THREE.HemisphereLight(0xbfd6ff, 0x2a3d2a, 1.1));
+const sun = new THREE.DirectionalLight(0xfff2d0, 1.15);
+sun.position.set(40, 90, 30);
+scene.add(sun);
+
+/* distant stars in-scene so the globe itself reads as tiny-planet */
+{
+  const geo = new THREE.BufferGeometry();
+  const N = 800, positions = new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const v = new THREE.Vector3().randomDirection().multiplyScalar(400 + Math.random()*200);
+    positions.set([v.x,v.y,v.z], i*3);
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const mat = new THREE.PointsMaterial({ color:0xcfe3ff, size:1.3, sizeAttenuation:true });
+  scene.add(new THREE.Points(geo, mat));
+}
+
+/* ---------- camera (mirrors src/core/camera.js) ---------- */
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+camera.position.set(0, GLOBE_RADIUS + 6, 8);
+camera.lookAt(0, GLOBE_RADIUS, 0);
+
+addEventListener('resize', () => {
+  renderer.setSize(innerWidth, innerHeight);
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+});
+
+/* ---------- globe + world content (mirrors src/world/globe.js) ---------- */
+function createGlobe(){
+  const pivot = new THREE.Group();
+
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(GLOBE_RADIUS, 48, 32),
+    new THREE.MeshStandardMaterial({ color:0x4a8f4a, flatShading:true, roughness:0.95 })
+  );
+  pivot.add(sphere);
+
+  const buildingMats = [0xd8dce6, 0xb9c3d6, 0xe7d9c2, 0x9fb0c9].map(
+    c => new THREE.MeshStandardMaterial({ color:c, flatShading:true, roughness:0.85 })
+  );
+  for(let i=0;i<BUILDING_COUNT;i++){
+    const h = 2 + Math.random()*5;
+    const b = new THREE.Mesh(
+      new THREE.BoxGeometry(1.4 + Math.random()*1.2, h, 1.4 + Math.random()*1.2),
+      buildingMats[i % buildingMats.length]
+    );
+    const dir = new THREE.Vector3().randomDirection();
+    b.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
+    b.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
+    b.translateY(h/2 - 0.05);
+    pivot.add(b);
+  }
+
+  const treeMat = new THREE.MeshStandardMaterial({ color:0x2f6b3a, flatShading:true });
+  const trunkMat = new THREE.MeshStandardMaterial({ color:0x5b3d24, flatShading:true });
+  for(let i=0;i<26;i++){
+    const dir = new THREE.Vector3().randomDirection();
+    const tree = new THREE.Group();
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.14,0.6,5), trunkMat);
+    trunk.position.y = 0.3;
+    const top = new THREE.Mesh(new THREE.ConeGeometry(0.55,1.3,6), treeMat);
+    top.position.y = 1.05;
+    tree.add(trunk, top);
+    tree.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
+    tree.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
+    pivot.add(tree);
+  }
+
+  return pivot;
+}
+
+const worldPivot = createGlobe();
+scene.add(worldPivot);
+
+/* coins: children of worldPivot, collected when they roll under the fixed player */
+const coinGeo = new THREE.TorusGeometry(0.45, 0.16, 8, 16);
+const coinMat = new THREE.MeshStandardMaterial({ color:0xffcf5c, emissive:0x664c00, emissiveIntensity:0.5, metalness:0.4, roughness:0.35 });
+const coins = [];
+for(let i=0;i<COIN_COUNT;i++){
+  const dir = new THREE.Vector3().randomDirection();
+  const coin = new THREE.Mesh(coinGeo, coinMat);
+  coin.position.copy(dir).multiplyScalar(GLOBE_RADIUS + 0.9);
+  coin.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
+  coin.userData.dir = dir;
+  worldPivot.add(coin);
+  coins.push(coin);
+}
+
+/* player: fixed at the top of the globe, NOT a child of worldPivot */
+function createPlayer(){
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.4, 0.8, 4, 8),
+    new THREE.MeshStandardMaterial({ color:0xff5533, roughness:0.6 })
+  );
+  body.position.y = 0.8;
+  g.add(body);
+  g.position.set(0, GLOBE_RADIUS + 0.8, 0);
+  return g;
+}
+const player = createPlayer();
+scene.add(player);
+const PLAYER_TOP = new THREE.Vector3(0, GLOBE_RADIUS + 0.9, 0);
+
+/* ---------- input: keyboard (mirrors src/core/input.js) ---------- */
+const input = { up:false, down:false, left:false, right:false };
+const keyMap = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right', w:'up', s:'down', a:'left', d:'right' };
+addEventListener('keydown', (e) => {
+  if(keyMap[e.key]){ input[keyMap[e.key]] = true; document.body.classList.add('has-keyboard'); }
+});
+addEventListener('keyup', (e) => { if(keyMap[e.key]) input[keyMap[e.key]] = false; });
+
+/* ---------- input: touch stick + drag-anywhere (mobile-first) ---------- */
+const stickEl = document.getElementById('stick');
+const knobEl = document.getElementById('knob');
+let stickVec = { x:0, y:0 }; // -1..1
+let dragVec = { x:0, y:0 };
+(function touchStick(){
+  let active = false, originX=0, originY=0, pid=null;
+  const MAX = 42;
+  function set(dx,dy){
+    const len = Math.hypot(dx,dy) || 1;
+    const clamped = Math.min(len, MAX);
+    const nx = (dx/len)*clamped, ny = (dy/len)*clamped;
+    knobEl.style.transform = `translate(${nx-26}px, ${ny-26}px)`;
+    stickVec.x = nx/MAX; stickVec.y = ny/MAX;
+  }
+  function reset(){
+    stickVec.x = 0; stickVec.y = 0; active=false; pid=null;
+    knobEl.style.transform = 'translate(-50%,-50%)';
+  }
+  stickEl.addEventListener('pointerdown', (e) => {
+    active = true; pid = e.pointerId;
+    const r = stickEl.getBoundingClientRect();
+    originX = r.left + r.width/2; originY = r.top + r.height/2;
+    set(e.clientX-originX, e.clientY-originY);
+    stickEl.setPointerCapture(pid);
+  });
+  stickEl.addEventListener('pointermove', (e) => { if(active && e.pointerId===pid) set(e.clientX-originX, e.clientY-originY); });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev => stickEl.addEventListener(ev, (e) => { if(e.pointerId===pid) reset(); }));
+})();
+
+(function dragAnywhere(){
+  let active=false, lastX=0, lastY=0, pid=null;
+  const canvas = renderer.domElement;
+  canvas.addEventListener('pointerdown', (e) => {
+    if(e.target !== canvas) return;
+    active = true; pid = e.pointerId; lastX = e.clientX; lastY = e.clientY;
+  });
+  addEventListener('pointermove', (e) => {
+    if(!active || e.pointerId!==pid) return;
+    dragVec.x = (e.clientX - lastX) / 60;
+    dragVec.y = (e.clientY - lastY) / 60;
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  addEventListener('pointerup', (e) => { if(e.pointerId===pid){ active=false; dragVec.x=0; dragVec.y=0; } });
+})();
+
+/* ---------- HUD ---------- */
+const state = { money: 0, hp: 100, running: false };
+const hpFill = document.getElementById('hpfill');
+const moneyEl = document.getElementById('money');
+const coordEl = document.getElementById('coordread');
+const toastEl = document.getElementById('toast');
+const needleEl = document.getElementById('needle');
+let toastTimer = null;
+
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 900);
+}
+
+function updateHud(){
+  hpFill.style.width = Math.max(0, state.hp) + '%';
+  moneyEl.textContent = '$' + state.money;
+}
+
+/* lat/lon read against the fixed player, derived from the globe's inverse rotation */
+const _inv = new THREE.Quaternion();
+const _localTop = new THREE.Vector3();
+function updateCoordRead(){
+  _inv.copy(worldPivot.quaternion).invert();
+  _localTop.copy(PLAYER_TOP).applyQuaternion(_inv).normalize();
+  const lat = THREE.MathUtils.radToDeg(Math.asin(THREE.MathUtils.clamp(_localTop.y,-1,1)));
+  const lon = THREE.MathUtils.radToDeg(Math.atan2(_localTop.x, _localTop.z));
+  coordEl.textContent = `lat ${lat.toFixed(1)}° · lon ${lon.toFixed(1)}°`;
+}
+
+/* compass needle points toward the nearest uncollected coin's screen-relative bearing */
+function updateCompass(){
+  let nearest = null, nearestD = Infinity;
+  for(const coin of coins){
+    if(!coin.visible) continue;
+    const d = coin.getWorldPosition(new THREE.Vector3()).distanceTo(PLAYER_TOP);
+    if(d < nearestD){ nearestD = d; nearest = coin; }
+  }
+  if(!nearest){ needleEl.style.transform = 'rotate(0deg)'; return; }
+  const world = nearest.getWorldPosition(new THREE.Vector3());
+  _inv.copy(worldPivot.quaternion).invert();
+  const local = world.clone().applyQuaternion(_inv);
+  const angle = Math.atan2(local.x, local.z);
+  needleEl.style.transform = `rotate(${THREE.MathUtils.radToDeg(angle)}deg)`;
+}
+
+/* ---------- coin pulse + collection ---------- */
+function stepCoins(dt, t){
+  const worldPos = new THREE.Vector3();
+  for(const coin of coins){
+    if(!coin.visible) continue;
+    coin.rotation.z += dt * 1.6;
+    coin.position.y = (GLOBE_RADIUS + 0.9) + Math.sin(t*0.003 + coin.id) * 0.05;
+    coin.getWorldPosition(worldPos);
+    if(worldPos.distanceTo(PLAYER_TOP) < COLLECT_DIST){
+      coin.visible = false;
+      state.money += 10;
+      toast('+$10');
+      beep(880, 0.08);
+      updateHud();
+      if(coins.every(c => !c.visible)) respawnCoins();
+    }
+  }
+}
+function respawnCoins(){
+  for(const coin of coins){
+    const dir = new THREE.Vector3().randomDirection();
+    coin.position.copy(dir).multiplyScalar(GLOBE_RADIUS + 0.9);
+    coin.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir);
+    coin.visible = true;
+  }
+  toast('Field cleared — more coins!');
+}
+
+/* tiny WebAudio blip, no external asset needed */
+let actx = null;
+function beep(freq, dur){
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'square'; o.frequency.value = freq;
+    g.gain.value = 0.05;
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime + dur);
+  }catch(e){}
+}
+
+/* ---------- stamina drains while rolling; game ends at 0, mirrors state.health ---------- */
+const SPEED = 0.6; // radians / second, matches src/main.js
+const AXIS_X = new THREE.Vector3(1,0,0);
+const AXIS_Y = new THREE.Vector3(0,1,0);
+
+function currentDrive(){
+  let ix = 0, iy = 0;
+  if(input.up) iy -= 1;
+  if(input.down) iy += 1;
+  if(input.left) ix -= 1;
+  if(input.right) ix += 1;
+  ix += stickVec.x; iy += stickVec.y;
+  ix += dragVec.x; iy += dragVec.y;
+  dragVec.x = 0; dragVec.y = 0; // drag is a per-frame delta, not a held state
+  return { x: THREE.MathUtils.clamp(ix,-1,1), y: THREE.MathUtils.clamp(iy,-1,1) };
+}
+
+function tick(dt, t){
+  if(!state.running) return;
+  const d = currentDrive();
+  const moving = Math.abs(d.x) > 0.02 || Math.abs(d.y) > 0.02;
+  if(d.y !== 0) worldPivot.rotateOnWorldAxis(AXIS_X, -SPEED * d.y * dt);
+  if(d.x !== 0) worldPivot.rotateOnWorldAxis(AXIS_Y, SPEED * d.x * dt);
+
+  if(moving){
+    state.hp -= dt * 2.2;
+    if(state.hp <= 0){
+      state.hp = 0;
+      endRun();
+    }
+  } else {
+    state.hp = Math.min(100, state.hp + dt * 1.4);
+  }
+  updateHud();
+  stepCoins(dt, t);
+  updateCoordRead();
+  updateCompass();
+}
+
+/* ---------- lifecycle ---------- */
+const titlecard = document.getElementById('titlecard');
+const deathcard = document.getElementById('deathcard');
+const deathscore = document.getElementById('deathscore');
+
+function startRun(){
+  state.money = 0; state.hp = 100; state.running = true;
+  updateHud();
+  titlecard.style.display = 'none';
+  window.__stopStars && window.__stopStars();
+  deathcard.classList.remove('show');
+}
+function endRun(){
+  state.running = false;
+  deathscore.textContent = `You banked $${state.money} before the globe outran you.`;
+  deathcard.classList.add('show');
+}
+
+document.getElementById('startbtn').addEventListener('click', startRun);
+document.getElementById('retrybtn').addEventListener('click', () => {
+  respawnCoins();
+  startRun();
+});
+
+/* ---------- render loop (mirrors src/core/loop.js) ---------- */
+let last = performance.now();
+function frame(now){
+  const dt = Math.min((now-last)/1000, 0.05);
+  last = now;
+  tick(dt, now);
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+updateHud();
+</script>
+</body>
+</html>
