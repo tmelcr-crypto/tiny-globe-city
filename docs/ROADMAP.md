@@ -1,5 +1,7 @@
 # Roadmap
 - [x] Scaffold (globe + fixed player + rotate with arrows)
+- [x] Player creation UI (name entry)
+- [x] Manual save at savehouses (one test safepoint)
 - [ ] Touch controls
 - [ ] Buildings on globe
 - [ ] Enter/exit building

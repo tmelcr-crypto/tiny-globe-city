@@ -1,2 +1,8 @@
 // Global game state placeholder.
-export const state = { money: 0, health: 100, inVehicle: false, currentInterior: null };
+export const state = {
+  player: { name: null },
+  money: 0,
+  health: 100,
+  inVehicle: false,
+  currentInterior: null,
+};
