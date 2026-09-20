@@ -1591,5 +1591,648 @@
         "color": "#767469"
       }
     ]
+  },
+  {
+    "id": "parasol",
+    "name": "Beach parasol",
+    "category": "recreation",
+    "footprint": 1.6,
+    "turnable": true,
+    "reference": "Rows of them down Ocean Drive",
+    "parts": [
+      {
+        "shape": "cylinder",
+        "size": [
+          0.05,
+          2.3
+        ],
+        "at": [
+          0,
+          1.15,
+          0
+        ],
+        "color": "#c9b79a"
+      },
+      {
+        "shape": "cone",
+        "size": [
+          1.7,
+          0.6
+        ],
+        "at": [
+          0,
+          2.45,
+          0
+        ],
+        "sides": 8,
+        "color": "#e86a5c"
+      },
+      {
+        "shape": "cone",
+        "size": [
+          1.2,
+          0.4
+        ],
+        "at": [
+          0,
+          2.62,
+          0
+        ],
+        "sides": 8,
+        "color": "#f6e0c8"
+      }
+    ]
+  },
+  {
+    "id": "deckchair",
+    "name": "Deck chair",
+    "category": "recreation",
+    "footprint": 0.8,
+    "turnable": true,
+    "reference": "Striped canvas, always at the wrong angle",
+    "parts": [
+      {
+        "shape": "box",
+        "size": [
+          0.7,
+          0.08,
+          1.2
+        ],
+        "at": [
+          0,
+          0.35,
+          0
+        ],
+        "turn": [
+          -14,
+          0,
+          0
+        ],
+        "color": "#f2f0e6"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.7,
+          0.75,
+          0.08
+        ],
+        "at": [
+          0,
+          0.6,
+          -0.5
+        ],
+        "turn": [
+          -28,
+          0,
+          0
+        ],
+        "color": "#5ab0c8"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.06,
+          0.5,
+          0.06
+        ],
+        "at": [
+          -0.3,
+          0.2,
+          0.4
+        ],
+        "color": "#c9b79a"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.06,
+          0.5,
+          0.06
+        ],
+        "at": [
+          0.3,
+          0.2,
+          0.4
+        ],
+        "color": "#c9b79a"
+      }
+    ]
+  },
+  {
+    "id": "beach_hut",
+    "name": "Lifeguard hut",
+    "category": "recreation",
+    "footprint": 2.2,
+    "turnable": true,
+    "reference": "The one everybody photographs",
+    "parts": [
+      {
+        "shape": "box",
+        "size": [
+          2.6,
+          2.0,
+          2.4
+        ],
+        "at": [
+          0,
+          2.0,
+          0
+        ],
+        "color": "#f2dfc8"
+      },
+      {
+        "shape": "cone",
+        "size": [
+          2.2,
+          1.0
+        ],
+        "at": [
+          0,
+          3.4,
+          0
+        ],
+        "sides": 4,
+        "turn": [
+          0,
+          45,
+          0
+        ],
+        "color": "#e86a5c"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.16,
+          1.1,
+          0.16
+        ],
+        "at": [
+          -1.1,
+          0.55,
+          -1.0
+        ],
+        "color": "#c9b79a"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.16,
+          1.1,
+          0.16
+        ],
+        "at": [
+          1.1,
+          0.55,
+          -1.0
+        ],
+        "color": "#c9b79a"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.16,
+          1.1,
+          0.16
+        ],
+        "at": [
+          -1.1,
+          0.55,
+          1.0
+        ],
+        "color": "#c9b79a"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.16,
+          1.1,
+          0.16
+        ],
+        "at": [
+          1.1,
+          0.55,
+          1.0
+        ],
+        "color": "#c9b79a"
+      },
+      {
+        "shape": "box",
+        "size": [
+          1.6,
+          0.1,
+          1.2
+        ],
+        "at": [
+          0,
+          1.0,
+          1.7
+        ],
+        "color": "#c9b79a"
+      }
+    ]
+  },
+  {
+    "id": "container",
+    "name": "Shipping container",
+    "category": "transport",
+    "footprint": 3.4,
+    "turnable": false,
+    "reference": "Stacked two high behind the dock fence",
+    "parts": [
+      {
+        "shape": "box",
+        "size": [
+          6.0,
+          2.6,
+          2.4
+        ],
+        "at": [
+          0,
+          1.3,
+          0
+        ],
+        "color": "#b5543c"
+      },
+      {
+        "shape": "box",
+        "size": [
+          6.1,
+          0.12,
+          2.5
+        ],
+        "at": [
+          0,
+          2.6,
+          0
+        ],
+        "color": "#8f4230"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.12,
+          2.4,
+          2.3
+        ],
+        "at": [
+          3.0,
+          1.3,
+          0
+        ],
+        "color": "#93412f"
+      }
+    ]
+  },
+  {
+    "id": "crate_stack",
+    "name": "Crate stack",
+    "category": "commerce",
+    "footprint": 1.5,
+    "turnable": true,
+    "reference": "Pallets and crates waiting on the quay",
+    "parts": [
+      {
+        "shape": "box",
+        "size": [
+          1.8,
+          0.9,
+          1.4
+        ],
+        "at": [
+          0,
+          0.45,
+          0
+        ],
+        "color": "#a9793f"
+      },
+      {
+        "shape": "box",
+        "size": [
+          1.5,
+          0.8,
+          1.2
+        ],
+        "at": [
+          0.1,
+          1.3,
+          0.05
+        ],
+        "color": "#966b38"
+      },
+      {
+        "shape": "box",
+        "size": [
+          1.0,
+          0.7,
+          0.9
+        ],
+        "at": [
+          -0.2,
+          2.05,
+          -0.1
+        ],
+        "color": "#b08447"
+      }
+    ]
+  },
+  {
+    "id": "timber_stack",
+    "name": "Timber stack",
+    "category": "industry",
+    "footprint": 2.2,
+    "turnable": true,
+    "reference": "Logs banded at the roadside, waiting for the lorry",
+    "parts": [
+      {
+        "shape": "cylinder",
+        "size": [
+          0.35,
+          4.2
+        ],
+        "at": [
+          0,
+          0.35,
+          -0.7
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "color": "#8a5a2b"
+      },
+      {
+        "shape": "cylinder",
+        "size": [
+          0.35,
+          4.2
+        ],
+        "at": [
+          0,
+          0.35,
+          0
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "color": "#96633a"
+      },
+      {
+        "shape": "cylinder",
+        "size": [
+          0.35,
+          4.2
+        ],
+        "at": [
+          0,
+          0.35,
+          0.7
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "color": "#8a5a2b"
+      },
+      {
+        "shape": "cylinder",
+        "size": [
+          0.35,
+          4.2
+        ],
+        "at": [
+          0,
+          1.0,
+          -0.35
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "color": "#9c6b40"
+      },
+      {
+        "shape": "cylinder",
+        "size": [
+          0.35,
+          4.2
+        ],
+        "at": [
+          0,
+          1.0,
+          0.35
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "color": "#8a5a2b"
+      }
+    ]
+  },
+  {
+    "id": "haystack",
+    "name": "Hay bales",
+    "category": "farm",
+    "footprint": 1.6,
+    "turnable": true,
+    "reference": "Round bales left standing in the stubble",
+    "parts": [
+      {
+        "shape": "cylinder",
+        "size": [
+          0.9,
+          1.4
+        ],
+        "at": [
+          0,
+          0.9,
+          0
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "sides": 10,
+        "color": "#cba94f"
+      },
+      {
+        "shape": "cylinder",
+        "size": [
+          0.9,
+          1.4
+        ],
+        "at": [
+          0,
+          0.9,
+          1.9
+        ],
+        "turn": [
+          0,
+          0,
+          90
+        ],
+        "sides": 10,
+        "color": "#c2a047"
+      }
+    ]
+  },
+  {
+    "id": "well",
+    "name": "Village well",
+    "category": "street furniture",
+    "footprint": 1.3,
+    "turnable": true,
+    "reference": "Stone ring, timber frame, a bucket nobody uses",
+    "parts": [
+      {
+        "shape": "cylinder",
+        "size": [
+          1.0,
+          0.9,
+          1.1
+        ],
+        "at": [
+          0,
+          0.45,
+          0
+        ],
+        "color": "#9a938a"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.14,
+          1.8,
+          0.14
+        ],
+        "at": [
+          -0.8,
+          0.9,
+          0
+        ],
+        "color": "#7d5a3c"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.14,
+          1.8,
+          0.14
+        ],
+        "at": [
+          0.8,
+          0.9,
+          0
+        ],
+        "color": "#7d5a3c"
+      },
+      {
+        "shape": "cone",
+        "size": [
+          1.5,
+          0.8
+        ],
+        "at": [
+          0,
+          2.1,
+          0
+        ],
+        "sides": 4,
+        "turn": [
+          0,
+          45,
+          0
+        ],
+        "color": "#8c4a37"
+      }
+    ]
+  },
+  {
+    "id": "fence_rail",
+    "name": "Post and rail fence",
+    "category": "boundary",
+    "footprint": 2.2,
+    "turnable": true,
+    "reference": "Three rails round a paddock",
+    "parts": [
+      {
+        "shape": "box",
+        "size": [
+          4.4,
+          0.09,
+          0.09
+        ],
+        "at": [
+          0,
+          1.1,
+          0
+        ],
+        "color": "#8a5a2b"
+      },
+      {
+        "shape": "box",
+        "size": [
+          4.4,
+          0.09,
+          0.09
+        ],
+        "at": [
+          0,
+          0.7,
+          0
+        ],
+        "color": "#8a5a2b"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.12,
+          1.3,
+          0.12
+        ],
+        "at": [
+          -2.1,
+          0.65,
+          0
+        ],
+        "color": "#7d5a3c"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.12,
+          1.3,
+          0.12
+        ],
+        "at": [
+          0,
+          0.65,
+          0
+        ],
+        "color": "#7d5a3c"
+      },
+      {
+        "shape": "box",
+        "size": [
+          0.12,
+          1.3,
+          0.12
+        ],
+        "at": [
+          2.1,
+          0.65,
+          0
+        ],
+        "color": "#7d5a3c"
+      }
+    ]
   }
 ]

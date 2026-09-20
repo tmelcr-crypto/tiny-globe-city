@@ -26,7 +26,10 @@ describe('npc entity', () => {
       // rather than buried inside the globe.
       expect(npc.position.length()).toBeCloseTo(GLOBE_RADIUS + elevation(npc.position), 3);
       npc.children[0].getWorldPosition(bodyPos);
-      expect(bodyPos.length()).toBeGreaterThan(GLOBE_RADIUS);
+      // The land is a height field now, and plenty of it lies below the sphere
+      // the heights are measured from — so "standing up" means the body is
+      // further out than the feet, not further out than the sphere.
+      expect(bodyPos.length()).toBeGreaterThan(npc.position.length());
     }
   });
 });

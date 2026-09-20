@@ -49,7 +49,16 @@ describe('building assets', () => {
       church: [24, 36],
       apartment: [15, 21],
       skyscraper: [30, 50],
-      panelak: [24, 27],   // eight storeys, the height of a real slab block
+      panelak: [24, 27],        // eight storeys, the height of a real slab block
+      deco_hotel: [9, 16],      // three or four floors on Ocean Drive
+      shop_row: [8, 13],
+      office: [16, 27],
+      tower_glass: [38, 60],    // the tallest thing on the planet
+      warehouse: [8, 13],
+      villa: [7, 12],
+      cottage: [5, 9],
+      barn: [7, 12],
+      motel: [3, 6],            // one storey and a flat roof
     };
 
     for (const def of buildingDefs) {
@@ -59,8 +68,9 @@ describe('building assets', () => {
         const height = new THREE.Box3().setFromObject(createBuilding(def)).max.y;
         expect(height, `${def.id} is ${height.toFixed(1)} m tall`).toBeGreaterThanOrEqual(min);
         expect(height, `${def.id} is ${height.toFixed(1)} m tall`).toBeLessThanOrEqual(max);
-        // Nothing should be anywhere near shrunk to the player's own height.
-        expect(height).toBeGreaterThan(PLAYER_HEIGHT * 3);
+        // Nothing is shrunk down towards the player's own height: even the
+        // lowest thing on the planet, a single-storey motel, clears them twice.
+        expect(height).toBeGreaterThan(PLAYER_HEIGHT * 2.5);
       }
     }
   });
@@ -96,9 +106,11 @@ describe('building assets', () => {
       expect(weight, `${building.userData.kind} does not belong in a "${building.userData.zone}" block`)
         .toBeGreaterThan(0);
     }
-    // Skyscrapers only belong in tower and apartment blocks.
+    // Towers belong downtown, and at a push on a commercial street — never in
+    // a village, a farm or an oasis out in the country.
     const strays = built.filter(
-      (b) => b.userData.kind === 'skyscraper' && !['towers', 'apartments'].includes(b.userData.zone)
+      (b) => ['skyscraper', 'tower_glass'].includes(b.userData.kind)
+        && !['downtown', 'commercial'].includes(b.userData.zone)
     );
     expect(strays).toHaveLength(0);
   });

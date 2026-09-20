@@ -19,6 +19,10 @@
 - [x] Dev free-float globe view
 - [x] Asset catalogue (PDF, Prague reference, 619 assets)
 - [x] Curved street network (avenues, rounded corners)
+- [x] The whole planet mapped: districts, beaches, docks, villages, forest, desert
+- [x] Land coloured by what kind of country it is
+- [x] Streets laid into the land planet-wide, agreed at every crossing
+- [x] The drive test: a car over every road on the planet
 - [ ] Quests
 - [ ] Activities
 - [ ] World events

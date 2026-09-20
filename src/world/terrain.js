@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLOBE_RADIUS } from './planet.js';
+import { grid } from './grid.js';
 import terrainData from '../data/terrain.json';
 
 // The shape of the land.
@@ -144,14 +145,16 @@ function toRiver(dir, river) {
 //
 // Where a road cannot be laid on earth at all it says so, and the land is left
 // alone: that is a bridge over a river, or a tunnel through a ridge.
+//
+// Streets run all over the planet, so the index is per face of the grid, and
+// each face's own flat map is what the buckets are cut from.
 
-const BUCKET_REACH = 420;   // metres either side of the town the index covers
-const BUCKETS = 42;
-const BUCKET_SIZE = (BUCKET_REACH * 2) / BUCKETS;
-const TOWN_COS = Math.cos(1.35);  // only this cap of the globe has streets on it
+const BUCKET_SIZE = 20;      // metres of map to a bucket
+const BUCKET_REACH = 400;    // how far from a face's middle the index reaches
+const BUCKETS = Math.ceil((BUCKET_REACH * 2) / BUCKET_SIZE);
 
 let corridors = [];
-let index = null;
+let index = null;   // Map(faceId → Map(bucket → [corridor]))
 
 const bucketOf = (u, v) => {
   const x = Math.floor((u + BUCKET_REACH) / BUCKET_SIZE);
@@ -160,28 +163,18 @@ const bucketOf = (u, v) => {
   return y * BUCKETS + x;
 };
 
-// The flat map the town is planned on, inlined: terrain.js cannot import
-// city-plan.js, which imports this.
-function flatten(dir, target) {
-  const y = Math.min(1, Math.max(-1, dir.y));
-  const distance = Math.acos(y) * GLOBE_RADIUS;
-  const flat = Math.hypot(dir.x, dir.z);
-  if (flat < 1e-9) return target.set(0, 0);
-  return target.set((dir.x / flat) * distance, (dir.z / flat) * distance);
-}
-
-const _flat = { x: 0, y: 0, set(x, y) { this.x = x; this.y = y; return this; } };
-
-// Hand the streets' profiles to the land. Each run is a list of samples with
-// where they are, how high the road sits there, and whether the road is
-// actually on the ground at that point.
+// Hand the streets' profiles to the land. Each run is a list of samples on one
+// face's map with where they are, how high the road sits, and whether the road
+// is actually on the ground there.
 export function carveStreets(runs) {
   corridors = [];
+  const placed = [];
   for (const run of runs) {
     for (let s = 0; s < run.samples.length - 1; s++) {
       const a = run.samples[s];
       const b = run.samples[s + 1];
       corridors.push({
+        faceId: run.faceId,
         au: a.u, av: a.v, ah: a.height,
         bu: b.u, bv: b.v, bh: b.height,
         half: run.half,
@@ -195,29 +188,85 @@ export function carveStreets(runs) {
     }
   }
 
+  // A street is indexed on the faces its ground actually lies on, not the one
+  // it was drawn on: the ends of a run reach past the edge of their own face,
+  // and a point there looks itself up on the face it is standing on.
   index = new Map();
   for (let c = 0; c < corridors.length; c++) {
     const seg = corridors[c];
-    const reach = seg.half + seg.shoulder;
-    const minU = Math.min(seg.au, seg.bu) - reach;
-    const maxU = Math.max(seg.au, seg.bu) + reach;
-    const minV = Math.min(seg.av, seg.bv) - reach;
-    const maxV = Math.max(seg.av, seg.bv) + reach;
-    for (let u = minU; u <= maxU + BUCKET_SIZE; u += BUCKET_SIZE) {
-      for (let v = minV; v <= maxV + BUCKET_SIZE; v += BUCKET_SIZE) {
-        const key = bucketOf(u, v);
-        if (key < 0) continue;
-        if (!index.has(key)) index.set(key, []);
-        const list = index.get(key);
-        if (list[list.length - 1] !== c) list.push(c);
+    for (const faceId of facesUnder(seg)) {
+      const here = { ...seg, ...cornersOn(faceId, seg) };
+      if (!index.has(faceId)) index.set(faceId, new Map());
+      const onFace = index.get(faceId);
+      const reach = seg.half + seg.shoulder;
+      const minU = Math.min(here.au, here.bu) - reach;
+      const maxU = Math.max(here.au, here.bu) + reach;
+      const minV = Math.min(here.av, here.bv) - reach;
+      const maxV = Math.max(here.av, here.bv) + reach;
+      const at = placed.length;
+      placed.push(here);
+      for (let u = minU; u <= maxU + BUCKET_SIZE; u += BUCKET_SIZE) {
+        for (let v = minV; v <= maxV + BUCKET_SIZE; v += BUCKET_SIZE) {
+          const key = bucketOf(u, v);
+          if (key < 0) continue;
+          if (!onFace.has(key)) onFace.set(key, []);
+          const list = onFace.get(key);
+          if (list[list.length - 1] !== at) list.push(at);
+        }
       }
     }
   }
+  corridors = placed;
+}
+
+// The faces a segment's ground stands on: usually one, more where a street
+// runs along the edge of a face. Its shoulders count too, which is why the
+// corners of the ground it covers are probed and not just its ends.
+function facesUnder(seg) {
+  const reach = seg.half + seg.shoulder;
+  const found = new Set();
+  for (const [u, v] of [[seg.au, seg.av], [seg.bu, seg.bv]]) {
+    for (const [du, dv] of [[0, 0], [reach, 0], [-reach, 0], [0, reach], [0, -reach]]) {
+      grid.direction(seg.faceId, (u + du) / GLOBE_RADIUS, (v + dv) / GLOBE_RADIUS, _probe);
+      found.add(grid.locate(_probe).faceId);
+    }
+  }
+  return found;
+}
+
+// The same segment, written in another face's map.
+function cornersOn(faceId, seg) {
+  const at = (u, v) => {
+    grid.direction(seg.faceId, u / GLOBE_RADIUS, v / GLOBE_RADIUS, _probe);
+    const { a, b } = grid.localOn(faceId, _probe);
+    return [a * GLOBE_RADIUS, b * GLOBE_RADIUS];
+  };
+  const [au, av] = at(seg.au, seg.av);
+  const [bu, bv] = at(seg.bu, seg.bv);
+  return { au, av, bu, bv };
 }
 
 export function clearStreets() {
   corridors = [];
   index = null;
+}
+
+// Where a direction falls on its own face's flat map.
+function onMap(dir) {
+  const { faceId, a, b } = grid.locate(dir);
+  return { faceId, u: a * GLOBE_RADIUS, v: b * GLOBE_RADIUS };
+}
+
+// The corridors that might cover a point, on the face it stands on.
+function corridorsUnder(dir) {
+  if (!index) return null;
+  const { faceId, u, v } = onMap(dir);
+  const onFace = index.get(faceId);
+  if (!onFace) return null;
+  const key = bucketOf(u, v);
+  if (key < 0) return null;
+  const nearby = onFace.get(key);
+  return nearby ? { nearby, u, v } : null;
 }
 
 // How far a point on the flat map is along a corridor, and how high the road
@@ -235,21 +284,17 @@ function roadAt(u, v, seg) {
 // Blend the land towards the road bed: level across the carriageway, then
 // easing out through the shoulder into whatever the hill was doing.
 function carve(dir, height) {
-  if (!index || dir.y < TOWN_COS) return height;
-  flatten(dir, _flat);
-  const key = bucketOf(_flat.x, _flat.y);
-  if (key < 0) return height;
-  const nearby = index.get(key);
-  if (!nearby) return height;
+  const found = corridorsUnder(dir);
+  if (!found) return height;
 
   // Whichever corridor has the strongest claim on this spot, and of those, the
   // nearest: a crossing is covered by two streets at once, and the one whose
-  // carriageway you are actually standing on is the one that sets the level.
+  // carriageway you are standing on is the one that sets the level.
   let best = null;
-  for (const c of nearby) {
+  for (const c of found.nearby) {
     const seg = corridors[c];
     if (!seg.carves) continue;
-    const { distance, height: road } = roadAt(_flat.x, _flat.y, seg);
+    const { distance, height: road } = roadAt(found.u, found.v, seg);
     const reach = seg.half + seg.shoulder;
     if (distance >= reach) continue;
     const weight = distance <= seg.half ? 1
@@ -260,6 +305,30 @@ function carve(dir, height) {
     if (better) best = { weight, distance, road };
   }
   return best ? mix(height, best.road, best.weight) : height;
+}
+
+// What you actually stand on: the land, unless a street is carrying you over
+// it on a deck or through it in a bore. This is what the player rides.
+//
+// Which street you are on is whichever one's carriageway you are nearest the
+// middle of — roads on the ground count too, so driving over the top of a
+// tunnel keeps you on the surface instead of dropping you into the bore that
+// passes below. Two streets that genuinely cross were levelled to meet, so
+// there it makes no difference which of them answers.
+export function walkHeight(direction) {
+  const land = elevation(direction);
+  const found = corridorsUnder(direction);
+  if (!found) return land;
+
+  let best = null;
+  for (const c of found.nearby) {
+    const seg = corridors[c];
+    const { distance, height: road } = roadAt(found.u, found.v, seg);
+    if (distance >= (seg.carves ? seg.half : seg.deck)) continue;
+    if (best && distance >= best.distance) continue;
+    best = { distance, height: seg.carves ? land : road };
+  }
+  return best ? best.height : land;
 }
 
 // Height of the land at a direction, in metres above the sphere.
@@ -284,29 +353,6 @@ export function elevation(direction) {
   return carve(_dir, height);
 }
 
-// What you actually stand on: the land, unless a street is carrying you over
-// it on a deck or through it in a bore. This is what the player rides.
-export function walkHeight(direction) {
-  const land = elevation(direction);
-  if (!index) return land;
-  _dir.copy(direction).normalize();
-  if (_dir.y < TOWN_COS) return land;
-  flatten(_dir, _flat);
-  const key = bucketOf(_flat.x, _flat.y);
-  if (key < 0) return land;
-  const nearby = index.get(key);
-  if (!nearby) return land;
-
-  let best = null;
-  for (const c of nearby) {
-    const seg = corridors[c];
-    if (seg.carves) continue; // the land already has this stretch in it
-    const { distance, height: road } = roadAt(_flat.x, _flat.y, seg);
-    if (distance >= seg.deck) continue;
-    if (!best || distance < best.distance) best = { distance, road };
-  }
-  return best ? best.road : land;
-}
 
 // The ground, as a point in space.
 export function groundPoint(direction, lift = 0, target = new THREE.Vector3()) {

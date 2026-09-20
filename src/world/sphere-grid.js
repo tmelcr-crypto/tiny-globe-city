@@ -138,9 +138,24 @@ export function createCubeGrid({ divisions, orientation = new THREE.Quaternion()
     return new THREE.Vector3().crossVectors(line, other).normalize();
   }
 
+  // Where a direction sits on a named face, whether or not it belongs to it.
+  // Just past a face's edge the numbers still behave; far past it they run
+  // away, which is what makes a face's own map a local one.
+  function localOn(faceId, dir) {
+    const face = faces.get(faceId);
+    _probe.copy(dir).normalize();
+    const out = _probe.dot(face.normal);
+    return {
+      a: Math.atan2(_probe.dot(face.right), out),
+      b: Math.atan2(_probe.dot(face.up), out),
+      out,
+    };
+  }
+
   return {
     divisions,
     step,
+    localOn,
     orientation,
     faces,
     // The length of a cell edge through the middle of a face, in metres. Cells

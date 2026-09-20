@@ -18,18 +18,22 @@ function lowestPoint(object) {
 }
 
 describe('trees', () => {
-  it('offers four kinds', () => {
-    expect(TREE_KINDS).toHaveLength(4);
-    expect(new Set(TREE_KINDS).size).toBe(4);
+  it('offers a kind for every country', () => {
+    expect(TREE_KINDS).toEqual(['pine', 'oak', 'birch', 'bush', 'palm', 'cactus']);
+    expect(new Set(TREE_KINDS).size).toBe(TREE_KINDS.length);
   });
 
-  it('grows every kind between 2 m and 5 m tall', () => {
+  it('grows every kind to the height its country expects', () => {
+    // Bushes are waist high, palms tower, and the rest are ordinary trees
+    // beside a 1.5 m player.
+    const expected = { pine: [3.5, 5], oak: [3, 4.5], birch: [3, 4.5], bush: [2, 2.5], palm: [5, 8.5], cactus: [1.8, 3.8] };
     for (const kind of TREE_KINDS) {
+      const [low, high] = expected[kind];
       for (let i = 0; i < 12; i++) {
         const tree = createTree(kind);
         const height = new THREE.Box3().setFromObject(tree).max.y;
-        expect(height, `${kind} is ${height.toFixed(2)} m`).toBeGreaterThanOrEqual(2);
-        expect(height, `${kind} is ${height.toFixed(2)} m`).toBeLessThanOrEqual(5);
+        expect(height, `${kind} is ${height.toFixed(2)} m`).toBeGreaterThanOrEqual(low);
+        expect(height, `${kind} is ${height.toFixed(2)} m`).toBeLessThanOrEqual(high);
       }
     }
   });

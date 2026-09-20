@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createGlobe } from '../src/world/globe.js';
 import { spawnAll } from '../src/world/spawner.js';
-import { cityBlocks, parkBlock, SPAWN_BLOCK, nearestRoad, ROAD_WIDTH, SIDEWALK_WIDTH } from '../src/world/city-plan.js';
+import {
+  allBlocks, parkBlock, SPAWN_BLOCK, chartUnder, nearestStreet, ROAD_WIDTH, SIDEWALK_WIDTH,
+} from '../src/world/city-plan.js';
+import { DIVISIONS, LEGEND } from '../src/world/city-map.js';
+import { FACE_IDS } from '../src/world/sphere-grid.js';
+import * as THREE from 'three';
 import { createRng } from '../src/core/rng.js';
 import cityMap from '../src/data/city-map.json';
 
@@ -61,25 +66,45 @@ describe('seeded generator', () => {
 });
 
 describe('city map', () => {
-  it('gives every block in the map a zone the legend defines', () => {
-    const blocks = cityBlocks();
-    const rows = cityMap.rows.length;
-    const cols = cityMap.rows[0].split(' ').filter(Boolean).length;
-    expect(blocks).toHaveLength(rows * cols);
+  it('gives every block on the planet a zone the legend defines', () => {
+    const blocks = allBlocks();
+    // Six faces of the cubed sphere, each cut into the same square grid.
+    expect(blocks).toHaveLength(FACE_IDS.length * DIVISIONS * DIVISIONS);
 
-    const zones = new Set(Object.values(cityMap.legend).map((entry) => entry.zone));
-    for (const block of blocks) expect(zones.has(block.zone)).toBe(true);
+    const zones = new Set(Object.values(LEGEND).map((entry) => entry.zone));
+    for (const block of blocks) {
+      expect(zones.has(block.zone), `block ${block.faceId} ${block.key} has no zone`).toBe(true);
+      expect(typeof block.biome, `block ${block.faceId} ${block.key} has no biome`).toBe('string');
+    }
+  });
+
+  it('spreads the planet over more than one kind of country', () => {
+    // A city on one face and nothing but city everywhere else would be a
+    // wasted globe: the map has to name districts, forest, desert and village.
+    const biomes = new Set(allBlocks().map((block) => block.biome));
+    for (const biome of ['city', 'beach', 'meadow', 'forest', 'desert']) {
+      expect(biomes.has(biome), `nowhere on the planet is ${biome}`).toBe(true);
+    }
+    const zones = new Set(allBlocks().map((block) => block.zone));
+    for (const zone of ['downtown', 'village', 'farm', 'forest', 'industrial', 'resort']) {
+      expect(zones.has(zone), `no block is zoned ${zone}`).toBe(true);
+    }
   });
 
   it('marks exactly one spawn block and puts the player on its verge', () => {
-    const spawnBlocks = cityBlocks().filter((block) => block.spawn);
+    const spawnBlocks = allBlocks().filter((block) => block.spawn);
     expect(spawnBlocks).toHaveLength(1);
-    expect(spawnBlocks[0].i).toBe(SPAWN_BLOCK.i);
-    expect(spawnBlocks[0].j).toBe(SPAWN_BLOCK.j);
+    expect(spawnBlocks[0].faceId).toBe(SPAWN_BLOCK.faceId);
+    expect(spawnBlocks[0].column).toBe(SPAWN_BLOCK.column);
+    expect(spawnBlocks[0].row).toBe(SPAWN_BLOCK.row);
 
-    // The player stands at map (0,0): off the road, past the pavement, on grass.
-    const road = nearestRoad(0, 0);
-    expect(road.distance).toBeGreaterThan(ROAD_WIDTH / 2 + SIDEWALK_WIDTH);
+    // The grid is turned so the player's doorstep is the top of the globe:
+    // off the road, past the pavement, on grass.
+    const up = new THREE.Vector3(0, 1, 0);
+    const chart = chartUnder(up);
+    const { u, v } = chart.local(up);
+    const street = nearestStreet(chart.faceId, u, v);
+    expect(street.distance).toBeGreaterThan(ROAD_WIDTH / 2 + SIDEWALK_WIDTH);
   });
 
   it('puts the lake in the park block the map marks', () => {
@@ -90,11 +115,23 @@ describe('city map', () => {
   });
 
   it('follows the map when the map changes', () => {
-    // Every zone named in the legend should actually be used by the rows, so a
-    // reader can trust the legend as the whole vocabulary of the map.
-    const used = new Set(cityMap.rows.flatMap((row) => row.split(' ').filter(Boolean)));
+    // Every key in the legend should actually be used by some face, so a
+    // reader can trust the legend as the whole vocabulary of the planet.
+    const used = new Set(
+      Object.values(cityMap.faces).flatMap((face) => face.rows.flatMap((row) => row.split(' ').filter(Boolean)))
+    );
     for (const key of Object.keys(cityMap.legend)) {
       expect(used.has(key), `legend defines "${key}" but no block uses it`).toBe(true);
+    }
+  });
+
+  it('cuts every face to the same square grid', () => {
+    for (const faceId of FACE_IDS) {
+      const rows = cityMap.faces[faceId].rows;
+      expect(rows, `face ${faceId} is not ${DIVISIONS} rows`).toHaveLength(DIVISIONS);
+      for (const row of rows) {
+        expect(row.split(' ').filter(Boolean), `a row of face ${faceId} is short`).toHaveLength(DIVISIONS);
+      }
     }
   });
 });

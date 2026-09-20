@@ -3,9 +3,12 @@
     "id": "house",
     "name": "House",
     "zones": {
-      "houses": 10,
-      "apartments": 1,
-      "church": 2
+      "residential": 10,
+      "village": 8,
+      "oldtown": 3,
+      "farm": 4,
+      "oasis": 4,
+      "logging": 3
     },
     "width": [
       7,
@@ -49,7 +52,8 @@
     "id": "church",
     "name": "Church",
     "zones": {
-      "church": 10
+      "oldtown": 9,
+      "village": 3
     },
     "width": [
       11,
@@ -104,8 +108,10 @@
     "name": "Apartment Block",
     "zones": {
       "apartments": 10,
-      "houses": 1,
-      "towers": 2
+      "residential": 2,
+      "commercial": 3,
+      "oldtown": 2,
+      "port": 2
     },
     "width": [
       15,
@@ -146,8 +152,8 @@
     "id": "skyscraper",
     "name": "Skyscraper",
     "zones": {
-      "towers": 10,
-      "apartments": 2
+      "downtown": 10,
+      "commercial": 3
     },
     "width": [
       12,
@@ -262,6 +268,403 @@
       "rows": 8,
       "cols": 3,
       "wrap": true
+    },
+    "door": true
+  },
+  {
+    "id": "deco_hotel",
+    "name": "Art deco hotel",
+    "note": "Ocean Drive: pastel render, a stepped parapet and a neon line under it.",
+    "zones": {
+      "resort": 10,
+      "commercial": 3,
+      "apartments": 2
+    },
+    "width": [
+      13,
+      17
+    ],
+    "depth": [
+      11,
+      14
+    ],
+    "wallHeight": [
+      9,
+      13
+    ],
+    "walls": [
+      "#f2d7c2",
+      "#f6e5c8",
+      "#e8c9d4",
+      "#cfe3e8",
+      "#f3ded0"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        1.2,
+        1.8
+      ],
+      "colors": [
+        "#e9f2f4",
+        "#f7e9d8"
+      ]
+    },
+    "windows": {
+      "rows": 3,
+      "cols": 4,
+      "wrap": true
+    },
+    "door": true
+  },
+  {
+    "id": "shop_row",
+    "name": "Shop row",
+    "note": "Shops at street level with two floors of flats over them.",
+    "zones": {
+      "commercial": 10,
+      "oldtown": 5,
+      "village": 4,
+      "resort": 3,
+      "port": 3
+    },
+    "width": [
+      17,
+      24
+    ],
+    "depth": [
+      10,
+      13
+    ],
+    "wallHeight": [
+      8,
+      11
+    ],
+    "walls": [
+      "#d9cfc0",
+      "#cdbfae",
+      "#d6c8b6",
+      "#c9d3dc",
+      "#e0d2b8"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        0.6,
+        1.0
+      ],
+      "colors": [
+        "#6a6f73",
+        "#7a6a58"
+      ]
+    },
+    "windows": {
+      "rows": 3,
+      "cols": 6,
+      "wrap": true
+    },
+    "door": true
+  },
+  {
+    "id": "office",
+    "name": "Office block",
+    "zones": {
+      "commercial": 9,
+      "downtown": 6,
+      "port": 3,
+      "industrial": 2
+    },
+    "width": [
+      16,
+      21
+    ],
+    "depth": [
+      14,
+      18
+    ],
+    "wallHeight": [
+      16,
+      24
+    ],
+    "walls": [
+      "#b9c2c9",
+      "#c8bfb2",
+      "#aab6bd"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        0.9,
+        1.4
+      ],
+      "colors": [
+        "#565b5f"
+      ]
+    },
+    "windows": {
+      "rows": 6,
+      "cols": 5,
+      "wrap": true
+    },
+    "door": true
+  },
+  {
+    "id": "tower_glass",
+    "name": "Glass tower",
+    "zones": {
+      "downtown": 8
+    },
+    "width": [
+      13,
+      17
+    ],
+    "depth": [
+      13,
+      17
+    ],
+    "wallHeight": [
+      34,
+      48
+    ],
+    "walls": [
+      "#7f97a8",
+      "#6f8b9c",
+      "#8aa2b0"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        1.2,
+        2
+      ],
+      "colors": [
+        "#3d4349"
+      ]
+    },
+    "antenna": [
+      5,
+      9
+    ],
+    "windows": {
+      "rows": 14,
+      "cols": 5,
+      "wrap": true
+    },
+    "door": true
+  },
+  {
+    "id": "warehouse",
+    "name": "Warehouse",
+    "zones": {
+      "industrial": 10,
+      "port": 8,
+      "logging": 6
+    },
+    "width": [
+      22,
+      30
+    ],
+    "depth": [
+      16,
+      22
+    ],
+    "wallHeight": [
+      8,
+      11
+    ],
+    "walls": [
+      "#9aa0a4",
+      "#b0a89a",
+      "#8d9aa2"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        0.8,
+        1.2
+      ],
+      "colors": [
+        "#6a6f73",
+        "#5d6266"
+      ]
+    },
+    "windows": {
+      "rows": 1,
+      "cols": 6
+    },
+    "door": true
+  },
+  {
+    "id": "villa",
+    "name": "Villa",
+    "zones": {
+      "residential": 4,
+      "resort": 5,
+      "oasis": 3
+    },
+    "width": [
+      12,
+      16
+    ],
+    "depth": [
+      10,
+      13
+    ],
+    "wallHeight": [
+      6,
+      8
+    ],
+    "walls": [
+      "#f0e6d2",
+      "#e8ddc8",
+      "#efe3d6"
+    ],
+    "roof": {
+      "type": "pitched",
+      "height": [
+        2,
+        2.8
+      ],
+      "colors": [
+        "#b06a4a",
+        "#a1583e"
+      ]
+    },
+    "windows": {
+      "rows": 2,
+      "cols": 4,
+      "wrap": true
+    },
+    "door": true
+  },
+  {
+    "id": "cottage",
+    "name": "Cottage",
+    "zones": {
+      "village": 10,
+      "farm": 7,
+      "logging": 7,
+      "oasis": 5,
+      "residential": 2
+    },
+    "width": [
+      7,
+      9
+    ],
+    "depth": [
+      6,
+      8
+    ],
+    "wallHeight": [
+      3.6,
+      4.6
+    ],
+    "walls": [
+      "#e6dcc6",
+      "#d8c9ad",
+      "#cfc0a6",
+      "#dcd2bd"
+    ],
+    "roof": {
+      "type": "pitched",
+      "height": [
+        2.6,
+        3.4
+      ],
+      "colors": [
+        "#8c4a37",
+        "#6b4a3a",
+        "#7a5c3a"
+      ]
+    },
+    "windows": {
+      "rows": 1,
+      "cols": 3
+    },
+    "door": true
+  },
+  {
+    "id": "barn",
+    "name": "Barn",
+    "zones": {
+      "farm": 10,
+      "village": 4,
+      "logging": 4
+    },
+    "width": [
+      12,
+      16
+    ],
+    "depth": [
+      8,
+      11
+    ],
+    "wallHeight": [
+      5,
+      7
+    ],
+    "walls": [
+      "#8c4a37",
+      "#a4553c",
+      "#7a4a33"
+    ],
+    "roof": {
+      "type": "pitched",
+      "height": [
+        3,
+        4
+      ],
+      "colors": [
+        "#5b6b73",
+        "#6a6f73"
+      ]
+    },
+    "windows": {
+      "rows": 1,
+      "cols": 2
+    },
+    "door": true
+  },
+  {
+    "id": "motel",
+    "name": "Motel",
+    "zones": {
+      "oasis": 8,
+      "resort": 4,
+      "commercial": 3,
+      "village": 2
+    },
+    "width": [
+      16,
+      22
+    ],
+    "depth": [
+      8,
+      10
+    ],
+    "wallHeight": [
+      3.4,
+      4.2
+    ],
+    "walls": [
+      "#e8d7b8",
+      "#dfc9a4",
+      "#e3d2c0"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        0.5,
+        0.8
+      ],
+      "colors": [
+        "#b06a4a",
+        "#8d6a52"
+      ]
+    },
+    "windows": {
+      "rows": 1,
+      "cols": 6
     },
     "door": true
   }

@@ -1,129 +1,573 @@
 {
   "seed": 20250920,
-  "rows": [
-    ". h h .",
-    "p h a h",
-    "h @ a h",
-    "c t t a"
-  ],
-  "legend": {
-    ".": {
-      "zone": "empty",
-      "buildings": 0
-    },
-    "h": {
-      "zone": "houses",
-      "buildings": 6
-    },
-    "a": {
-      "zone": "apartments",
-      "buildings": 4
-    },
-    "t": {
-      "zone": "towers",
-      "buildings": 4
-    },
-    "c": {
-      "zone": "church",
-      "buildings": 1
-    },
-    "p": {
-      "zone": "park",
-      "buildings": 0,
-      "lake": true
-    },
-    "@": {
-      "zone": "houses",
-      "buildings": 4,
-      "spawn": true
-    }
-  },
+  "note": "The whole planet, face by face. Six faces of the cubed sphere, each cut into the same grid: T is the city, the four around the sides are its coast, suburbs, docks and desert, and B is the forest on the far side. One character per block; the legend says what each one is.",
   "street": {
     "road": 9,
     "sidewalk": 2.5,
     "verge": 2,
     "corner": 6
   },
-  "avenues": [
-    {
-      "id": "narodni",
-      "width": 11,
-      "through": [
-        [
-          0.35,
-          4.0
-        ],
-        [
-          1.3,
-          3.8
-        ],
-        [
-          2.2,
-          3.75
-        ],
-        [
-          3.1,
-          3.6
-        ],
-        [
-          4.0,
-          3.25
-        ]
+  "legend": {
+    "@": {
+      "zone": "residential",
+      "biome": "city",
+      "buildings": 4,
+      "spawn": true,
+      "streets": true,
+      "trees": 6,
+      "props": {
+        "lamppost": 3,
+        "bench": 2,
+        "bin": 2,
+        "bike_rack": 1,
+        "planter": 1
+      }
+    },
+    "D": {
+      "zone": "downtown",
+      "biome": "city",
+      "buildings": 5,
+      "streets": true,
+      "trees": 3,
+      "props": {
+        "lamppost": 5,
+        "bin": 3,
+        "bench": 2,
+        "bollard": 6,
+        "kiosk": 1,
+        "tram_stop": 1
+      }
+    },
+    "C": {
+      "zone": "commercial",
+      "biome": "city",
+      "buildings": 5,
+      "streets": true,
+      "trees": 5,
+      "props": {
+        "lamppost": 4,
+        "bench": 3,
+        "bin": 3,
+        "kiosk": 2,
+        "planter": 3,
+        "bollard": 4
+      }
+    },
+    "A": {
+      "zone": "apartments",
+      "biome": "city",
+      "buildings": 4,
+      "streets": true,
+      "trees": 7,
+      "props": {
+        "lamppost": 3,
+        "bench": 2,
+        "bin": 2,
+        "dumpster": 2,
+        "carpet_beater": 1,
+        "drying_rack": 1,
+        "playground": 1
+      }
+    },
+    "R": {
+      "zone": "residential",
+      "biome": "city",
+      "buildings": 6,
+      "streets": true,
+      "trees": 10,
+      "props": {
+        "lamppost": 3,
+        "bench": 1,
+        "bin": 1,
+        "noticeboard": 1,
+        "bike_rack": 1
+      }
+    },
+    "O": {
+      "zone": "oldtown",
+      "biome": "city",
+      "buildings": 5,
+      "streets": true,
+      "trees": 4,
+      "props": {
+        "lamppost": 4,
+        "bench": 2,
+        "bin": 2,
+        "statue": 1,
+        "fountain": 1,
+        "bollard": 5,
+        "kiosk": 1
+      }
+    },
+    "H": {
+      "zone": "resort",
+      "biome": "beach",
+      "buildings": 3,
+      "streets": true,
+      "trees": 8,
+      "treeKinds": [
+        "palm"
+      ],
+      "props": {
+        "lamppost": 3,
+        "parasol": 4,
+        "deckchair": 5,
+        "bench": 2,
+        "bin": 2,
+        "kiosk": 1
+      }
+    },
+    "B": {
+      "zone": "beach",
+      "biome": "beach",
+      "buildings": 0,
+      "streets": false,
+      "trees": 6,
+      "treeKinds": [
+        "palm"
+      ],
+      "props": {
+        "parasol": 6,
+        "deckchair": 8,
+        "beach_hut": 2,
+        "bin": 1,
+        "rock": 2
+      }
+    },
+    "M": {
+      "zone": "port",
+      "biome": "city",
+      "buildings": 3,
+      "streets": true,
+      "trees": 2,
+      "props": {
+        "crate_stack": 5,
+        "container": 4,
+        "bollard": 6,
+        "lamppost": 3,
+        "bin": 1
+      }
+    },
+    "I": {
+      "zone": "industrial",
+      "biome": "city",
+      "buildings": 4,
+      "streets": true,
+      "trees": 2,
+      "props": {
+        "container": 5,
+        "crate_stack": 4,
+        "utility_cabinet": 2,
+        "lamppost": 3,
+        "dumpster": 3
+      }
+    },
+    "V": {
+      "zone": "village",
+      "biome": "meadow",
+      "buildings": 5,
+      "streets": true,
+      "trees": 9,
+      "props": {
+        "haystack": 2,
+        "well": 1,
+        "fence_rail": 4,
+        "bench": 1,
+        "lamppost": 2,
+        "noticeboard": 1
+      }
+    },
+    "F": {
+      "zone": "farm",
+      "biome": "meadow",
+      "buildings": 2,
+      "streets": false,
+      "trees": 5,
+      "props": {
+        "haystack": 5,
+        "fence_rail": 8,
+        "well": 1
+      }
+    },
+    "W": {
+      "zone": "forest",
+      "biome": "forest",
+      "buildings": 0,
+      "streets": false,
+      "trees": 26,
+      "treeKinds": [
+        "pine",
+        "oak",
+        "birch"
+      ],
+      "props": {
+        "rock": 4,
+        "bush": 3
+      }
+    },
+    "L": {
+      "zone": "logging",
+      "biome": "forest",
+      "buildings": 3,
+      "streets": true,
+      "trees": 14,
+      "treeKinds": [
+        "pine"
+      ],
+      "props": {
+        "timber_stack": 4,
+        "crate_stack": 2,
+        "rock": 2,
+        "lamppost": 1
+      }
+    },
+    "X": {
+      "zone": "desert",
+      "biome": "desert",
+      "buildings": 0,
+      "streets": false,
+      "trees": 5,
+      "treeKinds": [
+        "cactus"
+      ],
+      "props": {
+        "rock": 6,
+        "crag": 1
+      }
+    },
+    "Y": {
+      "zone": "oasis",
+      "biome": "desert",
+      "buildings": 3,
+      "streets": true,
+      "trees": 7,
+      "treeKinds": [
+        "palm",
+        "cactus"
+      ],
+      "props": {
+        "well": 1,
+        "rock": 3,
+        "parasol": 2,
+        "lamppost": 2
+      }
+    },
+    "P": {
+      "zone": "park",
+      "biome": "city",
+      "buildings": 0,
+      "lake": true,
+      "streets": true,
+      "trees": 22,
+      "props": {
+        "bench": 5,
+        "bin": 3,
+        "lamppost": 4,
+        "fountain": 1,
+        "playground": 1,
+        "statue": 1
+      }
+    },
+    "G": {
+      "zone": "park",
+      "biome": "meadow",
+      "buildings": 0,
+      "streets": false,
+      "trees": 16,
+      "props": {
+        "bench": 2,
+        "rock": 2,
+        "bush": 4
+      }
+    },
+    ".": {
+      "zone": "wild",
+      "biome": "meadow",
+      "buildings": 0,
+      "streets": false,
+      "trees": 7,
+      "props": {
+        "rock": 3,
+        "bush": 3
+      }
+    }
+  },
+  "faces": {
+    "T": {
+      "name": "Vice Bay — the city",
+      "rows": [
+        "P D D C",
+        "O R A C",
+        "R @ A D",
+        "O C C A"
+      ],
+      "avenues": [
+        {
+          "id": "narodni",
+          "width": 11,
+          "through": [
+            [
+              0.35,
+              4.0
+            ],
+            [
+              1.3,
+              3.8
+            ],
+            [
+              2.2,
+              3.75
+            ],
+            [
+              3.1,
+              3.6
+            ],
+            [
+              4.0,
+              3.25
+            ]
+          ]
+        },
+        {
+          "id": "nabrezi",
+          "width": 10,
+          "through": [
+            [
+              4.0,
+              0.55
+            ],
+            [
+              3.4,
+              1.1
+            ],
+            [
+              3.1,
+              2.0
+            ],
+            [
+              3.45,
+              2.9
+            ],
+            [
+              4.0,
+              3.45
+            ]
+          ]
+        },
+        {
+          "id": "parkova",
+          "width": 8,
+          "through": [
+            [
+              0.0,
+              1.45
+            ],
+            [
+              0.75,
+              0.9
+            ],
+            [
+              1.7,
+              0.6
+            ],
+            [
+              2.55,
+              0.85
+            ],
+            [
+              3.0,
+              1.35
+            ]
+          ]
+        }
       ]
     },
-    {
-      "id": "nabrezi",
-      "width": 10,
-      "through": [
-        [
-          4.0,
-          0.55
-        ],
-        [
-          3.4,
-          1.1
-        ],
-        [
-          3.1,
-          2.0
-        ],
-        [
-          3.45,
-          2.9
-        ],
-        [
-          4.0,
-          3.45
-        ]
+    "N": {
+      "name": "Ocean Drive — the beach",
+      "rows": [
+        "H H C H",
+        "B H H B",
+        "B B M B",
+        ". B B ."
+      ],
+      "avenues": [
+        {
+          "id": "ocean-drive",
+          "width": 12,
+          "through": [
+            [
+              0.2,
+              1.6
+            ],
+            [
+              1.1,
+              1.75
+            ],
+            [
+              2.2,
+              1.9
+            ],
+            [
+              3.1,
+              1.75
+            ],
+            [
+              3.9,
+              1.5
+            ]
+          ]
+        }
       ]
     },
-    {
-      "id": "parkova",
-      "width": 8,
-      "through": [
-        [
-          0.0,
-          1.45
-        ],
-        [
-          0.75,
-          0.9
-        ],
-        [
-          1.7,
-          0.6
-        ],
-        [
-          2.55,
-          0.85
-        ],
-        [
-          3.0,
-          1.35
-        ]
+    "E": {
+      "name": "Sunshine Hills — the suburbs",
+      "rows": [
+        "R R C R",
+        "R V G V",
+        "F V F R",
+        ". F G ."
+      ],
+      "avenues": [
+        {
+          "id": "hill-road",
+          "width": 9,
+          "through": [
+            [
+              0.1,
+              0.8
+            ],
+            [
+              1.2,
+              1.4
+            ],
+            [
+              2.3,
+              1.9
+            ],
+            [
+              3.2,
+              2.6
+            ],
+            [
+              3.9,
+              3.3
+            ]
+          ]
+        }
+      ]
+    },
+    "S": {
+      "name": "Dock Yards — the port",
+      "rows": [
+        "I I C I",
+        "I M M I",
+        "R A A R",
+        "R R V ."
+      ],
+      "avenues": [
+        {
+          "id": "dock-road",
+          "width": 11,
+          "through": [
+            [
+              0.2,
+              1.9
+            ],
+            [
+              1.3,
+              2.0
+            ],
+            [
+              2.4,
+              1.85
+            ],
+            [
+              3.3,
+              2.1
+            ],
+            [
+              3.9,
+              2.4
+            ]
+          ]
+        }
+      ]
+    },
+    "W": {
+      "name": "Sandstone Flats — the desert",
+      "rows": [
+        "X X Y X",
+        "X Y X X",
+        ". X X V",
+        "X . X X"
+      ],
+      "avenues": [
+        {
+          "id": "desert-highway",
+          "width": 10,
+          "through": [
+            [
+              0.0,
+              3.2
+            ],
+            [
+              1.1,
+              2.6
+            ],
+            [
+              2.2,
+              2.0
+            ],
+            [
+              3.0,
+              1.2
+            ],
+            [
+              4.0,
+              0.7
+            ]
+          ]
+        }
+      ]
+    },
+    "B": {
+      "name": "Pine Reach — the far side",
+      "rows": [
+        "W W L W",
+        "W L W W",
+        "W W W L",
+        ". W W ."
+      ],
+      "avenues": [
+        {
+          "id": "forest-road",
+          "width": 8,
+          "through": [
+            [
+              0.2,
+              0.6
+            ],
+            [
+              1.0,
+              1.5
+            ],
+            [
+              2.0,
+              2.1
+            ],
+            [
+              3.0,
+              2.8
+            ],
+            [
+              3.8,
+              3.5
+            ]
+          ]
+        }
       ]
     }
-  ],
+  },
   "scenery": {
     "parkTrees": 34,
     "gardenTrees": 48,

@@ -2,9 +2,10 @@ import * as THREE from 'three';
 import {
   ROAD_WIDTH, SIDEWALK_WIDTH, BLOCK, LAKE_RADIUS, CORNER_RADIUS,
   ROAD_LIFT, SIDEWALK_LIFT, GROUND_LIFT,
-  streets, streetProfiles, junctions, surfacePoint, parkBlock, lakeCentre,
-  directionFromTangent,
+  streetProfiles, streetsOn, junctionsOn, surfacePoint, parkBlock, lakeCentre,
+  chartFor, blockPoint,
 } from './city-plan.js';
+import { FACE_IDS } from './sphere-grid.js';
 import { GLOBE_RADIUS } from './planet.js';
 import { elevation } from './terrain.js';
 
@@ -128,6 +129,8 @@ function addCornerFill(out, junction, first, second, arc, lift) {
 function addDisc(out, centre, radius, lift, segments = 32) {
   const at = (r, t, target) =>
     surfacePoint(centre.u + Math.cos(t) * r, centre.v + Math.sin(t) * r, lift, target);
+  // centre is a point on the park block's own map; surfacePoint reads the
+  // player's, which is the same map near the town and near enough elsewhere.
 
   for (let ring = 0; ring < RINGS; ring++) {
     const inner = (radius * ring) / RINGS;
@@ -226,21 +229,23 @@ const _along = new THREE.Vector3();
 const _across = new THREE.Vector3();
 const _at = new THREE.Vector3();
 
-// The frame at a point on a street: which way is up, along and across.
+// The frame at a point on a street: which way is up, along and across. Read
+// off the face the street is drawn on, so it works anywhere on the planet.
 function frameOn(sample, next) {
-  directionFromTangent(sample.u, sample.v, _up).normalize();
+  const chart = sample.chart;
+  chart.direction(sample.u, sample.v, _up).normalize();
   const du = next.u - sample.u;
   const dv = next.v - sample.v;
   const run = Math.hypot(du, dv) || 1;
   // A step along the street, laid flat on the ground.
-  directionFromTangent(sample.u + (du / run) * 2, sample.v + (dv / run) * 2, _at).normalize();
+  chart.direction(sample.u + (du / run) * 2, sample.v + (dv / run) * 2, _at).normalize();
   _along.copy(_at).addScaledVector(_up, -_at.dot(_up)).normalize();
   _across.crossVectors(_along, _up).normalize();
   return { up: _up.clone(), along: _along.clone(), across: _across.clone() };
 }
 
 const pointAt = (sample, height, target = new THREE.Vector3()) =>
-  directionFromTangent(sample.u, sample.v, target).multiplyScalar(GLOBE_RADIUS + height);
+  sample.chart.direction(sample.u, sample.v, target).multiplyScalar(GLOBE_RADIUS + height);
 
 // The stretches of one street that share a kind, as runs of samples.
 function runsOf(profile) {
@@ -435,21 +440,14 @@ function addProfileRibbon(out, samples, offset, halfWidth, lift, skip) {
 export function createCityGround() {
   const roads = [];
   const pavements = [];
-  const crossings = junctions();
-  const all = streets();
   const structures = new THREE.Group();
+  const profiles = streetProfiles();
   // Corners sit above every street's pavement, so the overlap where a kerb
   // runs into one is covered rather than fighting with it.
-  const CORNER_LIFT = SIDEWALK_LIFT + all.length * LAYER;
+  const CORNER_LIFT = SIDEWALK_LIFT + profiles.length * LAYER;
 
-  // A kerb runs until something interrupts it: a junction, where the rounded
-  // corner takes over, or another street crossing it. Grid streets only ever
-  // meet each other at junctions, so each kind only has to watch the other.
-  const crossingStreets = (street) => all.filter((other) => (street.kind === 'avenue'
-    ? other.kind !== 'avenue'
-    : other.kind === 'avenue'));
+  const crossingsOn = new Map(FACE_IDS.map((faceId) => [faceId, junctionsOn(faceId)]));
 
-  const profiles = streetProfiles();
   profiles.forEach((profile, index) => {
     const lift = ROAD_LIFT + index * LAYER;
     addProfileRibbon(roads, profile.samples, 0, profile.width / 2, lift);
@@ -459,7 +457,11 @@ export function createCityGround() {
     // Where the straight kerb hands over to the corner arc: the arc's own end,
     // measured from the junction, less a metre so the two overlap.
     const handover = Math.hypot(offset, half + CORNER_RADIUS) - 1;
-    const others = all.filter((other) => (profile.kind === 'avenue'
+    const crossings = crossingsOn.get(profile.faceId) ?? [];
+    // A kerb runs until something interrupts it: a junction, where the rounded
+    // corner takes over, or another street crossing it. Grid streets only meet
+    // each other at junctions, so each kind only has to watch the other.
+    const others = streetsOn(profile.faceId).filter((other) => (profile.kind === 'avenue'
       ? other.kind !== 'avenue'
       : other.kind === 'avenue'));
 
@@ -482,19 +484,24 @@ export function createCityGround() {
 
   // Rounded corners: four to a junction, each turning between the two streets
   // that meet there.
-  for (const junction of crossings) {
-    const [first, second] = junction.along;
-    for (const [s1, s2] of [[1, 1], [-1, 1], [-1, -1], [1, -1]]) {
-      const one = { u: first.u * s1, v: first.v * s1 };
-      const two = { u: second.u * s2, v: second.v * s2 };
-      const centre = cornerCentre(junction, one, two, CORNER_RADIUS);
-      addCornerFill(roads, junction, one, two, arcAbout(centre, one, two, CORNER_RADIUS), ROAD_LIFT);
-      addRibbon(
-        pavements,
-        arcAbout(centre, one, two, CORNER_RADIUS - SIDEWALK_WIDTH / 2),
-        SIDEWALK_WIDTH / 2,
-        CORNER_LIFT
-      );
+  for (const [faceId, crossings] of crossingsOn) {
+    const chart = chartFor(faceId);
+    for (const junction of crossings) {
+      const [first, second] = junction.along;
+      const at = { chart, u: junction.u, v: junction.v, height: junctionHeight(profiles, faceId, junction) };
+      for (const [s1, s2] of [[1, 1], [-1, 1], [-1, -1], [1, -1]]) {
+        const one = { u: first.u * s1, v: first.v * s1 };
+        const two = { u: second.u * s2, v: second.v * s2 };
+        const centre = cornerCentre(junction, one, two, CORNER_RADIUS);
+        const kerb = arcAbout(centre, one, two, CORNER_RADIUS).map((point) => ({ ...point, chart, height: at.height }));
+        addCornerFill(roads, { ...junction, chart, height: at.height }, one, two, kerb, ROAD_LIFT);
+        addProfileRibbon(
+          pavements,
+          arcAbout(centre, one, two, CORNER_RADIUS - SIDEWALK_WIDTH / 2)
+            .map((point) => ({ ...point, chart, height: at.height })),
+          0, SIDEWALK_WIDTH / 2, CORNER_LIFT
+        );
+      }
     }
   }
 
@@ -503,11 +510,12 @@ export function createCityGround() {
   const park = parkBlock();
   if (park) {
     const lawn = [];
-    addRect(lawn, park, BLOCK / 2, BLOCK / 2, GROUND_LIFT);
+    const centre = blockPoint(park);
+    addRect(lawn, centre, BLOCK / 2, BLOCK / 2, GROUND_LIFT);
     group.add(meshFrom(lawn, LAWN));
 
     const water = [];
-    addDisc(water, lakeCentre(), LAKE_RADIUS, GROUND_LIFT + 0.03);
+    addDisc(water, centre, LAKE_RADIUS, GROUND_LIFT + 0.03);
     group.add(meshFrom(water, WATER));
   }
 
@@ -516,6 +524,19 @@ export function createCityGround() {
   group.add(structures);
   group.name = 'city-ground';
   return group;
+}
+
+// How high a junction sits: whatever the streets meeting there settled on.
+function junctionHeight(profiles, faceId, junction) {
+  let best = null;
+  for (const profile of profiles) {
+    if (profile.faceId !== faceId) continue;
+    for (const sample of profile.samples) {
+      const gap = Math.hypot(sample.u - junction.u, sample.v - junction.v);
+      if (!best || gap < best.gap) best = { gap, height: sample.height };
+    }
+  }
+  return best ? best.height : 0;
 }
 
 // How far a point is from a polyline, for working out where kerbs break.

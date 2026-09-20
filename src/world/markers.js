@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLOBE_RADIUS } from './planet.js';
-import { grid, tangentFromDirection, directionFromTangent, blockCell, BLOCK } from './city-plan.js';
+import { grid, tangentFromDirection, directionFromTangent, BLOCK } from './city-plan.js';
 import { TOWN_FACE, FACE_IDS } from './sphere-grid.js';
 
 // Every plot on the planet has a short code you can read off the ground in
@@ -40,8 +40,7 @@ export const CELL_COUNT = FACE_IDS.length * grid.divisions * grid.divisions;
 // The reference of a block: either one of the town's, by its map indices, or
 // any cell on the globe.
 export function blockRef(block) {
-  const cell = block.faceId ? block : { faceId: TOWN_FACE, ...blockCell(block) };
-  return `${facePrefix(cell.faceId)}${columnLetter(cell.column)}${cell.row + 1}`;
+  return `${facePrefix(block.faceId)}${columnLetter(block.column)}${block.row + 1}`;
 }
 
 export function parseMarker(code) {

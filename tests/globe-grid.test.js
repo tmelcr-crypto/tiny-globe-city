@@ -2,10 +2,11 @@ import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import { GLOBE_RADIUS } from '../src/world/globe.js';
 import {
-  markerAt, markerPoint, markerDirection, markerUnder, parseMarker, blockRef,
+  markerPoint, markerDirection, markerUnder, parseMarker, blockRef,
   allBlocks, allMarkers, plotsOf, CELL_COUNT,
 } from '../src/world/markers.js';
-import { cityBlocks, grid, CELL } from '../src/world/city-plan.js';
+import { allBlocks as mapBlocks, blockCentre, grid, CELL } from '../src/world/city-plan.js';
+import { TOWN_FACE } from '../src/world/sphere-grid.js';
 import { FACE_IDS } from '../src/world/sphere-grid.js';
 import { createRng } from '../src/core/rng.js';
 
@@ -80,10 +81,10 @@ describe('the grid over the globe', () => {
   });
 
   it("keeps the town's own codes exactly as the city map numbers them", () => {
-    for (const block of cityBlocks()) {
+    for (const block of mapBlocks().filter((b) => b.faceId === TOWN_FACE)) {
       const ref = blockRef(block);
       expect(ref).toMatch(/^[A-D][1-4]$/);
-      expect(markerAt(block.u, block.v).code.startsWith(ref)).toBe(true);
+      expect(markerUnder(blockCentre(block)).code.startsWith(ref)).toBe(true);
     }
   });
 

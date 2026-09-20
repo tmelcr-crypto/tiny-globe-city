@@ -1,30 +1,42 @@
 # The city map
 
-The town is authored, not generated fresh each run. `src/data/city-map.json`
-describes it, `src/world/city-plan.js` turns that into coordinates, and
-`src/world/spawner.js` builds it. Same map in, same town out, every time.
+The planet is authored, not generated fresh each run. `src/data/city-map.json`
+describes it, `src/world/city-map.js` reads it, `src/world/grid.js`,
+`src/world/chart.js` and `src/world/streets.js` turn it into coordinates and
+streets, and `src/world/spawner.js` builds it. Same map in, same world out,
+every time.
 
 This file is how we talk about layout changes: describe the change as an edit to
 the map, and it is unambiguous.
 
 ## The map
 
+The planet is divided like a cube — six square faces (see below) — and the map
+has a block of rows for each one:
+
 ```
-"rows": [
-  ". h h .",
-  "p h a h",
-  "h @ a h",
-  "c t t a"
-]
+"faces": {
+  "T": { "name": "Vice Bay — the city",
+         "rows": ["P D D C", "O R A C", "R @ A D", "O C C A"] },
+  "N": { "name": "Ocean Drive — the beach",
+         "rows": ["H H C H", "B H H B", "B B M B", ". B B ."] },
+  ...
+}
 ```
 
-One character per block. **Row 0 is the north edge, column 0 the west edge.**
-The player faces south, so they look *down* the map from wherever `@` is.
+One character per block. **Row 0 is the north edge of that face, column 0 its
+west edge.** The player faces south, so they look *down* the map from wherever
+`@` is, and `@` appears exactly once on the whole planet.
 
-Roads run between every pair of blocks, with sidewalks either side, so the road
-grid follows from the shape of the map — you never place a road by hand. Every
-junction is rounded off by `street.corner` metres, so the kerb sweeps around
-the corner rather than meeting at a right angle.
+Every face is cut into the same square grid — four by four here — because they
+are all faces of one cube. The six of them are `T` (the top, where the town is),
+`N`, `E`, `S` and `W` around the sides, and `B` for the far side.
+
+Streets run between blocks that are built up, with pavements either side, so the
+street grid follows from the shape of the map — you never place a road by hand.
+Open country gets no grid: a forest is crossed by the road that passes through
+it and nothing more. Every junction is rounded off by `street.corner` metres, so
+the kerb sweeps round the corner rather than meeting at a right angle.
 
 A block is one cell of the grid the whole planet is divided by (below), so its
 size is not authored: `street.road` sets the road width, and what is left of
@@ -47,45 +59,78 @@ into the same N×N grid, then blown out onto the sphere (`src/world/sphere-grid.
   planned on, that reads as a very slight bow — which is why streets are
   carried as polylines rather than ruled lines.
 
-The town takes the top face, and the face is cut as finely as the map is long:
-`N = max(rows, columns)`, so a 4×4 map fills its face exactly. The grid is then
-turned so the player's spawn lands under them.
+Every face carries its own block of rows, so the whole planet is mapped: the
+town on the top face, and beaches, suburbs, docks, desert and forest on the
+other five. The grid is turned so the player's spawn lands under them.
 
 ## Legend
 
-| Char | Zone | What goes there |
-| --- | --- | --- |
-| `.` | empty | grass and trees, no buildings |
-| `h` | houses | suburb houses |
-| `a` | apartments | apartment blocks, the odd house or tower |
-| `t` | towers | downtown skyscrapers |
-| `c` | church | the church |
-| `p` | park | lawn with the lake in it, no buildings |
-| `@` | houses | where the player starts; also holds the safehouse |
+Each character is one entry in `legend`, and the entry says everything about
+that kind of block:
 
-Each legend entry carries a `buildings` count — how many go in that block — so
-density is authored too, not guessed.
+```json
+"V": { "zone": "village", "biome": "meadow", "buildings": 5, "streets": true,
+       "trees": 9, "props": { "haystack": 2, "well": 1, "fence_rail": 4 } }
+```
+
+| Field | What it does |
+| --- | --- |
+| `zone` | which buildings may go there (`buildings.json` decides, below) |
+| `biome` | what kind of country it is: `city`, `beach`, `desert`, `forest`, `meadow` |
+| `buildings` | how many buildings go in the block — density is authored |
+| `streets` | whether the street grid runs along this block's edges |
+| `trees` | how many trees, and `treeKinds` which sort if it is fussy |
+| `props` | the dressing: how many of each prop from `props.json` |
+| `spawn` | the one block the player starts in (`@`) |
+| `lake` | the block the park lake sits in |
+
+The vocabulary as it stands:
+
+| Char | Zone | Biome | What it is |
+| --- | --- | --- | --- |
+| `@` | residential | city | where the player starts; also holds the safehouse |
+| `D` | downtown | city | towers, offices, glass |
+| `C` | commercial | city | shop rows, offices, the odd tower |
+| `A` | apartments | city | slab blocks and their yards |
+| `R` | residential | city | houses and gardens |
+| `O` | oldtown | city | church, shop rows, statues and a fountain |
+| `H` | resort | beach | Ocean Drive: deco hotels, palms, parasols |
+| `B` | beach | beach | sand, palms, deckchairs, huts — no buildings |
+| `M` | port | city | wharf: containers, crates, bollards |
+| `I` | industrial | city | warehouses and yards |
+| `V` | village | meadow | cottages, a well, hay |
+| `F` | farm | meadow | barns, hay and fence rails, no street grid |
+| `W` | forest | forest | pine, oak and birch, nothing built |
+| `L` | logging | forest | a few cabins and timber among the pines |
+| `X` | desert | desert | dunes, cactus, rock |
+| `Y` | oasis | desert | a motel and a villa where there is water |
+| `P` | park | city | lawn with the lake in it |
+| `G` | park | meadow | green space out of town |
+| `.` | wild | meadow | nothing built, nothing planned |
 
 ## Making a change
 
 Most layout changes are one character.
 
-- **Move downtown** — put the `t`s where you want them. They are the tall ones,
+- **Move downtown** — put the `D`s where you want them. They are the tall ones,
   so keep them off the block the player starts in.
 - **Move the player** — move `@`. The grid re-centres on it, so the player
   always starts on the grass verge just inside that block's north-east corner.
-- **Move the park and lake** — move `p`. The lake follows it.
-- **Grow the town** — add rows or columns. The map does not have to be square;
-  a 5×4 map works, and the road grid grows with it.
-- **Thin out or crowd a block** — change its `buildings` count in the legend.
+- **Move the park and lake** — move `P`. The lake follows it.
+- **Turn country into town** — change a `W` or `.` into a zone with
+  `"streets": true`, and the grid grows into it.
+- **Thin out or crowd a block** — change its `buildings`, `trees` or `props`.
 - **Reshape the streets** — `street.road`, `street.sidewalk`, `street.corner`.
-  The block size follows from the grid, so it is not yours to set: cut the map
-  into more rows and columns and every block gets smaller.
+  The block size follows from the grid, so it is not yours to set: cut every
+  face into more rows and columns and every block gets smaller.
 - **Reshuffle the details** — change `seed`. Same layout, different pick of
   house sizes, colours and tree kinds.
 
+Every face has to stay the same square: four rows of four here, on all six.
+The reader checks it and says so if they do not match.
+
 Everything else — how much of each kind of scenery there is, the lake radius,
-where the mountain ring sits — is under `scenery`.
+where the rock ring sits — is under `scenery`.
 
 ## Which buildings a zone admits
 
@@ -93,18 +138,18 @@ where the mountain ring sits — is under `scenery`.
 appear in and how common it is in each:
 
 ```json
-"zones": { "apartments": 10, "houses": 1, "towers": 2 }
+"zones": { "apartments": 10, "residential": 2, "commercial": 3 }
 ```
 
-So an apartment block is the usual thing in an `a` block, turns up occasionally
-among the houses, and sometimes fills a gap downtown. A new kind of building is
+So an apartment block is the usual thing in an `A` block, turns up occasionally
+among the houses, and sometimes fills a gap on a commercial street. A new kind of building is
 a new entry here plus a weight in whichever zones should have it — no new code.
 
 ## Streets that leave the grid: avenues
 
-A grid alone reads as a suburb. Prague's streets bend with the river and cut
-across the blocks at whatever angle gets them where they are going, so the map
-also carries avenues — streets that ignore the grid:
+A grid alone reads as a suburb. Real streets bend with the coast and cut across
+the blocks at whatever angle gets them where they are going, so each face of the
+map also carries avenues — streets that ignore the grid:
 
 ```json
 "avenues": [
@@ -121,13 +166,42 @@ the map, `[4, 4]` the south-east, and `[2.2, 3.75]` is three-quarters of the
 way down the third row of blocks.
 
 Ending an avenue on a whole number puts it on a grid road, which is what makes
-it look like it joins the street network rather than stopping in a field.
+it look like it joins the street network rather than stopping in a field. An
+avenue is the only street a block with `"streets": false` gets, so it is also
+how a road is carried out through the forest or across the desert.
 
 An avenue takes precedence over whatever the blocks would have held: buildings
 and trees keep clear of it, parked cars and pedestrians use its kerb, and
 buildings beside it face it instead of the grid road behind them. Three of
 them is enough to break the grid up; more is fine, they just eat buildable
 land.
+
+## How the streets meet the land
+
+The planet has hills, valleys and a sea, and the streets are laid *into* them
+rather than draped over them (`src/world/streets.js`, and `docs/TERRAIN.md` for
+the land itself). Each street is given a profile — the height it sits at, all
+the way along:
+
+1. the bare ground under it, averaged over a dozen samples either side, so it
+   ignores every bump;
+2. held to a gradient no steeper than `MAX_GRADE` (8.5 in 100), which is what
+   makes it cut through a rise and bank up over a hollow;
+3. agreed with every street it crosses, tapered away either side so the crossing
+   is a bend rather than a step — including crossings with a street laid on the
+   next face along;
+4. re-graded, agreed again, and so on until the two stop arguing.
+
+Then each stretch is classified: road where the earth can carry it, **bridge**
+where the road would stand clear of the ground, **tunnel** where the ground
+would stand over the road. The land is carved to the roads, the structures are
+built, and the classification is settled once more against the carved land,
+because a hill the street next door cut away is no longer worth tunnelling.
+
+`tests/drive.test.js` drives the whole network afterwards and checks the ride:
+that there is ground under the wheels everywhere, that nothing climbs faster
+than the gradient limit, that the road does not kink, that the carriageway is
+clear, and that bridges stay over the land and tunnels under it.
 
 ## Pointing at a plot: markers
 
