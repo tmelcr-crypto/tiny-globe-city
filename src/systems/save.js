@@ -12,12 +12,20 @@ export function createSaveSystem() {
       health: state.health,
       savedAt: Date.now(),
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // Private browsing / blocked storage: saving is best-effort.
+    }
     emit('save:completed', payload);
   });
 }
 
 export function loadSave() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  return raw ? JSON.parse(raw) : null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
 }
