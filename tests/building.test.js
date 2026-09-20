@@ -49,6 +49,7 @@ describe('building assets', () => {
       church: [24, 36],
       apartment: [15, 21],
       skyscraper: [30, 50],
+      panelak: [24, 27],   // eight storeys, the height of a real slab block
     };
 
     for (const def of buildingDefs) {

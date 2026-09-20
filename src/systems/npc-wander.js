@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLOBE_RADIUS } from '../world/globe.js';
+import { edgeDistance } from './collision.js';
 import { NPC_RADIUS } from '../entities/npc.js';
 
 const SPEED = 0.9;         // metres per second along the ground, a walking pace
@@ -30,8 +31,7 @@ function retargetDelay() {
 function blocked(npc, obstacles) {
   for (const obj of obstacles) {
     if (obj.parent !== npc.parent) continue; // e.g. the car the player is driving
-    const clearance = (obj.userData.footprint ?? 1) + NPC_RADIUS;
-    if (npc.position.angleTo(obj.position) * GLOBE_RADIUS < clearance) return true;
+    if (edgeDistance(obj, npc.position, obj.position) < NPC_RADIUS) return true;
   }
   return false;
 }

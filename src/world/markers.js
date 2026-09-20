@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLOBE_RADIUS } from './globe.js';
 import { grid, tangentFromDirection, directionFromTangent, blockCell, BLOCK } from './city-plan.js';
 import { TOWN_FACE, FACE_IDS } from './sphere-grid.js';
 
@@ -44,7 +45,7 @@ export function blockRef(block) {
 }
 
 export function parseMarker(code) {
-  const match = /^(?:([TNESWB])-)?([A-Z])(\d+)([A-D])$/.exec(String(code).trim().toUpperCase());
+  const match = /^([TNESWB])?[-\s]?([A-Z])(\d+)([A-D])$/.exec(String(code).trim().toUpperCase());
   if (!match) return null;
   const faceId = match[1] ?? TOWN_FACE;
   const column = match[2].charCodeAt(0) - 65;
@@ -120,6 +121,61 @@ export function plotsOf(block) {
 // Every marker on the planet.
 export function allMarkers() {
   return allBlocks().flatMap((block) => plotsOf(block));
+}
+
+// Which way east and north run where a marker stands — the frame anything
+// placed there is laid out in, so "twenty metres north" means the same thing
+// on any face of the planet.
+export function frameAt(direction) {
+  const face = grid.faces.get(grid.locate(direction).faceId);
+  const north = face.up.clone().addScaledVector(direction, -face.up.dot(direction)).normalize();
+  const east = new THREE.Vector3().crossVectors(north, direction).normalize();
+  return { east, north };
+}
+
+// A layout's own frame: where it starts and which way east and north run
+// there. Everything in one layout is placed in this frame rather than working
+// out the compass again at each spot — east and north are read off the face a
+// thing stands on, and an estate long enough to cross onto the next face would
+// otherwise turn a right angle halfway along.
+export function layoutFrom(direction) {
+  const { east, north } = frameAt(direction);
+  return { up: direction.clone().normalize(), east, north };
+}
+
+const _turn = new THREE.Quaternion();
+
+// A spot that many metres east and north within a layout, and the way east and
+// north lie once you are there. Turning about the frame's own axes keeps the
+// rows parallel and evenly spaced, which is what a row of blocks needs.
+export function spotIn(frame, east, north) {
+  const up = frame.up.clone();
+  const eastward = frame.east.clone();
+  const northward = frame.north.clone();
+
+  _turn.setFromAxisAngle(frame.east, -north / GLOBE_RADIUS);
+  up.applyQuaternion(_turn);
+  northward.applyQuaternion(_turn);
+
+  _turn.setFromAxisAngle(frame.north, east / GLOBE_RADIUS);
+  up.applyQuaternion(_turn);
+  eastward.applyQuaternion(_turn);
+  northward.applyQuaternion(_turn);
+
+  // Keep the frame square to the ground it ended up on.
+  northward.addScaledVector(up, -northward.dot(up)).normalize();
+  eastward.crossVectors(northward, up).normalize().negate();
+  return { dir: up.normalize(), east: eastward, north: northward };
+}
+
+// A point that many metres east and north of a direction, over the surface.
+export function stepFrom(direction, east, north, target = new THREE.Vector3()) {
+  const reach = Math.hypot(east, north);
+  if (reach < 1e-9) return target.copy(direction);
+  const frame = frameAt(direction);
+  const way = frame.east.multiplyScalar(east / reach).addScaledVector(frame.north, north / reach);
+  const angle = reach / GLOBE_RADIUS;
+  return target.copy(direction).multiplyScalar(Math.cos(angle)).addScaledVector(way, Math.sin(angle)).normalize();
 }
 
 // The marker under the player. The player is fixed at the top of the globe, so

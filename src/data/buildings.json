@@ -2,63 +2,267 @@
   {
     "id": "house",
     "name": "House",
-    "zones": { "houses": 10, "apartments": 1, "church": 2 },
-    "width": [7, 9],
-    "depth": [6.5, 8],
-    "wallHeight": [5.5, 6.5],
-    "walls": ["#d9cfc0", "#c9d3dc", "#e0d2b8", "#cfd8cd", "#e3cfc7"],
-    "roof": { "type": "pitched", "height": [2.5, 3.2], "colors": ["#8c4a3f", "#4f5d63", "#7a5c3a", "#6b4a57"] },
-    "windows": { "rows": 2, "cols": 2 },
+    "zones": {
+      "houses": 10,
+      "apartments": 1,
+      "church": 2
+    },
+    "width": [
+      7,
+      9
+    ],
+    "depth": [
+      6.5,
+      8
+    ],
+    "wallHeight": [
+      5.5,
+      6.5
+    ],
+    "walls": [
+      "#d9cfc0",
+      "#c9d3dc",
+      "#e0d2b8",
+      "#cfd8cd",
+      "#e3cfc7"
+    ],
+    "roof": {
+      "type": "pitched",
+      "height": [
+        2.5,
+        3.2
+      ],
+      "colors": [
+        "#8c4a3f",
+        "#4f5d63",
+        "#7a5c3a",
+        "#6b4a57"
+      ]
+    },
+    "windows": {
+      "rows": 2,
+      "cols": 2
+    },
     "door": true
   },
   {
     "id": "church",
     "name": "Church",
-    "zones": { "church": 10 },
-    "width": [11, 13],
-    "depth": [18, 22],
-    "wallHeight": [8.5, 10],
-    "walls": ["#e6e0d4", "#ded6c6"],
-    "roof": { "type": "pitched", "height": [4, 5], "colors": ["#5b6b73", "#6b4a57"] },
-    "steeple": { "width": [4, 5], "height": [18, 22], "spire": [6, 8] },
-    "windows": { "rows": 3, "cols": 2, "wrap": true },
+    "zones": {
+      "church": 10
+    },
+    "width": [
+      11,
+      13
+    ],
+    "depth": [
+      18,
+      22
+    ],
+    "wallHeight": [
+      8.5,
+      10
+    ],
+    "walls": [
+      "#e6e0d4",
+      "#ded6c6"
+    ],
+    "roof": {
+      "type": "pitched",
+      "height": [
+        4,
+        5
+      ],
+      "colors": [
+        "#5b6b73",
+        "#6b4a57"
+      ]
+    },
+    "steeple": {
+      "width": [
+        4,
+        5
+      ],
+      "height": [
+        18,
+        22
+      ],
+      "spire": [
+        6,
+        8
+      ]
+    },
+    "windows": {
+      "rows": 3,
+      "cols": 2,
+      "wrap": true
+    },
     "door": true
   },
   {
     "id": "apartment",
     "name": "Apartment Block",
-    "zones": { "apartments": 10, "houses": 1, "towers": 2 },
-    "width": [15, 19],
-    "depth": [13, 16],
-    "wallHeight": [15, 18],
-    "walls": ["#c8bfb2", "#b9c2c9", "#cbc2b0"],
-    "roof": { "type": "flat", "height": [0.8, 1.2], "colors": ["#6a6f73", "#565b5f"] },
-    "windows": { "rows": 5, "cols": 4, "wrap": true },
+    "zones": {
+      "apartments": 10,
+      "houses": 1,
+      "towers": 2
+    },
+    "width": [
+      15,
+      19
+    ],
+    "depth": [
+      13,
+      16
+    ],
+    "wallHeight": [
+      15,
+      18
+    ],
+    "walls": [
+      "#c8bfb2",
+      "#b9c2c9",
+      "#cbc2b0"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        0.8,
+        1.2
+      ],
+      "colors": [
+        "#6a6f73",
+        "#565b5f"
+      ]
+    },
+    "windows": {
+      "rows": 5,
+      "cols": 4,
+      "wrap": true
+    },
     "door": true
   },
   {
     "id": "skyscraper",
     "name": "Skyscraper",
-    "zones": { "towers": 10, "apartments": 2 },
-    "width": [12, 15],
-    "depth": [12, 15],
-    "wallHeight": [28, 38],
-    "walls": ["#8fa3b0", "#7e8f9c", "#9aa7ae"],
-    "roof": { "type": "flat", "height": [1, 1.5], "colors": ["#4a5157", "#3d4349"] },
-    "antenna": [4, 7],
-    "windows": { "rows": 11, "cols": 4, "wrap": true },
+    "zones": {
+      "towers": 10,
+      "apartments": 2
+    },
+    "width": [
+      12,
+      15
+    ],
+    "depth": [
+      12,
+      15
+    ],
+    "wallHeight": [
+      28,
+      38
+    ],
+    "walls": [
+      "#8fa3b0",
+      "#7e8f9c",
+      "#9aa7ae"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        1,
+        1.5
+      ],
+      "colors": [
+        "#4a5157",
+        "#3d4349"
+      ]
+    },
+    "antenna": [
+      4,
+      7
+    ],
+    "windows": {
+      "rows": 11,
+      "cols": 4,
+      "wrap": true
+    },
     "door": true
   },
   {
     "id": "safehouse",
     "name": "Safehouse",
     "zones": {},
-    "width": [8, 9],
-    "depth": [7, 8],
-    "wallHeight": [5.5, 6.5],
-    "walls": ["#3388ff"],
-    "roof": { "type": "pitched", "height": [2.8, 3.4], "colors": ["#1f4f8f"] },
-    "windows": { "rows": 2, "cols": 2 },
+    "width": [
+      8,
+      9
+    ],
+    "depth": [
+      7,
+      8
+    ],
+    "wallHeight": [
+      5.5,
+      6.5
+    ],
+    "walls": [
+      "#3388ff"
+    ],
+    "roof": {
+      "type": "pitched",
+      "height": [
+        2.8,
+        3.4
+      ],
+      "colors": [
+        "#1f4f8f"
+      ]
+    },
+    "windows": {
+      "rows": 2,
+      "cols": 2
+    },
+    "door": true
+  },
+  {
+    "id": "panelak",
+    "name": "Panelák section",
+    "note": "One entrance-width section of a prefab slab block. A long panelak is a row of them, which is how they were really built — and how a straight block follows the curve of a small planet.",
+    "zones": {},
+    "width": [
+      11.8,
+      12.2
+    ],
+    "depth": [
+      11,
+      11.6
+    ],
+    "wallHeight": [
+      24,
+      25.5
+    ],
+    "walls": [
+      "#d9d2c2",
+      "#c7cfd6",
+      "#e0d9c6",
+      "#cdd6cc",
+      "#d8cbb4"
+    ],
+    "roof": {
+      "type": "flat",
+      "height": [
+        0.7,
+        1.0
+      ],
+      "colors": [
+        "#6a6f73",
+        "#5d6266"
+      ]
+    },
+    "windows": {
+      "rows": 8,
+      "cols": 3,
+      "wrap": true
+    },
     "door": true
   }
 ]

@@ -53,8 +53,10 @@ describe('placements', () => {
     for (const entry of placements) {
       if (entry.place === 'empty') continue;
       const marker = entry.at.toUpperCase();
-      const model = pivot.children.find((c) => c.userData?.id === `${entry.place}@${marker}`);
+      const wanted = `${entry.place}@${marker}`;
+      const model = pivot.children.find((c) => c.userData?.id === wanted || c.userData?.id?.startsWith(`${wanted}_`));
       expect(model, `nothing placed at ${entry.at}`).toBeTruthy();
+      if (entry.offset || entry.repeat) continue; // laid out to the metre, not on the marker
 
       // It stands on the marker it was asked for, within a metre.
       const target = directionFromTangent(markerPoint(entry.at).u, markerPoint(entry.at).v)

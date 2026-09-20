@@ -12,9 +12,9 @@ import {
   BLOCK, ROAD_WIDTH, SIDEWALK_WIDTH, MOUNTAIN_RING, LAKE_RADIUS, SCENERY, SEED,
   QUARTER_SPAN,
   cityBlocks, plotIn, kerbSpot, parkBlock, lakeCentre, isOnAvenue,
-  directionFromTangent, tangentFacing, nearestRoad, isInLake,
+  directionFromTangent, tangentFromDirection, tangentFacing, nearestRoad, isInLake,
 } from './city-plan.js';
-import { markerPoint, markerAt, blockRef } from './markers.js';
+import { markerPoint, markerDirection, markerAt, markerUnder, blockRef, layoutFrom, spotIn } from './markers.js';
 import vehicles from '../data/vehicles.json';
 import placements from '../data/placements.json';
 import propDefs from '../data/props.json';
@@ -23,14 +23,6 @@ import buildingDefs from '../data/buildings.json';
 
 const NPC_HEALTH = 30;
 const PLACEMENT_ATTEMPTS = 24;
-
-// Compass names you can use in placements.json instead of a raw direction.
-const FACING = {
-  north: { u: 0, v: 1 },
-  south: { u: 0, v: -1 },
-  east: { u: 1, v: 0 },
-  west: { u: -1, v: 0 },
-};
 
 const UP = new THREE.Vector3(0, 1, 0);
 const _facing = new THREE.Vector3();
@@ -48,8 +40,21 @@ function markerSeed(code) {
   return (hash ^ SEED) >>> 0;
 }
 
-// Stands a model on the globe. Given a facing direction it is also turned to
-// look that way, so buildings front the street instead of sitting at random angles.
+// Stands a model on the globe at a direction, turned to look whichever way a
+// tangent says. Everything placed goes through here, so nothing floats.
+function placeOn(mesh, dir, facing) {
+  mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
+  if (!facing) {
+    mesh.quaternion.setFromUnitVectors(UP, dir);
+    return;
+  }
+  _facing.copy(facing).addScaledVector(dir, -facing.dot(dir)).normalize();
+  _right.copy(dir).cross(_facing).normalize();
+  _basis.makeBasis(_right, dir, _facing);
+  mesh.quaternion.setFromRotationMatrix(_basis);
+}
+
+// The same from a point on the flat map, which is how the town is laid out.
 function placeAt(mesh, u, v, facing) {
   const dir = directionFromTangent(u, v);
   mesh.position.copy(dir).multiplyScalar(GLOBE_RADIUS);
@@ -93,14 +98,106 @@ function build(name, rng, look = {}) {
   if (prop) return { model: createProp(prop, rng), type: 'prop' };
 
   if (TREE_KINDS.includes(name)) return { model: createTree(name, rng), type: 'tree' };
+
+  const vehicle = vehicleDef(name);
+  if (vehicle) {
+    const car = createCar(vehicle);
+    car.userData.footprint = CAR_RADIUS;
+    car.userData.def = vehicle;
+    return { model: car, type: 'car' };
+  }
+
+  const npc = npcDefs.find((d) => d.id === name);
+  if (npc) {
+    const person = createNpc(npc);
+    person.userData.footprint = NPC_RADIUS;
+    person.userData.def = npc;
+    person.userData.health = NPC_HEALTH;
+    return { model: person, type: 'npc' };
+  }
   return null;
 }
 
-// Scatters the extras a placement asks for around its main model, inside the
-// lot: "a playground with 7 pines and 1 bush".
-function spawnCompanions(worldPivot, placed, entry, spot, rng) {
-  for (const companion of entry.with ?? []) {
-    for (let n = 0; n < (companion.count ?? 1); n++) {
+// "car" on its own means whatever car the town uses.
+function vehicleDef(name) {
+  if (name === 'car') return vehicles[0];
+  return vehicles.find((d) => d.id === name) ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// Placements: what data/placements.json asks for, exactly where it asks.
+//
+// A placement can be dropped on a marker and left at that, or laid out to the
+// metre: `offset` moves it east and north of the marker, `facing` turns it,
+// and `repeat` copies it along one or two directions — which is how four
+// parallel blocks of flats, their parking courts and the cars in them are one
+// entry each rather than eighty.
+//
+// East and north are read off the grid where the marker stands, so a layout
+// means the same thing anywhere on the planet.
+
+
+// The tangent a compass name points along at a spot in a layout. Read off the
+// layout's own frame, so every block in an estate faces the same way even
+// where the estate runs onto the next face of the grid.
+function facingTangent(spot, facing) {
+  if (!facing) return null;
+  switch (facing) {
+    case 'north': return spot.north.clone();
+    case 'south': return spot.north.clone().negate();
+    case 'east': return spot.east.clone();
+    case 'west': return spot.east.clone().negate();
+    default: return null;
+  }
+}
+
+// Every copy a `repeat` asks for, as offsets from the entry's own spot. One
+// step makes a row; two make a grid.
+function copies(repeat) {
+  const axes = [].concat(repeat ?? []).filter(Boolean);
+  let spots = [[0, 0]];
+  for (const axis of axes) {
+    const [east = 0, north = 0] = axis.step ?? [];
+    const next = [];
+    for (const [e, n] of spots) {
+      for (let c = 0; c < (axis.count ?? 1); c++) next.push([e + east * c, n + north * c]);
+    }
+    spots = next;
+  }
+  return spots;
+}
+
+// One model, built and stood on the globe.
+function put(worldPivot, placed, interactables, { model, type }, spot, facing, id, marker, group) {
+  const radius = model.userData.footprint ?? 1;
+  const dir = spot.dir;
+  placeOn(model, dir, facingTangent(spot, facing));
+  model.userData.type = type;
+  model.userData.id = id;
+  model.userData.marker = marker;
+  // Pieces of one hand-placed run: a long block is a row of sections that
+  // overlap on purpose, so they are allowed to.
+  if (group) model.userData.group = group;
+  worldPivot.add(model);
+  placed.push({ dir: dir.clone(), radius });
+  if (type === 'car' || type === 'npc') interactables.push(model);
+  return model;
+}
+
+// A placement's extras: either laid out exactly, like the main model, or
+// scattered around it inside the lot — "a playground with 7 pines and 1 bush".
+function spawnCompanions(worldPivot, placed, interactables, entry, home, rng, taken) {
+  (entry.with ?? []).forEach((companion, index) => {
+    const exact = companion.offset || companion.repeat;
+    const count = exact ? 1 : (companion.count ?? 1);
+
+    for (let n = 0; n < count; n++) {
+      if (exact) {
+        spawnLayout(worldPivot, placed, interactables, companion, home, rng, taken,
+          `${entry.at}_${index}_${companion.place}`);
+        continue;
+      }
+
       const built = build(companion.place, rng, companion);
       if (!built) {
         console.warn(`placements: nothing called "${companion.place}" to put at ${entry.at}`);
@@ -111,52 +208,79 @@ function spawnCompanions(worldPivot, placed, entry, spot, rng) {
       for (let attempt = 0; attempt < PLACEMENT_ATTEMPTS; attempt++) {
         const reach = QUARTER_SPAN / 2 - radius;
         if (reach <= 0) break;
-        const u = spot.u + (rng() * 2 - 1) * reach;
-        const v = spot.v + (rng() * 2 - 1) * reach;
+        const spot = spotIn(home, (rng() * 2 - 1) * reach, (rng() * 2 - 1) * reach);
+        const { u, v } = tangentFromDirection(spot.dir);
         if (overlaps(placed, u, v, radius) || isInLake(u, v, radius)) continue;
 
-        placeAt(built.model, u, v);
-        built.model.userData.type = built.type;
-        built.model.userData.id = `${companion.place}@${entry.at.toUpperCase()}_${n}`;
-        built.model.userData.marker = entry.at.toUpperCase();
-        worldPivot.add(built.model);
-        remember(placed, u, v, radius);
+        put(worldPivot, placed, interactables, built, spot, companion.facing,
+          `${companion.place}@${entry.at.toUpperCase()}_${n}`, entry.at.toUpperCase());
         break;
       }
     }
+  });
+}
+
+// Lays a thing out from a marker: offset, turned, and repeated as asked.
+function spawnLayout(worldPivot, placed, interactables, entry, home, rng, taken, label) {
+  const [east = 0, north = 0] = entry.offset ?? [];
+  let made = 0;
+
+  for (const [stepEast, stepNorth] of copies(entry.repeat)) {
+    const spot = spotIn(home, east + stepEast, north + stepNorth);
+    const built = build(entry.place, rng, entry);
+    if (!built) {
+      console.warn(`placements: nothing called "${entry.place}" to put at ${entry.at ?? label}`);
+      return 0;
+    }
+    const where = markerUnder(spot.dir);
+    taken?.add(where.code);
+    put(worldPivot, placed, interactables, built, spot, entry.facing, `${label}_${made}`, where.code, label);
+    made++;
   }
+  return made;
 }
 
 // Buildings and scenery asked for by marker in data/placements.json. These win:
 // they go down before the filler, and the filler works around them.
-function spawnPlacements(worldPivot, placed, taken) {
+function spawnPlacements(worldPivot, placed, interactables, taken) {
   for (const entry of placements) {
-    const spot = markerPoint(entry.at);
-    if (!spot) {
-      console.warn(`placements: "${entry.at}" is not a marker in this city`);
+    const anchor = markerDirection(entry.at);
+    const home = anchor && layoutFrom(anchor);
+    if (!home) {
+      console.warn(`placements: "${entry.at}" is not a marker on this planet`);
       continue;
     }
-    taken.add(entry.at.toUpperCase());
+    const marker = markerUnder(anchor).code;
+    taken.add(marker);
     if (entry.place === 'empty') continue;
 
-    const rng = createRng(markerSeed(entry.at.toUpperCase()));
-    const built = build(entry.place, rng, { walls: entry.walls, roof: entry.roof });
+    const rng = createRng(markerSeed(marker));
 
-    if (!built) {
-      console.warn(`placements: nothing called "${entry.place}" to put at ${entry.at}`);
-      continue;
+    if (entry.offset || entry.repeat) {
+      spawnLayout(worldPivot, placed, interactables, entry, home, rng, taken, `${entry.place}@${marker}`);
+    } else {
+      const built = build(entry.place, rng, { walls: entry.walls, roof: entry.roof });
+      if (!built) {
+        console.warn(`placements: nothing called "${entry.place}" to put at ${entry.at}`);
+        continue;
+      }
+      const { u, v } = tangentFromDirection(anchor);
+      const facing = entry.facing ?? null;
+      if (facing) {
+        put(worldPivot, placed, interactables, built, spotIn(home, 0, 0), facing, `${entry.place}@${marker}`, marker);
+      } else {
+        // No facing asked for: front it onto the nearest street.
+        placeAt(built.model, u, v, nearestRoad(u, v)?.facing ?? { u: 0, v: 1 });
+        built.model.userData.type = built.type;
+        built.model.userData.id = `${entry.place}@${marker}`;
+        built.model.userData.marker = marker;
+        worldPivot.add(built.model);
+        remember(placed, u, v, built.model.userData.footprint ?? 1);
+        if (built.type === 'car' || built.type === 'npc') interactables.push(built.model);
+      }
     }
 
-    const { model, type } = built;
-    const facing = entry.facing ?? nearestRoad(spot.u, spot.v).facing;
-    placeAt(model, spot.u, spot.v, FACING[facing] ?? facing);
-    model.userData.type = type;
-    model.userData.id = `${entry.place}@${entry.at.toUpperCase()}`;
-    model.userData.marker = entry.at.toUpperCase();
-    worldPivot.add(model);
-    remember(placed, spot.u, spot.v, model.userData.footprint ?? 1);
-
-    spawnCompanions(worldPivot, placed, entry, spot, rng);
+    spawnCompanions(worldPivot, placed, interactables, entry, home, rng, taken);
   }
 }
 
@@ -318,7 +442,7 @@ export function spawnAll(worldPivot) {
   interactables.push(safehouse);
 
   const taken = new Set();
-  spawnPlacements(worldPivot, placed, taken);
+  spawnPlacements(worldPivot, placed, interactables, taken);
   spawnBuildings(worldPivot, placed, rng, taken);
   spawnCars(worldPivot, placed, interactables, rng);
   spawnNpcs(worldPivot, placed, interactables, rng);

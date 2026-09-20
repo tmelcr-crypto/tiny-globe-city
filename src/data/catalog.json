@@ -36,7 +36,16 @@
   "rec_monument_statue": "prop:statue",
   "stf_planter_concrete": "prop:planter",
   "stf_bin_metal": "prop:bin",
-  "stf_bollard_stone": "prop:bollard"
+  "stf_bollard_stone": "prop:bollard",
+  "res_panelak_long": "building:panelak",
+  "stf_bin_recycling": "prop:dumpster",
+  "tra_bike_rack": "prop:bike_rack",
+  "inf_utility_cabinet": "prop:utility_cabinet",
+  "stf_notice_case": "prop:noticeboard",
+  "srf_parking_bay": "prop:parking_court",
+  "rec_carpet_beater": "prop:carpet_beater",
+  "stf_drying_rack": "prop:drying_rack",
+  "tra_estate_lane": "prop:service_road"
  },
  "categories": [
   {
@@ -2537,6 +2546,21 @@
       "#3c3f45"
      ],
      "Hoist on a building site over the pavement"
+    ],
+    [
+     "tra_estate_lane",
+     "Estate lane",
+     "surface",
+     [
+      10,
+      0.06,
+      2.16
+     ],
+     [
+      "#3a3d42",
+      "#8e9298"
+     ],
+     "The single lane threading a panel estate, wide enough for one car and no more"
     ]
    ]
   },
@@ -3234,6 +3258,21 @@
       "#c8442e"
      ],
      "Gas heater over a winter terrace"
+    ],
+    [
+     "stf_drying_rack",
+     "Washing line frame",
+     "fence",
+     [
+      3.7,
+      1.9,
+      0.3
+     ],
+     [
+      "#9aa0a6",
+      "#cfd4d8"
+     ],
+     "Sušák: lines strung between two frames on the grass behind the block"
     ]
    ]
   },
@@ -8858,6 +8897,21 @@
       "#2f7d3a"
      ],
      "Name of the park in ironwork over the path"
+    ],
+    [
+     "rec_carpet_beater",
+     "Carpet beating frame",
+     "scaffold",
+     [
+      3,
+      2.1,
+      0.4
+     ],
+     [
+      "#7d5a3c",
+      "#8a6a4a"
+     ],
+     "Klepadlo: the steel frame in every estate courtyard, for beating rugs and for climbing on"
     ]
    ]
   },

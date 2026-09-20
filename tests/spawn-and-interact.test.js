@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import { createGlobe, GLOBE_RADIUS } from '../src/world/globe.js';
 import { spawnAll } from '../src/world/spawner.js';
+import { edgeDistance } from '../src/systems/collision.js';
 import { createInteractionSystem } from '../src/systems/interaction.js';
 import { on, emit } from '../src/core/events.js';
 import { state } from '../src/core/state.js';
@@ -21,16 +22,29 @@ describe('world population', () => {
     for (const car of byType('car')) expect(interactables).toContain(car);
   });
 
-  it('never spawns two objects overlapping each other', () => {
+  it('never spawns two objects inside each other', () => {
     const pivot = createGlobe();
     spawnAll(pivot);
     const solid = pivot.children.filter((c) => c.userData?.footprint);
 
+    // Measured against what each thing actually occupies — the walls of a
+    // building, the circle round anything else — using the same reckoning the
+    // collision system uses.
+    const room = (obj, other) => edgeDistance(obj, other.position, obj.position)
+      - (other.userData.half ? 0 : other.userData.footprint);
+
     for (let i = 0; i < solid.length; i++) {
       for (let j = i + 1; j < solid.length; j++) {
-        const gap = solid[i].position.angleTo(solid[j].position) * GLOBE_RADIUS;
-        const needed = solid[i].userData.footprint + solid[j].userData.footprint;
-        expect(gap).toBeGreaterThanOrEqual(needed - 1e-6);
+        // Two pieces of one hand-placed run may overlap: a long block of flats
+        // is a row of sections built to overlap so it curves without gaps.
+        const group = solid[i].userData.group;
+        if (group && group === solid[j].userData.group) continue;
+
+        const clear = Math.min(room(solid[i], solid[j]), room(solid[j], solid[i]));
+        expect(
+          clear,
+          `${solid[i].userData.id ?? solid[i].userData.type} and ${solid[j].userData.id ?? solid[j].userData.type}`
+        ).toBeGreaterThanOrEqual(-1e-6);
       }
     }
   });

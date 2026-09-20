@@ -132,5 +132,12 @@ export function createBuilding(def, rng = Math.random, look = {}) {
   mesh.name = def.id;
   mesh.userData.kind = def.id;
   mesh.userData.footprint = (Math.hypot(width, depth) / 2) * ROOF_OVERHANG;
+  // The footprint is the circle around the building; these are the walls
+  // themselves, which is what you actually walk into. A long block of flats is
+  // nothing like its own circle.
+  mesh.userData.half = {
+    width: (width / 2) * ROOF_OVERHANG,
+    depth: (depth / 2) * ROOF_OVERHANG,
+  };
   return mesh;
 }

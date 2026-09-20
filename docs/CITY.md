@@ -181,13 +181,58 @@ never gets shuffled by the seed and adding one does not move the rest of town.
 
 - `at` — the marker code.
 - `place` — any building (`house`, `apartment`, `church`, `skyscraper`,
-  `safehouse`), any tree (`pine`, `oak`, `birch`, `shrub`, `bush`) or any prop
-  from `src/data/props.json`.
+  `panelak`, `safehouse`), any tree (`pine`, `oak`, `birch`, `shrub`, `bush`),
+  any prop from `src/data/props.json`, a `car`, or an NPC by id.
 - `walls` / `roof` — optional colour overrides, any CSS colour.
 - `with` — extra things scattered around the main one inside the same plot.
+- `note` — a line for whoever reads the file next. Ignored by the game.
 
 So "on lot B3A place a children playground with 7 trees and 1 bush" is one
 entry, and the change is reviewable as a diff.
+
+### Laying something out to the metre
+
+Dropping a thing on a marker is enough for a building in a plot. A whole
+estate needs more, so a placement can also say exactly where things go:
+
+```json
+{ "at": "S-B4A", "place": "panelak", "facing": "north",
+  "offset": [-12.25, -49.5],
+  "repeat": [{ "count": 4, "step": [9.5, 0] },
+             { "count": 4, "step": [0, 33] }] }
+```
+
+- `offset` — `[east, north]` in metres from the marker.
+- `facing` — `north`, `south`, `east` or `west`; the way the front looks.
+- `repeat` — one step makes a row, two make a grid. This one is sixteen
+  models: four blocks of flats, each built from four sections.
+
+East and north are read off the grid **where the marker stands**, and the
+whole layout is placed in that one frame — so a run of buildings stays
+parallel and evenly spaced even where it crosses onto the next face of the
+grid, which is where compass directions would otherwise turn a corner.
+
+Companions take the same three fields, so the parking courts between those
+blocks, the cars in their bays, the lamps and the bins are each one line.
+
+## The estate on the far side: S-B4A
+
+`S-B4A` holds Sídliště Jižní, which is what the layout fields are for:
+
+- four long panelák blocks running parallel to the estate lane, each one a row
+  of four sections — the way they were really built, and the way a straight
+  block follows the curve of a small planet;
+- a parking court between each pair of blocks, bays at right angles to a lane
+  **2.16 m** wide, which is 1.2 times the width of a car. That is as the brief
+  asked; it is about a third of what a car needs to turn into a bay, so treat
+  it as a look rather than a working geometry;
+- the courts fed by one lane up the west end, with cars nose-in to the bays;
+- and the rest of what makes an estate: beating frames, washing lines,
+  dumpsters, bike racks, a notice board by each door, a playground, a kiosk, a
+  stop on the lane, and four residents walking about.
+
+It runs about 130 m by 60 m, so it spills over the plots around `S-B4A` — a
+placement is anchored to a marker, not fenced in by it.
 
 ## Props: `src/data/props.json`
 
@@ -202,6 +247,10 @@ Street furniture and small scenery are described as primitives, not code:
 with the origin at ground level, `turn` rotates it in degrees. Parts sharing a
 colour merge into one mesh, so a prop costs a draw call per colour. A new asset
 is a new entry here — no new code, and it is immediately placeable by name.
+
+A prop with `"footprint": 0` is a surface rather than an obstacle — the
+parking courts and the estate lane are things you drive on, so nothing spaces
+itself off them and nothing collides with them.
 
 ## Getting around while you work
 
